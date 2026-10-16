@@ -1,0 +1,195 @@
+<div class="analytics-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <h1>Analytics Dashboard</h1>
+      <p class="subtitle">Transportation performance, costs and volumes</p>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary" (click)="exportToCSV('lanes')">
+        <span class="icon">↓</span> Export All
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-card">
+    <div class="filters-row">
+      <div class="filter-group">
+        <label>Date From</label>
+        <input type="date" [(ngModel)]="dateFrom" (change)="applyFilters()" class="form-control">
+      </div>
+      <div class="filter-group">
+        <label>Date To</label>
+        <input type="date" [(ngModel)]="dateTo" (change)="applyFilters()" class="form-control">
+      </div>
+      <div class="filter-group">
+        <label>Mode</label>
+        <select [(ngModel)]="selectedMode" (change)="applyFilters()" class="form-control">
+          <option value="all">All Modes</option>
+          <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Carrier</label>
+        <select [(ngModel)]="selectedCarrier" (change)="applyFilters()" class="form-control">
+          <option value="all">All Carriers</option>
+          <option *ngFor="let carrier of carriers" [value]="carrier">{{ carrier }}</option>
+        </select>
+      </div>
+      <div class="filter-group filter-actions">
+        <button class="btn btn-secondary" (click)="applyFilters()">Apply</button>
+        <button class="btn btn-outline" (click)="setDefaultDates(); applyFilters()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Summary -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Spend</div>
+      <div class="kpi-value">$3,466,500</div>
+      <div class="kpi-trend positive">+4.2% vs prior</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">On-Time %</div>
+      <div class="kpi-value">94.8%</div>
+      <div class="kpi-trend positive">+1.3 pts</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Volume</div>
+      <div class="kpi-value">2,400</div>
+      <div class="kpi-trend">loads</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Cost / Load</div>
+      <div class="kpi-value">$1,444</div>
+      <div class="kpi-trend negative">+2.1%</div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="dashboard-grid">
+    <!-- Cost per Lane -->
+    <div class="card card-full">
+      <div class="card-header">
+        <h2>Cost per Lane</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('lanes')">Export</button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Lane</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Mode</th>
+                <th class="text-right">Avg Cost</th>
+                <th class="text-right">Total Cost</th>
+                <th class="text-right">Volume</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lane of filteredLaneCosts">
+                <td class="lane-code">{{ lane.lane }}</td>
+                <td>{{ lane.origin }}</td>
+                <td>{{ lane.destination }}</td>
+                <td><span class="mode-badge" [attr.data-mode]="lane.mode">{{ lane.mode }}</span></td>
+                <td class="text-right">${{ lane.avgCost | number }}</td>
+                <td class="text-right">${{ lane.totalCost | number }}</td>
+                <td class="text-right">{{ lane.volume }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carrier Performance -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Carrier Performance</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('carriers')">Export</button>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Carrier</th>
+                <th class="text-right">On-Time %</th>
+                <th class="text-right">Avg Cost</th>
+                <th class="text-right">Volume</th>
+                <th class="text-right">Claims</th>
+                <th class="text-center">Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let carrier of filteredCarriers">
+                <td class="carrier-name">{{ carrier.carrier }}</td>
+                <td class="text-right">
+                  <span [class]="getOnTimeClass(carrier.onTimePercent)">{{ carrier.onTimePercent }}%</span>
+                </td>
+                <td class="text-right">${{ carrier.avgCost | number }}</td>
+                <td class="text-right">{{ carrier.totalVolume }}</td>
+                <td class="text-right">{{ carrier.claims }}</td>
+                <td class="text-center">
+                  <span class="score-badge" [class]="getScoreClass(carrier.score)">{{ carrier.score }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- On-Time Trend -->
+    <div class="card">
+      <div class="card-header">
+        <h2>On-Time Delivery Trend</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('trends')">Export</button>
+      </div>
+      <div class="card-body">
+        <div class="trend-chart">
+          <div class="trend-bars">
+            <div class="trend-item" *ngFor="let trend of filteredTrends">
+              <div class="trend-bar-container">
+                <div class="trend-bar" [style.height.%]="trend.onTimePercent" [class]="getOnTimeClass(trend.onTimePercent)">
+                  <span class="trend-value">{{ trend.onTimePercent }}%</span>
+                </div>
+              </div>
+              <div class="trend-label">{{ trend.period }}</div>
+              <div class="trend-deliveries">{{ trend.totalDeliveries }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Volume by Mode -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Volume by Mode</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('modes')">Export</button>
+      </div>
+      <div class="card-body">
+        <div class="mode-list">
+          <div class="mode-item" *ngFor="let mode of filteredModes">
+            <div class="mode-info">
+              <span class="mode-name">{{ mode.mode }}</span>
+              <span class="mode-percent">{{ mode.percentage }}%</span>
+            </div>
+            <div class="mode-bar-container">
+              <div class="mode-bar" [style.width.%]="mode.percentage" [attr.data-mode]="mode.mode"></div>
+            </div>
+            <div class="mode-stats">
+              <span>{{ mode.volume }} loads</span>
+              <span>${{ mode.cost | number }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

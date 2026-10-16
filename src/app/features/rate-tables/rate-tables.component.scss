@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.rate-tables-container {
+  font-family: inherit;
+}
+
+.label {
+  @apply block text-xs font-medium text-gray-400 mb-1.5;
+}
+
+.input {
+  @apply w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100
+         placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500
+         transition-colors;
+}
+
+/* Scrollbar polish for dark theme */
+.rate-tables-container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.rate-tables-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rate-tables-container ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+.rate-tables-container ::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Checkbox accent */
+input[type="checkbox"] {
+  accent-color: #3b82f6;
+}

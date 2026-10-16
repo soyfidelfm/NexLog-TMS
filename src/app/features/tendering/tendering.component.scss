@@ -1,0 +1,78 @@
+/* Tendering Screen - Same design language as other TMS screens */
+/* Dark theme, Tailwind primary, SCSS for component-specific polish */
+
+.tendering-container {
+  font-family: inherit;
+}
+
+.input {
+  @apply bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100
+         placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500
+         transition-colors;
+}
+
+.filter-btn {
+  @apply px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-700 text-gray-400
+         hover:text-gray-200 hover:border-gray-600 transition-colors;
+
+  &.active {
+    @apply bg-blue-600/20 border-blue-500/50 text-blue-300;
+  }
+}
+
+.load-card {
+  @apply bg-gray-800/70 border border-gray-700/80 rounded-xl p-4
+         hover:border-gray-600 hover:bg-gray-800 transition-all duration-150;
+}
+
+.status-badge {
+  @apply text-[11px] font-medium px-2.5 py-0.5 rounded-full;
+
+  &.status-pending {
+    @apply bg-amber-500/15 text-amber-300;
+  }
+
+  &.status-accepted {
+    @apply bg-emerald-500/15 text-emerald-300;
+  }
+
+  &.status-rejected {
+    @apply bg-red-500/15 text-red-300;
+  }
+}
+
+.action-btn {
+  @apply px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors
+         disabled:opacity-40 disabled:cursor-not-allowed;
+
+  &.tender {
+    @apply bg-blue-600/20 border-blue-500/40 text-blue-300 hover:bg-blue-600/30 hover:border-blue-500/60;
+  }
+
+  &.cascade {
+    @apply bg-violet-600/15 border-violet-500/40 text-violet-300 hover:bg-violet-600/25 hover:border-violet-500/60;
+  }
+
+  &.reassign {
+    @apply bg-gray-700/60 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500;
+  }
+}
+
+/* Scrollbar polish for dark theme */
+.tendering-container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.tendering-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tendering-container ::-webkit-scrollbar-thumb {
+  background: rgb(55 65 81);
+  border-radius: 3px;
+}
+
+.tendering-container ::-webkit-scrollbar-thumb:hover {
+  background: rgb(75 85 99);
+}

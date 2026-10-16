@@ -1,0 +1,135 @@
+<div class="tendering-container h-full flex flex-col bg-gray-900 text-gray-100">
+  <!-- Header -->
+  <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-gray-700/60 bg-gray-900/80 backdrop-blur">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight">Tendering</h1>
+      <p class="text-sm text-gray-400 mt-0.5">Cargas listas para asignar · Tender, Cascade y Reassign</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 text-xs">
+        <span class="px-2.5 py-1 rounded-full bg-gray-800 text-gray-300">{{ statusCounts().total }} total</span>
+        <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300">{{ statusCounts().pending }} pending</span>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300">{{ statusCounts().accepted }} accepted</span>
+        <span class="px-2.5 py-1 rounded-full bg-red-500/15 text-red-300">{{ statusCounts().rejected }} rejected</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap items-center gap-3 px-6 py-3 border-b border-gray-700/40 bg-gray-900/40">
+    <div class="relative">
+      <input
+        type="text"
+        placeholder="Buscar load, origen, destino o carrier..."
+        class="input w-72 pl-9"
+        [ngModel]="searchTerm()"
+        (ngModelChange)="searchTerm.set($event)"
+      />
+      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+
+    <div class="flex gap-1.5">
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus() === 'All'"
+        (click)="filterStatus.set('All')"
+      >All</button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus() === 'Pending'"
+        (click)="filterStatus.set('Pending')"
+      >Pending</button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus() === 'Accepted'"
+        (click)="filterStatus.set('Accepted')"
+      >Accepted</button>
+      <button
+        class="filter-btn"
+        [class.active]="filterStatus() === 'Rejected'"
+        (click)="filterStatus.set('Rejected')"
+      >Rejected</button>
+    </div>
+  </div>
+
+  <!-- Loads list -->
+  <div class="flex-1 overflow-auto p-6">
+    <div class="space-y-3">
+      @for (load of filteredLoads(); track load.id) {
+        <div class="load-card">
+          <div class="flex flex-wrap items-start justify-between gap-4">
+            <!-- Left: Load info -->
+            <div class="flex-1 min-w-[280px]">
+              <div class="flex items-center gap-3 mb-1.5">
+                <span class="font-semibold text-base">{{ load.id }}</span>
+                <span class="status-badge" [ngClass]="getStatusClass(load.status)">
+                  {{ load.status }}
+                </span>
+                @if (load.cascadeCount > 0) {
+                  <span class="text-[11px] px-2 py-0.5 rounded bg-gray-700 text-gray-300">
+                    Cascade {{ load.cascadeCount }}
+                  </span>
+                }
+              </div>
+              <div class="text-sm text-gray-300 flex items-center gap-2">
+                <span>{{ load.origin }}</span>
+                <span class="text-gray-500">→</span>
+                <span>{{ load.destination }}</span>
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400">
+                <span>{{ load.weight | number }} lbs</span>
+                <span>{{ load.volume | number }} ft³</span>
+                <span>Pickup: {{ load.pickupDate }}</span>
+                @if (load.tenderedAt) {
+                  <span>Tendered: {{ load.tenderedAt }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Center: Selected carrier -->
+            <div class="min-w-[200px]">
+              <div class="text-xs text-gray-500 mb-1">Carrier seleccionado</div>
+              <div class="font-medium text-sm">
+                {{ load.selectedCarrier || '— Sin asignar —' }}
+              </div>
+            </div>
+
+            <!-- Right: Actions -->
+            <div class="flex items-center gap-2">
+              <button
+                class="action-btn tender"
+                [disabled]="load.status === 'Accepted'"
+                (click)="tender(load)"
+                title="Tender load to selected carrier"
+              >
+                Tender
+              </button>
+              <button
+                class="action-btn cascade"
+                (click)="cascade(load)"
+                title="Cascade to next carrier in sequence"
+              >
+                Cascade
+              </button>
+              <button
+                class="action-btn reassign"
+                (click)="reassign(load)"
+                title="Reassign to a different carrier"
+              >
+                Reassign
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="text-center py-16 text-gray-500">
+          <p class="text-lg">No hay cargas que coincidan con los filtros</p>
+          <p class="text-sm mt-1">Ajusta la búsqueda o el estado</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

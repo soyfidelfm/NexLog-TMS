@@ -1,0 +1,180 @@
+<div class="exception-container h-full flex flex-col bg-gray-900 text-gray-100">
+  <!-- Header -->
+  <header class="border-b border-gray-700/60 px-6 py-4 flex items-center justify-between bg-gray-900/95">
+    <div>
+      <h1 class="text-2xl font-semibold tracking-tight">Exception Management</h1>
+      <p class="text-sm text-gray-400 mt-0.5">Active exceptions · monitor, act and communicate</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex gap-2 text-xs">
+        <span class="px-2.5 py-1 rounded-full bg-red-500/15 text-red-300 border border-red-500/30">Critical {{ severityCounts().critical }}</span>
+        <span class="px-2.5 py-1 rounded-full bg-orange-500/15 text-orange-300 border border-orange-500/30">High {{ severityCounts().high }}</span>
+        <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30">Medium {{ severityCounts().medium }}</span>
+        <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">Low {{ severityCounts().low }}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Left: List -->
+    <aside class="w-[420px] min-w-[380px] border-r border-gray-700/60 flex flex-col bg-gray-900/80">
+      <!-- Filters -->
+      <div class="p-4 border-b border-gray-700/50 space-y-3">
+        <input
+          type="text"
+          placeholder="Search by ID, load, carrier..."
+          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+        />
+        <div class="flex gap-2">
+          <select
+            class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            [ngModel]="filterSeverity()"
+            (ngModelChange)="filterSeverity.set($event)"
+          >
+            <option value="All">All Severity</option>
+            <option value="Critical">Critical</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+          <select
+            class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            [ngModel]="filterStatus()"
+            (ngModelChange)="filterStatus.set($event)"
+          >
+            <option value="All">All Status</option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- List -->
+      <div class="flex-1 overflow-y-auto">
+        @for (ex of filteredExceptions(); track ex.id) {
+          <button
+            type="button"
+            (click)="select(ex)"
+            class="w-full text-left px-4 py-3.5 border-b border-gray-800/80 hover:bg-gray-800/60 transition-colors"
+            [class.bg-gray-800/80]="selectedId() === ex.id"
+            [class.border-l-2]="selectedId() === ex.id"
+            [class.border-l-blue-500]="selectedId() === ex.id"
+          >
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="text-xs font-mono text-gray-400">{{ ex.id }}</span>
+                  <span class="text-[10px] px-1.5 py-0.5 rounded border" [ngClass]="severityClass(ex.severity)">{{ ex.severity }}</span>
+                </div>
+                <p class="text-sm font-medium text-gray-100 truncate">{{ ex.title }}</p>
+                <p class="text-xs text-gray-500 mt-0.5">{{ ex.loadId }} · {{ ex.carrier }}</p>
+              </div>
+              <span class="text-[10px] px-1.5 py-0.5 rounded shrink-0" [ngClass]="statusClass(ex.status)">{{ ex.status }}</span>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-[11px] text-gray-500">
+              <span>{{ ex.type }}</span>
+              <span>{{ ex.lastUpdate }}</span>
+            </div>
+          </button>
+        } @empty {
+          <div class="p-8 text-center text-sm text-gray-500">No exceptions match the filters.</div>
+        }
+      </div>
+    </aside>
+
+    <!-- Right: Detail -->
+    <main class="flex-1 overflow-y-auto">
+      @if (selectedException(); as ex) {
+        <div class="p-6 max-w-4xl">
+          <!-- Detail header -->
+          <div class="flex items-start justify-between gap-4 mb-6">
+            <div>
+              <div class="flex items-center gap-3 mb-1">
+                <h2 class="text-xl font-semibold">{{ ex.title }}</h2>
+                <span class="text-xs px-2 py-0.5 rounded border" [ngClass]="severityClass(ex.severity)">{{ ex.severity }}</span>
+                <span class="text-xs px-2 py-0.5 rounded" [ngClass]="statusClass(ex.status)">{{ ex.status }}</span>
+              </div>
+              <p class="text-sm text-gray-400">{{ ex.id }} · {{ ex.loadId }}{{ ex.orderId ? ' · ' + ex.orderId : '' }} · {{ ex.carrier }}</p>
+              <p class="text-xs text-gray-500 mt-1">{{ ex.location }} · Opened {{ ex.openedAt }}</p>
+            </div>
+            <div class="flex gap-2">
+              <button type="button" (click)="markInProgress()" class="action-btn progress" [disabled]="ex.status === 'In Progress' || ex.status === 'Resolved'">In Progress</button>
+              <button type="button" (click)="resolve()" class="action-btn resolve" [disabled]="ex.status === 'Resolved'">Resolve</button>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-300 mb-6 leading-relaxed">{{ ex.description }}</p>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Timeline -->
+            <section class="lg:col-span-1">
+              <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Timeline</h3>
+              <div class="relative pl-4 space-y-4">
+                <div class="absolute left-[7px] top-1 bottom-1 w-px bg-gray-700"></div>
+                @for (ev of ex.timeline; track ev.time) {
+                  <div class="relative">
+                    <div class="absolute -left-[11px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 ring-4 ring-gray-900"></div>
+                    <div class="text-xs text-gray-500">{{ ev.time }}</div>
+                    <div class="text-sm font-medium text-gray-200">{{ ev.title }}</div>
+                    <div class="text-xs text-gray-400 mt-0.5">{{ ev.description }}</div>
+                    <div class="text-[11px] text-gray-500 mt-0.5">{{ ev.actor }}</div>
+                  </div>
+                }
+              </div>
+            </section>
+
+            <!-- Actions + Comms -->
+            <div class="lg:col-span-2 space-y-6">
+              <!-- Actions taken -->
+              <section>
+                <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Actions Taken</h3>
+                <div class="space-y-2">
+                  @for (act of ex.actions; track act.id) {
+                    <div class="bg-gray-800/60 border border-gray-700/70 rounded-lg px-3.5 py-2.5">
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-200">{{ act.action }}</span>
+                        <span class="text-[11px] text-gray-500">{{ act.at }}</span>
+                      </div>
+                      <div class="text-xs text-gray-500 mt-0.5">by {{ act.by }}{{ act.notes ? ' · ' + act.notes : '' }}</div>
+                    </div>
+                  } @empty {
+                    <p class="text-xs text-gray-500">No actions recorded yet.</p>
+                  }
+                </div>
+              </section>
+
+              <!-- Communication log -->
+              <section>
+                <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Communication Log</h3>
+                <div class="space-y-2">
+                  @for (comm of ex.communications; track comm.id) {
+                    <div class="bg-gray-800/50 border border-gray-700/60 rounded-lg px-3.5 py-2.5 text-sm">
+                      <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                          <span class="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-700 text-gray-300">{{ comm.channel }}</span>
+                          <span class="text-xs text-gray-400">{{ comm.from }} → {{ comm.to }}</span>
+                        </div>
+                        <span class="text-[11px] text-gray-500">{{ comm.at }}</span>
+                      </div>
+                      <p class="text-gray-300 text-xs leading-relaxed">{{ comm.message }}</p>
+                    </div>
+                  } @empty {
+                    <p class="text-xs text-gray-500">No communications yet.</p>
+                  }
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="h-full flex items-center justify-center text-gray-500">
+          Select an exception to view details
+        </div>
+      }
+    </main>
+  </div>
+</div>

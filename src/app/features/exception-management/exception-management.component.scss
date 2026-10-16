@@ -1,0 +1,38 @@
+/* Exception Management Screen - Same design language as other TMS screens */
+/* Dark theme, Tailwind primary, SCSS for component-specific polish */
+
+.exception-container {
+  font-family: inherit;
+}
+
+.action-btn {
+  @apply px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors
+         disabled:opacity-40 disabled:cursor-not-allowed;
+
+  &.progress {
+    @apply bg-amber-600/20 border-amber-500/40 text-amber-300 hover:bg-amber-600/30 hover:border-amber-500/60;
+  }
+
+  &.resolve {
+    @apply bg-emerald-600/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-500/60;
+  }
+}
+
+/* Scrollbar polish for dark theme */
+.exception-container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.exception-container ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.exception-container ::-webkit-scrollbar-thumb {
+  background: rgb(55 65 81);
+  border-radius: 3px;
+}
+
+.exception-container ::-webkit-scrollbar-thumb:hover {
+  background: rgb(75 85 99);
+}

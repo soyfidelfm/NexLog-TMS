@@ -1,0 +1,173 @@
+<div class="load-planning h-full flex flex-col bg-slate-950 text-slate-100">
+  <!-- Header -->
+  <header class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur">
+    <div>
+      <h1 class="text-xl font-semibold tracking-tight">Load Planning</h1>
+      <p class="text-sm text-slate-400">Drag orders onto trailers • Capacity shown in real time</p>
+    </div>
+    <div class="flex items-center gap-3 text-sm">
+      <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-300">
+        {{ unassigned.length }} unassigned
+      </span>
+      <button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium transition">
+        Optimize Loads
+      </button>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- Left: Unassigned Orders -->
+    <aside class="w-80 shrink-0 border-r border-slate-800 flex flex-col bg-slate-900/50">
+      <div class="px-4 py-3 border-b border-slate-800">
+        <h2 class="font-medium text-sm uppercase tracking-wider text-slate-400">Unassigned Orders</h2>
+      </div>
+
+      <div
+        id="unassigned"
+        cdkDropList
+        [cdkDropListData]="unassigned"
+        [cdkDropListConnectedTo]="dropListIds"
+        (cdkDropListDropped)="drop($event)"
+        class="flex-1 overflow-y-auto p-3 space-y-2"
+      >
+        @for (order of unassigned; track order.id) {
+          <div
+            cdkDrag
+            class="order-card bg-slate-800/80 border border-slate-700 rounded-lg p-3 cursor-grab active:cursor-grabbing hover:border-slate-500 transition"
+          >
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <div class="font-medium text-sm">{{ order.id }}</div>
+                <div class="text-xs text-slate-400 mt-0.5">{{ order.customer }}</div>
+              </div>
+              <span
+                class="text-[10px] px-1.5 py-0.5 rounded font-medium uppercase"
+                [class]="order.priority === 'High' ? 'bg-red-500/20 text-red-400' : order.priority === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-600 text-slate-300'"
+              >
+                {{ order.priority }}
+              </span>
+            </div>
+            <div class="mt-2 text-xs text-slate-400 flex items-center gap-1">
+              <span>{{ order.origin.split(',')[0] }}</span>
+              <span>→</span>
+              <span>{{ order.destination.split(',')[0] }}</span>
+            </div>
+            <div class="mt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-300">{{ order.weight | number }} lbs</span>
+              <span class="text-slate-300">{{ order.volume | number }} ft³</span>
+            </div>
+
+            <!-- Placeholder while dragging -->
+            <div *cdkDragPlaceholder class="order-placeholder h-[88px] rounded-lg border-2 border-dashed border-blue-500/50 bg-blue-500/10"></div>
+          </div>
+        } @empty {
+          <div class="text-center text-slate-500 text-sm py-8">All orders assigned</div>
+        }
+      </div>
+    </aside>
+
+    <!-- Center: Trailers Board -->
+    <main class="flex-1 overflow-x-auto p-5">
+      <div class="flex gap-4 h-full min-w-max">
+        @for (trailer of trailers; track trailer.id) {
+          <div class="trailer-card w-[340px] shrink-0 flex flex-col bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <!-- Trailer header -->
+            <div class="px-4 py-3 border-b border-slate-800 bg-slate-800/40">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-semibold">{{ trailer.name }}</h3>
+                  <p class="text-xs text-slate-400">{{ trailer.type }}</p>
+                </div>
+                <span class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-300">
+                  {{ trailer.assigned.length }} loads
+                </span>
+              </div>
+
+              <!-- Capacity indicators -->
+              <div class="mt-3 space-y-2">
+                <!-- Weight -->
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Weight</span>
+                    <span>
+                      {{ getUsedWeight(trailer) | number }} / {{ trailer.maxWeight | number }} lbs
+                      <span class="text-slate-500">({{ getWeightPercent(trailer) | number:'1.0-0' }}%)</span>
+                    </span>
+                  </div>
+                  <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      class="h-full rounded-full transition-all duration-300"
+                      [class]="getCapacityClass(getWeightPercent(trailer))"
+                      [style.width.%]="getWeightPercent(trailer)"
+                    ></div>
+                  </div>
+                </div>
+
+                <!-- Volume -->
+                <div>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span class="text-slate-400">Volume</span>
+                    <span>
+                      {{ getUsedVolume(trailer) | number }} / {{ trailer.maxVolume | number }} ft³
+                      <span class="text-slate-500">({{ getVolumePercent(trailer) | number:'1.0-0' }}%)</span>
+                    </span>
+                  </div>
+                  <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                    <div
+                      class="h-full rounded-full transition-all duration-300"
+                      [class]="getCapacityClass(getVolumePercent(trailer))"
+                      [style.width.%]="getVolumePercent(trailer)"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Drop zone -->
+            <div
+              [id]="trailer.id"
+              cdkDropList
+              [cdkDropListData]="trailer.assigned"
+              [cdkDropListConnectedTo]="dropListIds"
+              (cdkDropListDropped)="drop($event)"
+              class="flex-1 p-3 space-y-2 min-h-[280px] overflow-y-auto"
+              [class.empty]="trailer.assigned.length === 0"
+            >
+              @for (order of trailer.assigned; track order.id; let i = $index) {
+                <div
+                  cdkDrag
+                  class="order-card bg-slate-800 border border-slate-700 rounded-lg p-3 cursor-grab active:cursor-grabbing group"
+                >
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <div class="font-medium text-sm">{{ order.id }}</div>
+                      <div class="text-xs text-slate-400">{{ order.customer }}</div>
+                    </div>
+                    <button
+                      (click)="removeFromTrailer(trailer, i)"
+                      class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 text-xs transition"
+                      title="Remove"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div class="mt-1.5 text-xs text-slate-400">
+                    {{ order.origin.split(',')[0] }} → {{ order.destination.split(',')[0] }}
+                  </div>
+                  <div class="mt-1.5 flex justify-between text-xs text-slate-300">
+                    <span>{{ order.weight | number }} lbs</span>
+                    <span>{{ order.volume | number }} ft³</span>
+                  </div>
+                </div>
+              } @empty {
+                <div class="h-full flex items-center justify-center text-slate-600 text-sm border-2 border-dashed border-slate-700 rounded-lg">
+                  Drop orders here
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </main>
+  </div>
+</div>

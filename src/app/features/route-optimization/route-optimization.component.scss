@@ -1,0 +1,23 @@
+@reference "tailwindcss";
+
+:host { display: block; }
+
+.btn-outline {
+  @apply flex items-center gap-2 rounded-lg border border-slate-700 bg-[#0f172a] px-4 py-2.5 text-sm font-medium text-slate-200 hover:border-slate-600 hover:bg-slate-800;
+}
+.kpi { @apply flex flex-col gap-1 rounded-xl border border-slate-800 bg-[#0f172a] p-4; }
+.kpi-label { @apply text-xs uppercase tracking-wide text-slate-500; }
+.kpi-value { @apply text-2xl font-bold; }
+.kpi-hint { @apply text-xs text-slate-400; }
+.stat { @apply flex flex-col rounded-lg bg-[#0b1220] py-2; }
+.stat-v { @apply text-sm font-semibold text-white; }
+.stat-l { @apply text-[11px] text-slate-500; }
+
+.route-dash {
+  stroke-dasharray: 10 8;
+  animation: dash 1.2s linear infinite;
+}
+@keyframes dash { to { stroke-dashoffset: -18; } }
+
+aside::-webkit-scrollbar { width: 6px; }
+aside::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
