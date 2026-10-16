@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './features/auth/login/login.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { OrderDetailComponent } from './orders/order-detail/order-detail.component';
@@ -11,7 +12,8 @@ import { DocumentsComponent } from './features/documents/documents.component';
 import { FreightAuditComponent } from './features/freight-audit/freight-audit.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent, title: 'Sign in · NexLog' },
   { path: 'dashboard', component: DashboardComponent, title: 'Dashboard' },
   { path: 'orders', component: OrdersComponent, title: 'Orders' },
   { path: 'orders/:id', component: OrderDetailComponent, title: 'Order Detail' },

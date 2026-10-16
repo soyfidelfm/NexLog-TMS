@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+// Background image is served from /public (angular.json assets input: "public").
+// Place the file at: public/fondo-login.jpg
+.login-hero {
+  background-color: #0a1f44;
+  background-image: url('/fondo-login.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-overlay {
+  background: linear-gradient(135deg, rgba(10, 31, 68, 0.92) 0%, rgba(10, 31, 68, 0.75) 50%, rgba(10, 31, 68, 0.6) 100%);
+}
+
+.toast-enter {
+  animation: toast-in 0.25s ease-out;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
