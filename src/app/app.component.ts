@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LanguageService, Lang } from './core/language.service';
 
 interface NavItem {
-  label: string;
+  labelKey: keyof ReturnType<LanguageService['t']>;
   path: string;
   icon: string;
 }
@@ -37,13 +38,13 @@ interface NavItem {
               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-300 hover:bg-slate-800/70 hover:text-white transition-colors"
             >
               <span class="text-lg w-5 text-center">{{ item.icon }}</span>
-              <span>{{ item.label }}</span>
+              <span>{{ lang.t()[item.labelKey] }}</span>
             </a>
           }
         </nav>
 
         <div class="p-4 border-t border-slate-800 text-xs text-slate-500">
-          NexLog TMS · Core
+          {{ lang.t().core }}
         </div>
       </aside>
 
@@ -52,12 +53,35 @@ interface NavItem {
         <!-- Header -->
         <header class="h-16 flex-shrink-0 bg-slate-900/50 border-b border-slate-800 flex items-center justify-between px-6">
           <div class="text-sm text-slate-400">
-            Transportation Management System
+            {{ lang.t().tms }}
           </div>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-4">
+            <!-- Language switcher -->
+            <div class="flex items-center rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium overflow-hidden">
+              <button
+                type="button"
+                (click)="lang.setLang('en')"
+                class="px-3 py-1.5 transition"
+                [class.bg-blue-600]="lang.lang() === 'en'"
+                [class.text-white]="lang.lang() === 'en'"
+                [class.text-slate-400]="lang.lang() !== 'en'"
+                [class.hover:bg-slate-700]="lang.lang() !== 'en'"
+              >EN</button>
+              <span class="text-slate-600">|</span>
+              <button
+                type="button"
+                (click)="lang.setLang('es')"
+                class="px-3 py-1.5 transition"
+                [class.bg-blue-600]="lang.lang() === 'es'"
+                [class.text-white]="lang.lang() === 'es'"
+                [class.text-slate-400]="lang.lang() !== 'es'"
+                [class.hover:bg-slate-700]="lang.lang() !== 'es'"
+              >ES</button>
+            </div>
+
             <div class="text-right text-sm">
               <div class="text-white font-medium">Fidel Filio</div>
-              <div class="text-xs text-slate-400">Admin</div>
+              <div class="text-xs text-slate-400">{{ lang.t().admin }}</div>
             </div>
             <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-medium">
               FF
@@ -80,15 +104,17 @@ interface NavItem {
   `]
 })
 export class AppComponent {
+  readonly lang = inject(LanguageService);
+
   navItems: NavItem[] = [
-    { label: 'Dashboard', path: '/dashboard', icon: '📊' },
-    { label: 'Orders', path: '/orders', icon: '📦' },
-    { label: 'Load Planning', path: '/load-planning', icon: '🚛' },
-    { label: 'Route Optimization', path: '/route-optimization', icon: '🗺️' },
-    { label: 'Carriers', path: '/carrier-management', icon: '🚚' },
-    { label: 'Rating', path: '/rating', icon: '💰' },
-    { label: 'Tendering', path: '/tendering', icon: '📤' },
-    { label: 'Documents', path: '/documents', icon: '📄' },
-    { label: 'Freight Audit', path: '/freight-audit', icon: '📋' },
+    { labelKey: 'dashboard', path: '/dashboard', icon: '📊' },
+    { labelKey: 'orders', path: '/orders', icon: '📦' },
+    { labelKey: 'loadPlanning', path: '/load-planning', icon: '🚛' },
+    { labelKey: 'routeOptimization', path: '/route-optimization', icon: '🗺️' },
+    { labelKey: 'carriers', path: '/carrier-management', icon: '🚚' },
+    { labelKey: 'rating', path: '/rating', icon: '💰' },
+    { labelKey: 'tendering', path: '/tendering', icon: '📤' },
+    { labelKey: 'documents', path: '/documents', icon: '📄' },
+    { labelKey: 'freightAudit', path: '/freight-audit', icon: '📋' },
   ];
 }
