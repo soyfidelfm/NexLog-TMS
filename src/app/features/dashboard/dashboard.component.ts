@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
     {
       title: 'Total Shipments Today',
       value: '1,248',
-      change: 'â†‘ 12.5% vs May 19, 2024',
+      change: '↑ 12.5% vs May 19, 2024',
       changePositive: true,
       icon: 'truck',
       color: 'blue',
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
     {
       title: 'On-Time Delivery %',
       value: '92.6%',
-      change: 'â†‘ 3.4% vs May 19, 2024',
+      change: '↑ 3.4% vs May 19, 2024',
       changePositive: true,
       icon: 'check',
       color: 'green',
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
     {
       title: 'Freight Cost This Month',
       value: '$2.45M',
-      change: 'â†“ 5.7% vs Apr 20 â€“ May 19',
+      change: '↓ 5.7% vs Apr 20 – May 19',
       changePositive: false,
       icon: 'dollar',
       color: 'purple',
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
     {
       title: 'Active Exceptions',
       value: '27',
-      change: 'â†‘ 8 vs May 19, 2024',
+      change: '↑ 8 vs May 19, 2024',
       changePositive: false,
       icon: 'alert',
       color: 'orange',
@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit {
       id: '1',
       type: 'delay',
       title: 'Delay: Shipment #SHP0048912',
-      description: 'Houston, TX â†’ Phoenix, AZ â€¢ 2h 15m delay',
+      description: 'Houston, TX → Phoenix, AZ • 2h 15m delay',
       time: '10 min ago',
       icon: 'alert-triangle',
       color: 'red'
