@@ -18,7 +18,7 @@ export const routes: Routes = [
   { path: 'load-planning', component: LoadPlanningComponent, title: 'Load Planning' },
   { path: 'route-optimization', component: RouteOptimizationComponent, title: 'Route Optimization' },
   { path: 'carrier-management', component: CarrierManagementComponent, title: 'Carrier Management' },
-  { path: 'rating', component: RatingComponent, title: 'Rating / Cotización' },
+  { path: 'rating', component: RatingComponent, title: 'Rating / Quote' },
   { path: 'tendering', component: TenderingComponent, title: 'Tendering' },
   { path: 'documents', component: DocumentsComponent, title: 'Document Management' },
   { path: 'freight-audit', component: FreightAuditComponent, title: 'Freight Audit & Payment' },
