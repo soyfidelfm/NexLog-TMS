@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../core/auth.service';
 
 type Provider = 'google' | 'microsoft' | 'apple' | 'email';
 
@@ -17,6 +18,9 @@ interface Feature {
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
+  private readonly auth = inject(AuthService);
+  private readonly router = inject(Router);
+
   readonly features: Feature[] = [
     { icon: 'pin', title: 'Real-Time Tracking', description: 'Monitor shipments and assets in real time.' },
     { icon: 'network', title: 'Route Optimization', description: 'AI-powered routing for lower costs and on-time delivery.' },
@@ -35,9 +39,11 @@ export class LoginComponent {
   };
 
   signIn(provider: Provider): void {
-    // Placeholder: real authentication not implemented yet.
-    console.log(`[NexLog] Sign in with ${provider} clicked`);
-    this.showToast(`Sign in with ${this.labels[provider]} is coming soon.`);
+    // Demo auth: mark as logged in and go to dashboard.
+    // Replace with real OAuth / email flow later.
+    console.log(`[NexLog] Sign in with ${provider}`);
+    this.auth.login();
+    this.router.navigateByUrl('/dashboard');
   }
 
   createAccount(event: Event): void {
