@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 export interface LaneCost {
   lane: string;
@@ -34,6 +36,8 @@ export interface ModeVolume {
 
 @Component({
   selector: 'app-analytics',
+  standalone: true,
+  imports: [CommonModule, FormsModule, DecimalPipe],
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
