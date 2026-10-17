@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
+import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
 
 type Provider = 'google' | 'microsoft' | 'apple' | 'email';
 
@@ -13,13 +15,14 @@ interface Feature {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
 
   readonly features: Feature[] = [
     { icon: 'pin', title: 'Real-Time Tracking', description: 'Monitor shipments and assets in real time.' },
@@ -49,7 +52,7 @@ export class LoginComponent {
   createAccount(event: Event): void {
     event.preventDefault();
     console.log('[NexLog] Create account clicked');
-    this.showToast('Account registration is coming soon.');
+    this.showToast(this.translate.instant('login.comingSoon'));
   }
 
   private showToast(message: string): void {

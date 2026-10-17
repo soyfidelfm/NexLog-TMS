@@ -1,4 +1,8 @@
-import { Component, signal, computed } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, signal, computed, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
+import { equipmentKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -25,11 +29,15 @@ interface Carrier {
 @Component({
   selector: 'app-carrier-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './carrier-management.component.html',
   styleUrl: './carrier-management.component.scss',
 })
 export class CarrierManagementComponent {
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
+  readonly equipmentKey = equipmentKey;
+  readonly statusKey: Record<Carrier['status'], string> = { Active: 'carriers.status.active', Inactive: 'carriers.status.inactive', Pending: 'carriers.status.pending' };
   searchQuery = signal('');
   statusFilter = signal<'All' | 'Active' | 'Inactive' | 'Pending'>('All');
   minRating = signal(0);
@@ -205,6 +213,6 @@ export class CarrierManagementComponent {
 
   addCarrier() {
     // Placeholder — en producción abriría un modal o navegaría a un formulario
-    alert('Add Carrier form (to be implemented)');
+    alert(this.translate.instant('carriers.addTodo'));
   }
 }
