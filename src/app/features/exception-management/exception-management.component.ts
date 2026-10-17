@@ -1,4 +1,6 @@
-import { Component, signal, computed } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, signal, computed, inject } from '@angular/core';
+import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -51,11 +53,12 @@ interface ExceptionItem {
 @Component({
   selector: 'app-exception-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './exception-management.component.html',
   styleUrl: './exception-management.component.scss',
 })
 export class ExceptionManagementComponent {
+  readonly lang = inject(LanguageService);
   exceptions = signal<ExceptionItem[]>([
     {
       id: 'EXC-2026-0142',
@@ -66,8 +69,8 @@ export class ExceptionManagementComponent {
       carrier: 'Swift Transportation',
       severity: 'Critical',
       status: 'Open',
-      openedAt: '2026-10-15 08:42',
-      lastUpdate: '2026-10-15 11:15',
+      openedAt: '2026-10-15T08:42',
+      lastUpdate: '2026-10-15T11:15',
       location: 'Los Angeles, CA',
       description: 'Driver failed to arrive for scheduled pickup. Customer is escalating. Window closes in 90 min.',
       timeline: [
@@ -97,8 +100,8 @@ export class ExceptionManagementComponent {
       carrier: 'Knight-Swift',
       severity: 'High',
       status: 'In Progress',
-      openedAt: '2026-10-14 16:20',
-      lastUpdate: '2026-10-15 09:05',
+      openedAt: '2026-10-14T16:20',
+      lastUpdate: '2026-10-15T09:05',
       location: 'Phoenix, AZ',
       description: 'Receiver reported 3 pallets crushed. Photos uploaded. Claim process initiated.',
       timeline: [
@@ -124,8 +127,8 @@ export class ExceptionManagementComponent {
       carrier: 'Schneider',
       severity: 'Medium',
       status: 'Open',
-      openedAt: '2026-10-15 07:10',
-      lastUpdate: '2026-10-15 07:10',
+      openedAt: '2026-10-15T07:10',
+      lastUpdate: '2026-10-15T07:10',
       location: 'Irvine, CA',
       description: 'Projected weight exceeds trailer max by 1,200 lbs after last order assignment.',
       timeline: [
@@ -145,8 +148,8 @@ export class ExceptionManagementComponent {
       carrier: 'Werner Enterprises',
       severity: 'Low',
       status: 'Resolved',
-      openedAt: '2026-10-13 14:00',
-      lastUpdate: '2026-10-14 10:30',
+      openedAt: '2026-10-13T14:00',
+      lastUpdate: '2026-10-14T10:30',
       location: 'Salt Lake City, UT',
       description: 'BOL not signed by receiver. Follow-up completed.',
       timeline: [
@@ -169,8 +172,8 @@ export class ExceptionManagementComponent {
       carrier: 'J.B. Hunt',
       severity: 'High',
       status: 'In Progress',
-      openedAt: '2026-10-15 12:40',
-      lastUpdate: '2026-10-15 13:10',
+      openedAt: '2026-10-15T12:40',
+      lastUpdate: '2026-10-15T13:10',
       location: 'Albuquerque, NM',
       description: 'Severe weather delay expected. ETA pushed +6 hours. Customer notified.',
       timeline: [
@@ -251,7 +254,7 @@ export class ExceptionManagementComponent {
     const id = this.selectedId();
     if (!id) return;
     this.exceptions.update((list) =>
-      list.map((e) => (e.id === id ? { ...e, status: 'In Progress' as ExceptionStatus, lastUpdate: new Date().toLocaleString('en-US', { hour12: false }) } : e))
+      list.map((e) => (e.id === id ? { ...e, status: 'In Progress' as ExceptionStatus, lastUpdate: new Date().toISOString() } : e))
     );
   }
 
@@ -259,7 +262,7 @@ export class ExceptionManagementComponent {
     const id = this.selectedId();
     if (!id) return;
     this.exceptions.update((list) =>
-      list.map((e) => (e.id === id ? { ...e, status: 'Resolved' as ExceptionStatus, lastUpdate: new Date().toLocaleString('en-US', { hour12: false }) } : e))
+      list.map((e) => (e.id === id ? { ...e, status: 'Resolved' as ExceptionStatus, lastUpdate: new Date().toISOString() } : e))
     );
   }
 }
