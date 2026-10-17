@@ -38,5 +38,5 @@ export const SUMMARY = {
   before: { km: 1874, cost: 5720, hours: 27.6, vehicles: 5 },
   after:  { km: 1534, cost: 4620, hours: 24.2, vehicles: 4 },
   co2SavedKg: 289,
-  lastRun: 'May 21, 2025 10:24 AM',
+  lastRun: '2025-05-21T10:24',
 };
