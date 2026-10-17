@@ -1,4 +1,15 @@
-@reference "tailwindcss";
+@reference "../../../theme/tailwind.css";
+
+/* Scrollbar theme tokens */
+:host {
+  --scroll-thumb: rgb(55 65 81);
+  --scroll-thumb-hover: rgb(75 85 99);
+}
+:host-context([data-theme="light"]) {
+  --scroll-thumb: #cbd5e1;
+  --scroll-thumb-hover: #94a3b8;
+}
+
 
 /* Rating / Cotización Screen - Same design language as other TMS screens */
 /* Dark theme, Tailwind primary, SCSS for component-specific polish */
@@ -8,26 +19,26 @@
 }
 
 .label {
-  @apply block text-xs font-medium text-gray-400 mb-1.5;
+  @apply block text-xs font-medium text-muted mb-1.5;
 }
 
 .input {
-  @apply w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 
-         placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500
+  @apply w-full bg-elevated border border-line-strong rounded-lg px-3 py-2 text-sm text-primary 
+         placeholder-subtle focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500
          transition-colors;
 }
 
 .carrier-card {
-  @apply bg-gray-800/70 border border-gray-700/80 rounded-xl p-4 hover:border-gray-600 hover:bg-gray-800
+  @apply bg-elevated/70 border border-line-strong/80 rounded-xl p-4 hover:border-line-stronger hover:bg-elevated
          transition-all duration-150;
 }
 
 .sort-btn {
-  @apply px-3 py-1.5 text-xs font-medium rounded-lg border border-gray-700 text-gray-400
-         hover:text-gray-200 hover:border-gray-600 transition-colors;
+  @apply px-3 py-1.5 text-xs font-medium rounded-lg border border-line-strong text-muted
+         hover:text-secondary hover:border-line-stronger transition-colors;
 
   &.active {
-    @apply bg-blue-600/20 border-blue-500/50 text-blue-300;
+    @apply bg-blue-600/20 border-blue-500/50 text-blue-ink-soft;
   }
 }
 
@@ -42,10 +53,10 @@
 }
 
 .rating-container ::-webkit-scrollbar-thumb {
-  background: rgb(55 65 81);
+  background: var(--scroll-thumb);
   border-radius: 3px;
 }
 
 .rating-container ::-webkit-scrollbar-thumb:hover {
-  background: rgb(75 85 99);
+  background: var(--scroll-thumb-hover);
 }

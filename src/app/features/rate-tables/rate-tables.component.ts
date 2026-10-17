@@ -34,6 +34,7 @@ interface RolePermission {
 }
 
 @Component({
+  host: { class: 'tone-gray' },
   selector: 'app-rate-tables',
   standalone: true,
   imports: [TranslatePipe, CommonModule, ReactiveFormsModule, FormsModule],
