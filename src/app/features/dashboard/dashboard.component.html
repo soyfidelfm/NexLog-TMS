@@ -1,1 +1,28 @@
-FULL_CONTENT_PLACEHOLDER_TO_BE_REPLACED
+<div class="flex h-screen bg-slate-50 text-slate-900 dark:bg-[#0b1220] dark:text-slate-100 overflow-hidden">
+  <aside class="w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
+    <div class="p-4 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800">
+      <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white">NL</div>
+      <span class="font-semibold text-lg">NexLog TMS</span>
+    </div>
+    <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium">Dashboard</a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">Orders</a>
+    </nav>
+  </aside>
+  <div class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800 flex items-center px-6 gap-4 shrink-0">
+      <div class="flex-1"></div>
+      <button (click)="themeService.toggle()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" title="Cambiar tema">
+        @if (themeService.theme() === 'dark') {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        } @else {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        }
+      </button>
+    </header>
+    <main class="flex-1 overflow-y-auto p-6">
+      <h1 class="text-2xl font-bold">Dashboard</h1>
+      <p class="text-slate-500 dark:text-slate-400">Theme switching is working. Pull and test the toggle.</p>
+    </main>
+  </div>
+</div>
