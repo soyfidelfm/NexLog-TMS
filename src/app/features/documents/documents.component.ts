@@ -2,7 +2,6 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { Component, inject } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface DocumentItem {
   id: string;
@@ -28,7 +27,7 @@ interface EpodData {
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, RouterLink, RouterLinkActive],
+  imports: [TranslatePipe, CommonModule],
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.scss'
 })

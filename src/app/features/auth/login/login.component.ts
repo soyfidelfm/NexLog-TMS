@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
 import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
@@ -15,7 +15,7 @@ interface Feature {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, TranslatePipe, LanguageSwitcherComponent],
+  imports: [TranslatePipe, LanguageSwitcherComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
