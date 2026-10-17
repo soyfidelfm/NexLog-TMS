@@ -1,8 +1,8 @@
 <div class="client-portal">
   <header class="portal-header">
     <div>
-      <h1>Client Portal</h1>
-      <p class="subtitle">Track your shipments and download documents</p>
+      <h1>{{ 'clientPortal.title' | translate }}</h1>
+      <p class="subtitle">{{ 'clientPortal.subtitle' | translate }}</p>
     </div>
     <div class="search-box">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -10,7 +10,7 @@
       </svg>
       <input
         type="text"
-        placeholder="Search by tracking, origin, destination..."
+        [placeholder]="'clientPortal.search' | translate"
         [(ngModel)]="searchTerm"
       />
     </div>
@@ -21,29 +21,29 @@
       <div class="shipment-card">
         <div class="card-top">
           <div class="tracking">
-            <span class="label">Tracking</span>
+            <span class="label">{{ 'clientPortal.tracking' | translate }}</span>
             <strong>{{ shipment.trackingNumber }}</strong>
           </div>
           <span class="status-badge" [class]="getStatusClass(shipment.status)">
-            {{ shipment.status }}
+            {{ 'clientPortal.status.' + statusKey(shipment.status) | translate }}
           </span>
         </div>
 
         <div class="route">
           <div class="location">
-            <span class="label">Origin</span>
+            <span class="label">{{ 'clientPortal.origin' | translate }}</span>
             <span>{{ shipment.origin }}</span>
           </div>
           <div class="arrow">→</div>
           <div class="location">
-            <span class="label">Destination</span>
+            <span class="label">{{ 'clientPortal.destination' | translate }}</span>
             <span>{{ shipment.destination }}</span>
           </div>
         </div>
 
         <div class="progress-section">
           <div class="progress-header">
-            <span>Progress</span>
+            <span>{{ 'clientPortal.progress' | translate }}</span>
             <span class="percent">{{ shipment.progress }}%</span>
           </div>
           <div class="progress-bar">
@@ -53,8 +53,8 @@
 
         <div class="card-footer">
           <div class="eta">
-            <span class="label">Estimated Delivery</span>
-            <strong>{{ shipment.eta }}</strong>
+            <span class="label">{{ 'clientPortal.eta' | translate }}</span>
+            <strong>{{ shipment.eta | date: 'mediumDate' : undefined : lang.locale() }}</strong>
           </div>
           <button
             class="btn-download"
@@ -64,7 +64,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            Download Docs
+            {{ 'clientPortal.download' | translate }}
             @if (shipment.documents.length > 0) {
               <span class="doc-count">({{ shipment.documents.length }})</span>
             }
@@ -73,7 +73,7 @@
       </div>
     } @empty {
       <div class="empty-state">
-        <p>No shipments found matching your search.</p>
+        <p>{{ 'clientPortal.empty' | translate }}</p>
       </div>
     }
   </div>

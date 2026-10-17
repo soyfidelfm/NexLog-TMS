@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, effect } from '@angular/core';
+import { CommonModule, formatDate } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { LanguageService } from '../../core/language.service';
@@ -24,31 +25,28 @@ interface Alert {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BaseChartDirective],
+  imports: [CommonModule, BaseChartDirective, TranslatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
   readonly lang = inject(LanguageService);
 
+  private readonly translate = inject(TranslateService);
+
   kpiData = [
-    { titleKey: 'kpiShipments', value: '1,248', change: '↑ 12.5% vs May 19, 2024', changePositive: true, icon: 'truck', color: 'blue' },
-    { titleKey: 'kpiOnTime', value: '92.6%', change: '↑ 3.4% vs May 19, 2024', changePositive: true, icon: 'check', color: 'green' },
-    { titleKey: 'kpiCost', value: '$2.45M', change: '↓ 5.7% vs Apr 20 – May 19', changePositive: false, icon: 'dollar', color: 'purple' },
-    { titleKey: 'kpiExceptions', value: '27', change: '↑ 8 vs May 19, 2024', changePositive: false, icon: 'alert', color: 'orange' }
+    { titleKey: 'kpiShipments', value: '1,248', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '12.5%', date: '2024-05-19' }, changePositive: true, icon: 'truck', color: 'blue' },
+    { titleKey: 'kpiOnTime', value: '92.6%', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '3.4%', date: '2024-05-19' }, changePositive: true, icon: 'check', color: 'green' },
+    { titleKey: 'kpiCost', value: '$2.45M', changeKey: 'dashboard.changeVsPeriod', changeParams: { arrow: '↓', delta: '5.7%' }, changePositive: false, icon: 'dollar', color: 'purple' },
+    { titleKey: 'kpiExceptions', value: '27', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '8', date: '2024-05-19' }, changePositive: false, icon: 'alert', color: 'orange' }
   ];
 
-  kpis = computed(() => this.kpiData.map(k => ({
-    ...k,
-    title: (this.lang.t() as any)[k.titleKey]
-  })));
-
-  weeklyVolumeLabels = ['May 20', 'May 21', 'May 22', 'May 23', 'May 24', 'May 25', 'May 26'];
+  private readonly weekDays = ['2024-05-20', '2024-05-21', '2024-05-22', '2024-05-23', '2024-05-24', '2024-05-25', '2024-05-26'];
   weeklyVolumeData: ChartData<'line'> = {
-    labels: this.weeklyVolumeLabels,
+    labels: [],
     datasets: [{
       data: [980, 1100, 950, 1200, 1742, 1150, 980],
-      label: 'Shipments',
+      label: '',
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59, 130, 246, 0.1)',
       tension: 0.4,
@@ -74,21 +72,16 @@ export class DashboardComponent implements OnInit {
     { name: 'FastLane Logistics', percentage: 24.7, color: '#22c55e' },
     { name: 'NorthStar Transport', percentage: 16.1, color: '#a855f7' },
     { name: 'Velocity Express', percentage: 12.3, color: '#f97316' },
-    { name: 'Other Carriers', percentage: 8.5, color: '#64748b' }
+    { name: 'Other Carriers', nameKey: 'dashboard.otherCarriers', percentage: 8.5, color: '#64748b' }
   ];
 
   alertData = [
-    { id: '1', titleKey: 'alertDelay', descKey: 'alertDelayDesc', time: '10 min ago', color: 'red' },
-    { id: '2', titleKey: 'alertException', descKey: 'alertExceptionDesc', time: '35 min ago', color: 'orange' },
-    { id: '3', titleKey: 'alertCost', descKey: 'alertCostDesc', time: '1h ago', color: 'yellow' },
-    { id: '4', titleKey: 'alertWeather', descKey: 'alertWeatherDesc', time: '2h ago', color: 'blue' }
+    { id: '1', titleKey: 'alertDelay', descKey: 'alertDelayDesc', timeKey: 'time.minAgo', n: 10, color: 'red' },
+    { id: '2', titleKey: 'alertException', descKey: 'alertExceptionDesc', timeKey: 'time.minAgo', n: 35, color: 'orange' },
+    { id: '3', titleKey: 'alertCost', descKey: 'alertCostDesc', timeKey: 'time.hoursAgo', n: 1, color: 'yellow' },
+    { id: '4', titleKey: 'alertWeather', descKey: 'alertWeatherDesc', timeKey: 'time.hoursAgo', n: 2, color: 'blue' }
   ];
 
-  alerts = computed(() => this.alertData.map(a => ({
-    ...a,
-    title: (this.lang.t() as any)[a.titleKey],
-    description: (this.lang.t() as any)[a.descKey]
-  })));
 
   mapMarkers = [
     { x: 20, y: 40, color: 'blue' }, { x: 25, y: 55, color: 'blue' },
@@ -97,6 +90,21 @@ export class DashboardComponent implements OnInit {
     { x: 30, y: 60, color: 'orange' }, { x: 50, y: 58, color: 'orange' },
     { x: 40, y: 35, color: 'blue' }, { x: 65, y: 40, color: 'green' }
   ];
+
+  constructor() {
+    // Rebuild chart labels whenever the language changes.
+    effect(() => {
+      const locale = this.lang.locale();
+      this.lang.lang();
+      this.translate.get('dashboard.shipments').subscribe(label => {
+        this.weeklyVolumeData = {
+          ...this.weeklyVolumeData,
+          labels: this.weekDays.map(d => formatDate(d, 'MMM d', locale)),
+          datasets: [{ ...this.weeklyVolumeData.datasets[0], label }]
+        };
+      });
+    });
+  }
 
   ngOnInit(): void {}
 }

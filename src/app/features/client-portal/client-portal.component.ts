@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
+import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -16,11 +20,14 @@ interface Shipment {
 @Component({
   selector: 'app-client-portal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './client-portal.component.html',
   styleUrl: './client-portal.component.scss'
 })
 export class ClientPortalComponent {
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
+  readonly statusKey = camelKey;
   searchTerm = '';
 
   shipments: Shipment[] = [
@@ -31,7 +38,7 @@ export class ClientPortalComponent {
       destination: 'Dallas, TX',
       status: 'In Transit',
       progress: 65,
-      eta: 'Oct 18, 2026',
+      eta: '2026-10-18',
       documents: [
         { name: 'BOL', type: 'pdf' },
         { name: 'Invoice', type: 'pdf' }
@@ -44,7 +51,7 @@ export class ClientPortalComponent {
       destination: 'Atlanta, GA',
       status: 'Out for Delivery',
       progress: 88,
-      eta: 'Oct 16, 2026',
+      eta: '2026-10-16',
       documents: [
         { name: 'BOL', type: 'pdf' },
         { name: 'POD', type: 'pdf' },
@@ -58,7 +65,7 @@ export class ClientPortalComponent {
       destination: 'Phoenix, AZ',
       status: 'Delivered',
       progress: 100,
-      eta: 'Oct 14, 2026',
+      eta: '2026-10-14',
       documents: [
         { name: 'BOL', type: 'pdf' },
         { name: 'POD', type: 'pdf' },
@@ -72,7 +79,7 @@ export class ClientPortalComponent {
       destination: 'Denver, CO',
       status: 'Picked Up',
       progress: 25,
-      eta: 'Oct 20, 2026',
+      eta: '2026-10-20',
       documents: [
         { name: 'BOL', type: 'pdf' }
       ]
@@ -84,7 +91,7 @@ export class ClientPortalComponent {
       destination: 'New York, NY',
       status: 'Pending',
       progress: 8,
-      eta: 'Oct 22, 2026',
+      eta: '2026-10-22',
       documents: []
     }
   ];
@@ -112,11 +119,11 @@ export class ClientPortalComponent {
 
   downloadDocuments(shipment: Shipment): void {
     if (shipment.documents.length === 0) {
-      alert('No documents available for this shipment yet.');
+      alert(this.translate.instant('clientPortal.noDocs'));
       return;
     }
-    const names = shipment.documents.map(d => d.name).join(', ');
-    alert(`Downloading documents for ${shipment.trackingNumber}:\n${names}`);
+    const names = shipment.documents.map(d => this.translate.instant('clientPortal.doc.' + d.name)).join(', ');
+    alert(this.translate.instant('clientPortal.downloading', { id: shipment.trackingNumber, names }));
     // TODO: Replace with real download logic (FileService, etc.)
   }
 }
