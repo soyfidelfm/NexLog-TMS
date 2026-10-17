@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
@@ -23,11 +26,19 @@ interface Shipment {
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [TranslatePipe, CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss'
 })
 export class TrackingComponent {
+  private readonly translate = inject(TranslateService);
+  readonly statusKey = camelKey;
+
+  /** 'Today 16:40' / 'Tomorrow 09:30' -> localized text. */
+  etaText(eta: string): string {
+    const [day, time] = eta.split(' ');
+    return this.translate.instant(day === 'Tomorrow' ? 'tracking.tomorrow' : 'tracking.today', { time });
+  }
   selected: Shipment | null = null;
 
   shipments: Shipment[] = [
