@@ -1,15 +1,15 @@
-<div class="load-planning h-full flex flex-col bg-slate-950 text-slate-900 dark:text-slate-100">
+<div class="load-planning h-full flex flex-col bg-sunken text-primary">
   <!-- Header -->
-  <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 backdrop-blur">
+  <header class="flex items-center justify-between px-6 py-4 border-b border-line bg-panel/80 backdrop-blur">
     <div>
       <h1 class="text-xl font-semibold tracking-tight">{{ 'loadPlanning.title' | translate }}</h1>
-      <p class="text-sm text-slate-500 dark:text-slate-400">{{ 'loadPlanning.subtitle' | translate }}</p>
+      <p class="text-sm text-muted">{{ 'loadPlanning.subtitle' | translate }}</p>
     </div>
     <div class="flex items-center gap-3 text-sm">
-      <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+      <span class="px-3 py-1 rounded-full bg-elevated text-body">
         {{ 'loadPlanning.unassignedCount' | translate: { n: unassigned.length } }}
       </span>
-      <button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium transition">
+      <button class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-sm font-medium transition light:text-white">
         {{ 'loadPlanning.optimize' | translate }}
       </button>
     </div>
@@ -17,9 +17,9 @@
 
   <div class="flex flex-1 overflow-hidden">
     <!-- Left: Unassigned Orders -->
-    <aside class="w-80 shrink-0 border-r border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50 dark:bg-slate-900/50">
-      <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800">
-        <h2 class="font-medium text-sm uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'loadPlanning.unassignedOrders' | translate }}</h2>
+    <aside class="w-80 shrink-0 border-r border-line flex flex-col bg-panel/50">
+      <div class="px-4 py-3 border-b border-line">
+        <h2 class="font-medium text-sm uppercase tracking-wider text-muted">{{ 'loadPlanning.unassignedOrders' | translate }}</h2>
       </div>
 
       <div
@@ -33,35 +33,35 @@
         @for (order of unassigned; track order.id) {
           <div
             cdkDrag
-            class="order-card bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg p-3 cursor-grab active:cursor-grabbing hover:border-slate-500 transition"
+            class="order-card bg-elevated/80 border border-line-strong rounded-lg p-3 cursor-grab active:cursor-grabbing hover:border-line-strongest transition"
           >
             <div class="flex items-start justify-between gap-2">
               <div>
                 <div class="font-medium text-sm">{{ order.id }}</div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{{ order.customer }}</div>
+                <div class="text-xs text-muted mt-0.5">{{ order.customer }}</div>
               </div>
               <span
                 class="text-[10px] px-1.5 py-0.5 rounded font-medium uppercase"
-                [class]="order.priority === 'High' ? 'bg-red-500/20 text-red-400' : order.priority === 'Medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-600 text-slate-600 dark:text-slate-300'"
+                [class]="order.priority === 'High' ? 'bg-red-500/20 text-red-ink' : order.priority === 'Medium' ? 'bg-amber-500/20 text-amber-ink' : 'bg-elevated-3 text-body'"
               >
                 {{ priorityKey[order.priority] | translate }}
               </span>
             </div>
-            <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+            <div class="mt-2 text-xs text-muted flex items-center gap-1">
               <span>{{ order.origin.split(',')[0] }}</span>
               <span>→</span>
               <span>{{ order.destination.split(',')[0] }}</span>
             </div>
             <div class="mt-2 flex items-center justify-between text-xs">
-              <span class="text-slate-600 dark:text-slate-300">{{ order.weight | number : '1.0-0' : lang.locale() }} lb</span>
-              <span class="text-slate-600 dark:text-slate-300">{{ order.volume | number : '1.0-0' : lang.locale() }} ft³</span>
+              <span class="text-body">{{ order.weight | number : '1.0-0' : lang.locale() }} lb</span>
+              <span class="text-body">{{ order.volume | number : '1.0-0' : lang.locale() }} ft³</span>
             </div>
 
             <!-- Placeholder while dragging -->
             <div *cdkDragPlaceholder class="order-placeholder h-[88px] rounded-lg border-2 border-dashed border-blue-500/50 bg-blue-500/10"></div>
           </div>
         } @empty {
-          <div class="text-center text-slate-500 text-sm py-8">{{ 'loadPlanning.allAssigned' | translate }}</div>
+          <div class="text-center text-subtle text-sm py-8">{{ 'loadPlanning.allAssigned' | translate }}</div>
         }
       </div>
     </aside>
@@ -70,15 +70,15 @@
     <main class="flex-1 overflow-x-auto p-5">
       <div class="flex gap-4 h-full min-w-max">
         @for (trailer of trailers; track trailer.id) {
-          <div class="trailer-card w-[340px] shrink-0 flex flex-col bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+          <div class="trailer-card w-[340px] shrink-0 flex flex-col bg-panel border border-line rounded-xl overflow-hidden">
             <!-- Trailer header -->
-            <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40">
+            <div class="px-4 py-3 border-b border-line bg-elevated/40">
               <div class="flex items-center justify-between">
                 <div>
                   <h3 class="font-semibold">{{ 'loadPlanning.trailerName' | translate: { n: trailer.id.slice(4) } }}</h3>
-                  <p class="text-xs text-slate-500 dark:text-slate-400">{{ trailerTypeKey(trailer.type) | translate }} {{ trailerLength(trailer.type) }}</p>
+                  <p class="text-xs text-muted">{{ trailerTypeKey(trailer.type) | translate }} {{ trailerLength(trailer.type) }}</p>
                 </div>
-                <span class="text-xs px-2 py-1 rounded bg-slate-700 text-slate-600 dark:text-slate-300">
+                <span class="text-xs px-2 py-1 rounded bg-elevated-2 text-body">
                   {{ 'loadPlanning.loadsCount' | translate: { n: trailer.assigned.length } }}
                 </span>
               </div>
@@ -88,13 +88,13 @@
                 <!-- Weight -->
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-500 dark:text-slate-400">{{ 'loadPlanning.weight' | translate }}</span>
+                    <span class="text-muted">{{ 'loadPlanning.weight' | translate }}</span>
                     <span>
                       {{ getUsedWeight(trailer) | number : '1.0-0' : lang.locale() }} / {{ trailer.maxWeight | number : '1.0-0' : lang.locale() }} lb
-                      <span class="text-slate-500">({{ getWeightPercent(trailer) | number:'1.0-0':lang.locale() }}%)</span>
+                      <span class="text-subtle">({{ getWeightPercent(trailer) | number:'1.0-0':lang.locale() }}%)</span>
                     </span>
                   </div>
-                  <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div class="h-1.5 bg-elevated-2 rounded-full overflow-hidden">
                     <div
                       class="h-full rounded-full transition-all duration-300"
                       [class]="getCapacityClass(getWeightPercent(trailer))"
@@ -106,13 +106,13 @@
                 <!-- Volume -->
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-slate-500 dark:text-slate-400">{{ 'loadPlanning.volume' | translate }}</span>
+                    <span class="text-muted">{{ 'loadPlanning.volume' | translate }}</span>
                     <span>
                       {{ getUsedVolume(trailer) | number : '1.0-0' : lang.locale() }} / {{ trailer.maxVolume | number : '1.0-0' : lang.locale() }} ft³
-                      <span class="text-slate-500">({{ getVolumePercent(trailer) | number:'1.0-0':lang.locale() }}%)</span>
+                      <span class="text-subtle">({{ getVolumePercent(trailer) | number:'1.0-0':lang.locale() }}%)</span>
                     </span>
                   </div>
-                  <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+                  <div class="h-1.5 bg-elevated-2 rounded-full overflow-hidden">
                     <div
                       class="h-full rounded-full transition-all duration-300"
                       [class]="getCapacityClass(getVolumePercent(trailer))"
@@ -136,31 +136,31 @@
               @for (order of trailer.assigned; track order.id; let i = $index) {
                 <div
                   cdkDrag
-                  class="order-card bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 cursor-grab active:cursor-grabbing group"
+                  class="order-card bg-elevated border border-line-strong rounded-lg p-3 cursor-grab active:cursor-grabbing group"
                 >
                   <div class="flex items-start justify-between gap-2">
                     <div>
                       <div class="font-medium text-sm">{{ order.id }}</div>
-                      <div class="text-xs text-slate-500 dark:text-slate-400">{{ order.customer }}</div>
+                      <div class="text-xs text-muted">{{ order.customer }}</div>
                     </div>
                     <button
                       (click)="removeFromTrailer(trailer, i)"
-                      class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 text-xs transition"
+                      class="opacity-0 group-hover:opacity-100 text-subtle hover:text-red-ink text-xs transition"
                       [attr.title]="'loadPlanning.remove' | translate" [attr.aria-label]="'loadPlanning.remove' | translate"
                     >
                       ✕
                     </button>
                   </div>
-                  <div class="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+                  <div class="mt-1.5 text-xs text-muted">
                     {{ order.origin.split(',')[0] }} → {{ order.destination.split(',')[0] }}
                   </div>
-                  <div class="mt-1.5 flex justify-between text-xs text-slate-600 dark:text-slate-300">
+                  <div class="mt-1.5 flex justify-between text-xs text-body">
                     <span>{{ order.weight | number : '1.0-0' : lang.locale() }} lb</span>
                     <span>{{ order.volume | number : '1.0-0' : lang.locale() }} ft³</span>
                   </div>
                 </div>
               } @empty {
-                <div class="h-full flex items-center justify-center text-slate-600 text-sm border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg">
+                <div class="h-full flex items-center justify-center text-faint text-sm border-2 border-dashed border-line-strong rounded-lg">
                   {{ 'loadPlanning.dropHere' | translate }}
                 </div>
               }

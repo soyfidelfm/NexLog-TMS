@@ -64,21 +64,21 @@ export class OrdersComponent {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Delivered': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'In Transit': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'Picked Up': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      case 'Booked': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'Delayed': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-slate-500/20 text-slate-400';
+      case 'Delivered': return 'bg-green-500/20 text-green-ink border-green-500/30';
+      case 'In Transit': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
+      case 'Picked Up': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
+      case 'Booked': return 'bg-yellow-500/20 text-yellow-ink border-yellow-500/30';
+      case 'Delayed': return 'bg-red-500/20 text-red-ink border-red-500/30';
+      default: return 'bg-slate-500/20 text-muted';
     }
   }
 
   getPriorityClass(priority: string): string {
     switch (priority) {
-      case 'Low': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'Medium': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'High': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      default: return 'bg-slate-500/20 text-slate-400';
+      case 'Low': return 'bg-green-500/20 text-green-ink border-green-500/30';
+      case 'Medium': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
+      case 'High': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
+      default: return 'bg-slate-500/20 text-muted';
     }
   }
 
