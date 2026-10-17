@@ -1,4 +1,15 @@
-@reference "tailwindcss";
+@reference "../../../theme/tailwind.css";
+
+/* Scrollbar theme tokens */
+:host {
+  --scroll-thumb: rgb(55 65 81);
+  --scroll-thumb-hover: rgb(75 85 99);
+}
+:host-context([data-theme="light"]) {
+  --scroll-thumb: #cbd5e1;
+  --scroll-thumb-hover: #94a3b8;
+}
+
 
 /* Exception Management Screen - Same design language as other TMS screens */
 /* Dark theme, Tailwind primary, SCSS for component-specific polish */
@@ -12,11 +23,11 @@
          disabled:opacity-40 disabled:cursor-not-allowed;
 
   &.progress {
-    @apply bg-amber-600/20 border-amber-500/40 text-amber-300 hover:bg-amber-600/30 hover:border-amber-500/60;
+    @apply bg-amber-600/20 border-amber-500/40 text-amber-ink-soft hover:bg-amber-600/30 hover:border-amber-500/60;
   }
 
   &.resolve {
-    @apply bg-emerald-600/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-600/30 hover:border-emerald-500/60;
+    @apply bg-emerald-600/20 border-emerald-500/40 text-emerald-ink-soft hover:bg-emerald-600/30 hover:border-emerald-500/60;
   }
 }
 
@@ -31,10 +42,10 @@
 }
 
 .exception-container ::-webkit-scrollbar-thumb {
-  background: rgb(55 65 81);
+  background: var(--scroll-thumb);
   border-radius: 3px;
 }
 
 .exception-container ::-webkit-scrollbar-thumb:hover {
-  background: rgb(75 85 99);
+  background: var(--scroll-thumb-hover);
 }

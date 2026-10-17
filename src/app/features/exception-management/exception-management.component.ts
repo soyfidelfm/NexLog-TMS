@@ -51,6 +51,7 @@ interface ExceptionItem {
 }
 
 @Component({
+  host: { class: 'tone-gray' },
   selector: 'app-exception-management',
   standalone: true,
   imports: [TranslatePipe, CommonModule, FormsModule],
@@ -234,19 +235,19 @@ export class ExceptionManagementComponent {
 
   severityClass(severity: Severity): string {
     switch (severity) {
-      case 'Critical': return 'bg-red-500/20 text-red-300 border-red-500/40';
-      case 'High': return 'bg-orange-500/20 text-orange-300 border-orange-500/40';
-      case 'Medium': return 'bg-amber-500/20 text-amber-300 border-amber-500/40';
-      case 'Low': return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40';
+      case 'Critical': return 'bg-red-500/20 text-red-ink-soft border-red-500/40';
+      case 'High': return 'bg-orange-500/20 text-orange-ink-soft border-orange-500/40';
+      case 'Medium': return 'bg-amber-500/20 text-amber-ink-soft border-amber-500/40';
+      case 'Low': return 'bg-emerald-500/20 text-emerald-ink-soft border-emerald-500/40';
     }
   }
 
   statusClass(status: ExceptionStatus): string {
     switch (status) {
-      case 'Open': return 'bg-red-500/15 text-red-300';
-      case 'In Progress': return 'bg-amber-500/15 text-amber-300';
-      case 'Resolved': return 'bg-emerald-500/15 text-emerald-300';
-      case 'Closed': return 'bg-gray-600/40 text-gray-400';
+      case 'Open': return 'bg-red-500/15 text-red-ink-soft';
+      case 'In Progress': return 'bg-amber-500/15 text-amber-ink-soft';
+      case 'Resolved': return 'bg-emerald-500/15 text-emerald-ink-soft';
+      case 'Closed': return 'bg-elevated-3/40 text-muted';
     }
   }
 
