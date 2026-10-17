@@ -1,17 +1,26 @@
-@reference "tailwindcss";
+@reference "../../../theme/tailwind.css";
+
+/* Scrollbar theme tokens */
+:host {
+  --ro-scroll-thumb: #1e293b;
+}
+:host-context([data-theme="light"]) {
+  --ro-scroll-thumb: #cbd5e1;
+}
+
 
 :host { display: block; }
 
 .btn-outline {
-  @apply flex items-center gap-2 rounded-lg border border-slate-700 bg-[#0f172a] px-4 py-2.5 text-sm font-medium text-slate-200 hover:border-slate-600 hover:bg-slate-800;
+  @apply flex items-center gap-2 rounded-lg border border-line-strong bg-surface px-4 py-2.5 text-sm font-medium text-secondary hover:border-line-stronger hover:bg-elevated;
 }
-.kpi { @apply flex flex-col gap-1 rounded-xl border border-slate-800 bg-[#0f172a] p-4; }
-.kpi-label { @apply text-xs uppercase tracking-wide text-slate-500; }
+.kpi { @apply flex flex-col gap-1 rounded-xl border border-line bg-surface p-4; }
+.kpi-label { @apply text-xs uppercase tracking-wide text-subtle; }
 .kpi-value { @apply text-2xl font-bold; }
-.kpi-hint { @apply text-xs text-slate-400; }
-.stat { @apply flex flex-col rounded-lg bg-[#0b1220] py-2; }
-.stat-v { @apply text-sm font-semibold text-white; }
-.stat-l { @apply text-[11px] text-slate-500; }
+.kpi-hint { @apply text-xs text-muted; }
+.stat { @apply flex flex-col rounded-lg bg-app py-2; }
+.stat-v { @apply text-sm font-semibold text-strong; }
+.stat-l { @apply text-[11px] text-subtle; }
 
 .route-dash {
   stroke-dasharray: 10 8;
@@ -20,4 +29,4 @@
 @keyframes dash { to { stroke-dashoffset: -18; } }
 
 aside::-webkit-scrollbar { width: 6px; }
-aside::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+aside::-webkit-scrollbar-thumb { background: var(--ro-scroll-thumb); border-radius: 999px; }

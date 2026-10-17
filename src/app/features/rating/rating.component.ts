@@ -18,6 +18,7 @@ interface CarrierQuote {
 }
 
 @Component({
+  host: { class: 'tone-gray' },
   selector: 'app-rating',
   standalone: true,
   imports: [TranslatePipe, CommonModule, ReactiveFormsModule],

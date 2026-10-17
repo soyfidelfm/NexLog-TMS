@@ -1,18 +1,18 @@
-<div class="tendering-container h-full flex flex-col bg-slate-50 dark:bg-gray-900 text-slate-900 dark:text-gray-100">
-  <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 bg-slate-50 dark:bg-white/80 dark:bg-gray-900/80 backdrop-blur">
+<div class="tendering-container h-full flex flex-col bg-panel text-primary">
+  <header class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-line-strong/60 bg-panel/80 backdrop-blur">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight">{{ 'tendering.tenderingTitle' | translate }}</h1>
-      <p class="text-sm text-slate-500 dark:text-gray-400 mt-0.5">{{ 'tendering.tenderingSubtitle' | translate }}</p>
+      <p class="text-sm text-muted mt-0.5">{{ 'tendering.tenderingSubtitle' | translate }}</p>
     </div>
     <div class="flex items-center gap-2 text-xs">
-      <span class="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-gray-800 text-slate-600 dark:text-gray-300">{{ 'tendering.count.totalLabel' | translate: { n: statusCounts().total } }}</span>
-      <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300">{{ 'tendering.count.pending' | translate: { n: statusCounts().pending } }}</span>
-      <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300">{{ 'tendering.count.accepted' | translate: { n: statusCounts().accepted } }}</span>
-      <span class="px-2.5 py-1 rounded-full bg-red-500/15 text-red-300">{{ 'tendering.count.rejected' | translate: { n: statusCounts().rejected } }}</span>
+      <span class="px-2.5 py-1 rounded-full bg-elevated text-body">{{ 'tendering.count.totalLabel' | translate: { n: statusCounts().total } }}</span>
+      <span class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-ink-soft">{{ 'tendering.count.pending' | translate: { n: statusCounts().pending } }}</span>
+      <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-ink-soft">{{ 'tendering.count.accepted' | translate: { n: statusCounts().accepted } }}</span>
+      <span class="px-2.5 py-1 rounded-full bg-red-500/15 text-red-ink-soft">{{ 'tendering.count.rejected' | translate: { n: statusCounts().rejected } }}</span>
     </div>
   </header>
 
-  <div class="flex flex-wrap items-center gap-3 px-6 py-3 border-b border-slate-200 dark:border-slate-200/40 dark:border-gray-700/40 bg-slate-50 dark:bg-slate-50/40 dark:bg-gray-900/40">
+  <div class="flex flex-wrap items-center gap-3 px-6 py-3 border-b border-line-strong/40 bg-panel/40">
     <input type="text" [placeholder]="'tendering.searchLoad' | translate" class="input w-72 pl-3" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)" />
     <div class="flex gap-1.5">
       <button class="filter-btn" [class.active]="filterStatus() === 'All'" (click)="filterStatus.set('All')">{{ 'tendering.all' | translate }}</button>
@@ -32,15 +32,15 @@
                 <span class="font-semibold text-base">{{ load.id }}</span>
                 <span class="status-badge" [ngClass]="getStatusClass(load.status)">{{ 'tendering.status.' + load.status | translate }}</span>
                 @if (load.cascadeCount > 0) {
-                  <span class="text-[11px] px-2 py-0.5 rounded bg-gray-700 text-slate-600 dark:text-gray-300">{{ 'tendering.cascadeN' | translate: { n: load.cascadeCount } }}</span>
+                  <span class="text-[11px] px-2 py-0.5 rounded bg-elevated-2 text-body">{{ 'tendering.cascadeN' | translate: { n: load.cascadeCount } }}</span>
                 }
               </div>
-              <div class="text-sm text-slate-600 dark:text-gray-300 flex items-center gap-2">
+              <div class="text-sm text-body flex items-center gap-2">
                 <span>{{ load.origin }}</span>
-                <span class="text-gray-500">→</span>
+                <span class="text-subtle">→</span>
                 <span>{{ load.destination }}</span>
               </div>
-              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-gray-400">
+              <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
                 <span>{{ load.weight | number : '1.0-0' : lang.locale() }} lb</span>
                 <span>{{ load.volume | number : '1.0-0' : lang.locale() }} ft³</span>
                 <span>{{ 'tendering.pickup' | translate }}: {{ load.pickupDate | date: 'mediumDate' : undefined : lang.locale() }}</span>
@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="min-w-[200px]">
-              <div class="text-xs text-gray-500 mb-1">{{ 'tendering.selectedCarrier' | translate }}</div>
+              <div class="text-xs text-subtle mb-1">{{ 'tendering.selectedCarrier' | translate }}</div>
               <div class="font-medium text-sm">{{ load.selectedCarrier || ('— ' + ('tendering.unassigned' | translate) + ' —') }}</div>
             </div>
             <div class="flex items-center gap-2">
@@ -59,7 +59,7 @@
           </div>
         </div>
       } @empty {
-        <div class="text-center py-16 text-gray-500">
+        <div class="text-center py-16 text-subtle">
           <p class="text-lg">{{ 'tendering.noLoads' | translate }}</p>
           <p class="text-sm mt-1">{{ 'tendering.adjustSearch' | translate }}</p>
         </div>
