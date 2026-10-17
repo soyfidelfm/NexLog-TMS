@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, inject } from '@angular/core';
+import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import {
   CdkDragDrop,
@@ -29,11 +31,21 @@ interface Trailer {
 @Component({
   selector: 'app-load-planning',
   standalone: true,
-  imports: [CommonModule, DragDropModule],
+  imports: [TranslatePipe, CommonModule, DragDropModule],
   templateUrl: './load-planning.component.html',
   styleUrl: './load-planning.component.scss',
 })
 export class LoadPlanningComponent {
+  readonly lang = inject(LanguageService);
+  readonly priorityKey: Record<Order['priority'], string> = { High: 'priority.high', Medium: 'priority.medium', Low: 'priority.low' };
+
+  /** 'Dry Van 53\'' -> translation key for the equipment type. */
+  trailerTypeKey(type: string): string {
+    return type.startsWith('Reefer') ? 'loadPlanning.type.reefer' : 'loadPlanning.type.dryVan';
+  }
+  trailerLength(type: string): string {
+    return type.split(' ').pop() ?? '';
+  }
   unassigned: Order[] = [
     { id: 'ORD-1042', customer: 'Acme Corp', origin: 'Los Angeles, CA', destination: 'Phoenix, AZ', weight: 4200, volume: 180, priority: 'High' },
     { id: 'ORD-1045', customer: 'Global Foods', origin: 'San Diego, CA', destination: 'Las Vegas, NV', weight: 2800, volume: 220, priority: 'Medium' },

@@ -1,4 +1,7 @@
-import { Component, signal, computed } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, signal, computed, inject } from '@angular/core';
+import { LanguageService } from '../../core/language.service';
+import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -22,11 +25,14 @@ interface FreightInvoice {
 @Component({
   selector: 'app-freight-audit',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [TranslatePipe, CommonModule, RouterLink],
   templateUrl: './freight-audit.component.html',
   styleUrl: './freight-audit.component.scss',
 })
 export class FreightAuditComponent {
+  readonly lang = inject(LanguageService);
+  /** 'Fuel Surcharge' -> 'fuelSurcharge' (translation key suffix). */
+  lineKey(description: string): string { return camelKey(description); }
   invoices = signal<FreightInvoice[]>([
     {
       id: 'INV-78421',
