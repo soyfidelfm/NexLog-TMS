@@ -1,15 +1,20 @@
-import { Component, computed, signal } from '@angular/core';
-import { DecimalPipe, CurrencyPipe } from '@angular/common';
-import { ROUTES, SUMMARY, OptRoute } from './route-optimization.data';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
+import { ROUTES, SUMMARY, OptRoute, Stop } from './route-optimization.data';
 
 @Component({
   selector: 'app-route-optimization',
   standalone: true,
-  imports: [DecimalPipe, CurrencyPipe],
+  imports: [TranslatePipe, DecimalPipe, CurrencyPipe, DatePipe],
   templateUrl: './route-optimization.component.html',
   styleUrl: './route-optimization.component.scss',
 })
 export class RouteOptimizationComponent {
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
   routes = ROUTES;
   summary = SUMMARY;
   selected = signal<string | null>(null);
@@ -28,6 +33,8 @@ export class RouteOptimizationComponent {
   path(r: OptRoute) { return r.stops.map((s, i) => `${i ? 'L' : 'M'}${s.x},${s.y}`).join(' '); }
   toggle(id: string) { this.selected.set(this.selected() === id ? null : id); }
   dim(r: OptRoute) { return this.selected() !== null && this.selected() !== r.id; }
-  hrs(min: number) { return `${Math.floor(min / 60)}h ${min % 60}m`; }
+  hrs(min: number) { return this.translate.instant('common.durationHm', { h: Math.floor(min / 60), m: min % 60 }); }
+  /** City names are proper nouns; only the depot label is translated. */
+  stopName(s: Stop) { return s.type === 'depot' ? 'routeOpt.mainDepotDallas' : s.name; }
   runOptimize() { this.optimizing.set(true); setTimeout(() => this.optimizing.set(false), 1500); }
 }

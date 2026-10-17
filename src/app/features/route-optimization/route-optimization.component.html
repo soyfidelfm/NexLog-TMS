@@ -2,23 +2,23 @@
   <!-- Header -->
   <header class="mb-6 flex flex-wrap items-start justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-bold text-white">Route Optimization</h1>
-      <p class="mt-1 text-sm text-slate-400">Optimize multi-stop routes to reduce distance, time and cost</p>
+      <h1 class="text-3xl font-bold text-white">{{ 'routeOpt.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-slate-400">{{ 'routeOpt.subtitle' | translate }}</p>
     </div>
     <div class="flex flex-wrap items-center gap-2">
       <div class="flex rounded-lg border border-slate-800 bg-[#0f172a] p-1 text-sm">
         @for (o of ['distance','time','cost']; track o) {
-          <button (click)="objective.set($any(o))" class="rounded-md px-3 py-1.5 capitalize"
-            [class]="objective() === o ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'">{{ o }}</button>
+          <button (click)="objective.set($any(o))" class="rounded-md px-3 py-1.5"
+            [class]="objective() === o ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'">{{ 'routeOpt.objective.' + o | translate }}</button>
         }
       </div>
       <button class="btn-outline">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21V9m0 0-4 4m4-4 4 4M4 3h16"/></svg>Export
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 21V9m0 0-4 4m4-4 4 4M4 3h16"/></svg>{{ 'common.export' | translate }}
       </button>
       <button (click)="runOptimize()" [disabled]="optimizing()"
         class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 disabled:opacity-60">
         <svg class="h-4 w-4" [class.animate-spin]="optimizing()" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg>
-        {{ optimizing() ? 'Optimizing…' : 'Re-optimize' }}
+        {{ (optimizing() ? 'routeOpt.optimizing' : 'routeOpt.reoptimize') | translate }}
       </button>
     </div>
   </header>
@@ -26,24 +26,24 @@
   <!-- Summary -->
   <section class="mb-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
     <div class="kpi">
-      <span class="kpi-label">Distance saved</span>
-      <span class="kpi-value text-emerald-400">{{ kmSaved() | number }} km</span>
-      <span class="kpi-hint">{{ summary.before.km | number }} → {{ summary.after.km | number }} km · <b class="text-emerald-400">-{{ kmPct() }}%</b></span>
+      <span class="kpi-label">{{ 'routeOpt.distanceSaved' | translate }}</span>
+      <span class="kpi-value text-emerald-400">{{ kmSaved() | number : '1.0-0' : lang.locale() }} km</span>
+      <span class="kpi-hint">{{ summary.before.km | number : '1.0-0' : lang.locale() }} → {{ summary.after.km | number : '1.0-0' : lang.locale() }} km · <b class="text-emerald-400">-{{ kmPct() }}%</b></span>
     </div>
     <div class="kpi">
-      <span class="kpi-label">Cost saved</span>
-      <span class="kpi-value text-emerald-400">{{ costSaved() | currency:'USD':'symbol':'1.0-0' }}</span>
-      <span class="kpi-hint">{{ summary.before.cost | currency:'USD':'symbol':'1.0-0' }} → {{ summary.after.cost | currency:'USD':'symbol':'1.0-0' }} · <b class="text-emerald-400">-{{ costPct() }}%</b></span>
+      <span class="kpi-label">{{ 'routeOpt.costSaved' | translate }}</span>
+      <span class="kpi-value text-emerald-400">{{ costSaved() | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</span>
+      <span class="kpi-hint">{{ summary.before.cost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }} → {{ summary.after.cost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }} · <b class="text-emerald-400">-{{ costPct() }}%</b></span>
     </div>
     <div class="kpi">
-      <span class="kpi-label">Drive time</span>
-      <span class="kpi-value text-white">{{ summary.after.hours }} h</span>
-      <span class="kpi-hint">was {{ summary.before.hours }} h · {{ summary.after.vehicles }} vehicles (was {{ summary.before.vehicles }})</span>
+      <span class="kpi-label">{{ 'routeOpt.driveTime' | translate }}</span>
+      <span class="kpi-value text-white">{{ summary.after.hours | number: '1.1-1' : lang.locale() }} h</span>
+      <span class="kpi-hint">{{ 'routeOpt.driveHint' | translate: { before: (summary.before.hours | number: '1.1-1' : lang.locale()), vehicles: summary.after.vehicles, beforeVehicles: summary.before.vehicles } }}</span>
     </div>
     <div class="kpi">
-      <span class="kpi-label">CO₂ reduced</span>
+      <span class="kpi-label">{{ 'routeOpt.co2' | translate }}</span>
       <span class="kpi-value text-blue-400">{{ summary.co2SavedKg }} kg</span>
-      <span class="kpi-hint">Last run {{ summary.lastRun }}</span>
+      <span class="kpi-hint">{{ 'routeOpt.lastRun' | translate: { date: (summary.lastRun | date: 'medium' : undefined : lang.locale()) } }}</span>
     </div>
   </section>
 
@@ -54,7 +54,7 @@
         @for (r of routes; track r.id) {
           <button (click)="toggle(r.id)" class="flex items-center gap-2 rounded-full border border-slate-700 bg-[#0b1220]/90 px-3 py-1 text-xs backdrop-blur"
             [class.ring-2]="selected() === r.id" [style.--tw-ring-color]="r.color">
-            <span class="h-2.5 w-2.5 rounded-full" [style.background]="r.color"></span>{{ r.id }} · {{ r.name }}
+            <span class="h-2.5 w-2.5 rounded-full" [style.background]="r.color"></span>{{ r.id }} · {{ 'routeOpt.route.' + r.id | translate }}
           </button>
         }
       </div>
@@ -77,7 +77,7 @@
               @if (i > 0) {
                 <circle [attr.cx]="s.x" [attr.cy]="s.y" r="11" fill="#0b1220" [attr.stroke]="r.color" stroke-width="2.5"/>
                 <text [attr.x]="s.x" [attr.y]="s.y + 4" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">{{ i }}</text>
-                <text [attr.x]="s.x + 16" [attr.y]="s.y + 4" font-size="11" fill="#94a3b8">{{ s.name }}</text>
+                <text [attr.x]="s.x + 16" [attr.y]="s.y + 4" font-size="11" fill="#94a3b8">{{ stopName(s) | translate }}</text>
               }
             }
           </g>
@@ -86,13 +86,13 @@
           <circle cx="470" cy="330" r="20" fill="#2563eb" fill-opacity=".2"/>
           <rect x="458" y="318" width="24" height="24" rx="6" fill="#2563eb"/>
           <text x="470" y="334" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">D</text>
-          <text x="496" y="350" font-size="11" fill="#cbd5e1">Main Depot</text>
+          <text x="496" y="350" font-size="11" fill="#cbd5e1">{{ 'routeOpt.mainDepot' | translate }}</text>
         </g>
       </svg>
       <div class="absolute bottom-4 left-4 flex gap-4 rounded-lg border border-slate-800 bg-[#0b1220]/90 px-3 py-2 text-xs text-slate-400">
-        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-blue-600"></span>Depot</span>
-        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full border-2 border-slate-300"></span>Stop</span>
-        <span>{{ totals().stops }} stops · {{ totals().km | number }} km</span>
+        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-blue-600"></span>{{ 'routeOpt.depot' | translate }}</span>
+        <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full border-2 border-slate-300"></span>{{ 'routeOpt.stop' | translate }}</span>
+        <span>{{ 'routeOpt.stopsKm' | translate: { stops: totals().stops, km: (totals().km | number : '1.0-0' : lang.locale()) } }}</span>
       </div>
     </section>
 
@@ -105,21 +105,21 @@
             <div class="flex items-center gap-3">
               <span class="h-9 w-1.5 rounded-full" [style.background]="r.color"></span>
               <div>
-                <div class="font-semibold text-white">{{ r.id }} · {{ r.name }}</div>
-                <div class="text-xs text-slate-500">{{ r.vehicle }} · {{ r.driver }}</div>
+                <div class="font-semibold text-white">{{ r.id }} · {{ 'routeOpt.route.' + r.id | translate }}</div>
+                <div class="text-xs text-slate-500">{{ r.vehicle.split(' · ')[0] }} · {{ 'routeOpt.vehicle.' + r.id | translate }} · {{ r.driver }}</div>
               </div>
             </div>
-            <span class="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400">Optimized</span>
+            <span class="rounded-md bg-emerald-500/10 px-2 py-0.5 text-xs font-medium text-emerald-400">{{ 'routeOpt.optimized' | translate }}</span>
           </div>
 
           <div class="mb-3 grid grid-cols-3 gap-2 text-center">
-            <div class="stat"><span class="stat-v">{{ r.distanceKm }} km</span><span class="stat-l">Distance</span></div>
-            <div class="stat"><span class="stat-v">{{ hrs(r.durationMin) }}</span><span class="stat-l">Time</span></div>
-            <div class="stat"><span class="stat-v">{{ r.cost | currency:'USD':'symbol':'1.0-0' }}</span><span class="stat-l">Cost</span></div>
+            <div class="stat"><span class="stat-v">{{ r.distanceKm }} km</span><span class="stat-l">{{ 'routeOpt.distance' | translate }}</span></div>
+            <div class="stat"><span class="stat-v">{{ hrs(r.durationMin) }}</span><span class="stat-l">{{ 'routeOpt.time' | translate }}</span></div>
+            <div class="stat"><span class="stat-v">{{ r.cost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</span><span class="stat-l">{{ 'routeOpt.cost' | translate }}</span></div>
           </div>
 
           <div class="mb-3">
-            <div class="mb-1 flex justify-between text-xs text-slate-500"><span>Load utilization</span><span>{{ r.loadPct }}%</span></div>
+            <div class="mb-1 flex justify-between text-xs text-slate-500"><span>{{ 'routeOpt.loadUtil' | translate }}</span><span>{{ r.loadPct }}%</span></div>
             <div class="h-1.5 rounded-full bg-slate-800"><div class="h-full rounded-full" [style.width.%]="r.loadPct" [style.background]="r.color"></div></div>
           </div>
 
@@ -129,11 +129,11 @@
                 <span class="absolute -left-[23px] top-0.5 grid h-3.5 w-3.5 place-items-center rounded-full ring-4 ring-[#0f172a]"
                   [style.background]="i === 0 ? '#2563eb' : r.color"></span>
                 <div class="flex justify-between gap-2">
-                  <span class="text-slate-200">{{ i === 0 ? 'Depot' : i + '. ' + s.name }}</span>
+                  <span class="text-slate-200">{{ i === 0 ? ('routeOpt.depot' | translate) : i + '. ' + (stopName(s) | translate) }}</span>
                   <span class="tabular-nums text-slate-500">{{ s.eta }}</span>
                 </div>
                 @if (i > 0) {
-                  <span class="text-xs capitalize" [class]="s.type === 'pickup' ? 'text-amber-400' : 'text-slate-500'">{{ s.type }}</span>
+                  <span class="text-xs" [class]="s.type === 'pickup' ? 'text-amber-400' : 'text-slate-500'">{{ 'routeOpt.stopType.' + s.type | translate }}</span>
                 }
               </li>
             }
@@ -142,11 +142,11 @@
       }
 
       <div class="rounded-xl border border-slate-800 bg-[#0f172a] p-4 text-sm">
-        <div class="mb-2 font-semibold text-white">Plan totals</div>
-        <div class="flex justify-between text-slate-400"><span>Distance</span><span class="text-slate-200">{{ totals().km | number }} km</span></div>
-        <div class="flex justify-between text-slate-400"><span>Drive time</span><span class="text-slate-200">{{ hrs(totals().min) }}</span></div>
-        <div class="flex justify-between text-slate-400"><span>Cost</span><span class="text-slate-200">{{ totals().cost | currency:'USD':'symbol':'1.0-0' }}</span></div>
-        <button class="mt-4 w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white hover:bg-blue-500">Dispatch all routes</button>
+        <div class="mb-2 font-semibold text-white">{{ 'routeOpt.planTotals' | translate }}</div>
+        <div class="flex justify-between text-slate-400"><span>{{ 'routeOpt.distance' | translate }}</span><span class="text-slate-200">{{ totals().km | number : '1.0-0' : lang.locale() }} km</span></div>
+        <div class="flex justify-between text-slate-400"><span>{{ 'routeOpt.driveTime' | translate }}</span><span class="text-slate-200">{{ hrs(totals().min) }}</span></div>
+        <div class="flex justify-between text-slate-400"><span>{{ 'routeOpt.cost' | translate }}</span><span class="text-slate-200">{{ totals().cost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</span></div>
+        <button class="mt-4 w-full rounded-lg bg-blue-600 py-2.5 font-semibold text-white hover:bg-blue-500">{{ 'routeOpt.dispatchAll' | translate }}</button>
       </div>
     </aside>
   </div>
