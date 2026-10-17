@@ -1,4 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, inject, signal } from '@angular/core';
+import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -40,17 +42,30 @@ interface Order {
     date: string;
     completed: boolean;
     current: boolean;
+    estimated?: boolean;
   }[];
 }
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.scss'
 })
 export class OrderDetailComponent {
+  readonly lang = inject(LanguageService);
+  /** Raw requirement values stay in English (data); display goes through translation keys. */
+  readonly allRequirements = ['Liftgate Required', 'Temperature Sensitive', 'Stackable', 'Residential Delivery'];
+  readonly reqKey: Record<string, string> = {
+    'Liftgate Required': 'orderDetail.req.liftgate',
+    'Temperature Sensitive': 'orderDetail.req.temp',
+    'Stackable': 'orderDetail.req.stackable',
+    'Residential Delivery': 'orderDetail.req.residential',
+  };
+  private readonly productKeys: Record<string, string> = { 'General Merchandise Class 50': 'orderDetail.product.general50' };
+  /** Known product types are translated; user-entered text is shown as-is. */
+  productKey(v: string): string { return this.productKeys[v] ?? v; }
   isEditing = signal(false);
   editForm: Partial<Order> = {};
 
@@ -61,14 +76,14 @@ export class OrderDetailComponent {
       city: 'Los Angeles, CA, US',
       address: '1234 Industrial Way',
       zip: 'Los Angeles, CA 90001, US',
-      date: 'May 16, 2024',
+      date: '2024-05-16',
       window: '08:00 – 12:00'
     },
     destination: {
       city: 'Dallas, TX, US',
       address: '5678 Distribution Drive',
       zip: 'Dallas, TX 75201, US',
-      date: 'May 17, 2024',
+      date: '2024-05-17',
       window: '10:00 – 14:00'
     },
     weightLbs: 18750,
@@ -86,14 +101,14 @@ export class OrderDetailComponent {
     routeDistanceMi: 1438.6,
     routeDistanceKm: 2314.8,
     transitTime: '1d 22h 15m',
-    estimatedArrival: 'May 17, 2024, 13:45',
+    estimatedArrival: '2024-05-17T13:45',
     timeline: [
-      { label: 'Order Created', date: 'May 15, 09:12', completed: true, current: false },
-      { label: 'Pending Confirmation', date: 'May 15, 09:15', completed: true, current: false },
-      { label: 'Confirmed', date: 'May 15, 11:47', completed: true, current: false },
-      { label: 'In Transit', date: 'May 16, 08:30', completed: false, current: true },
-      { label: 'Out for Delivery', date: 'May 17, Est. 14:00', completed: false, current: false },
-      { label: 'Delivered', date: 'May 17, Est. 16:30', completed: false, current: false }
+      { label: 'orderDetail.timeline.created', date: '2024-05-15T09:12', completed: true, current: false },
+      { label: 'orderDetail.timeline.pending', date: '2024-05-15T09:15', completed: true, current: false },
+      { label: 'orderDetail.timeline.confirmed', date: '2024-05-15T11:47', completed: true, current: false },
+      { label: 'orderDetail.timeline.inTransit', date: '2024-05-16T08:30', completed: false, current: true },
+      { label: 'orderDetail.timeline.outForDelivery', date: '2024-05-17T14:00', completed: false, current: false, estimated: true },
+      { label: 'orderDetail.timeline.delivered', date: '2024-05-17T16:30', completed: false, current: false, estimated: true }
     ]
   });
 
