@@ -1,4 +1,7 @@
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -33,13 +36,15 @@ interface RolePermission {
 @Component({
   selector: 'app-rate-tables',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './rate-tables.component.html',
   styleUrl: './rate-tables.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RateTablesComponent {
   private readonly fb = inject(FormBuilder);
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
 
   rateForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
@@ -242,6 +247,6 @@ export class RateTablesComponent {
   savePermissions(): void {
     // In real app: call API to persist roles/permissions
     console.log('Permissions saved:', this.roles());
-    alert('Roles and permissions updated successfully.');
+    alert(this.translate.instant('rateTables.permsSaved'));
   }
 }

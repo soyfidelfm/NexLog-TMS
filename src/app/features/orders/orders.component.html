@@ -1,45 +1,45 @@
 <div class="flex flex-col h-full bg-[#0b1220] text-slate-100 overflow-hidden">
   <header class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
     <div>
-      <h1 class="text-2xl font-bold">{{ lang.t().ordersTitle }}</h1>
-      <p class="text-sm text-slate-400 mt-0.5">{{ lang.t().ordersSubtitle }}</p>
+      <h1 class="text-2xl font-bold">{{ 'orders.ordersTitle' | translate }}</h1>
+      <p class="text-sm text-slate-400 mt-0.5">{{ 'orders.ordersSubtitle' | translate }}</p>
     </div>
   </header>
 
   <div class="px-6 py-4 flex items-center justify-between gap-4 border-b border-slate-800">
     <div class="relative flex-1 max-w-md">
-      <input type="text" [(ngModel)]="searchQuery" [placeholder]="lang.t().searchOrders"
+      <input type="text" [(ngModel)]="searchQuery" [placeholder]="'orders.searchOrders' | translate"
         class="w-full pl-4 pr-4 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
     <div class="flex items-center gap-2">
-      <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">{{ lang.t().import }}</button>
-      <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">{{ lang.t().export }}</button>
-      <button class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition">{{ lang.t().createOrder }}</button>
+      <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">{{ 'orders.import' | translate }}</button>
+      <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm transition">{{ 'orders.export' | translate }}</button>
+      <button class="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium transition">{{ 'orders.createOrder' | translate }}</button>
     </div>
   </div>
 
   <div class="px-6 py-3 flex items-center gap-3 border-b border-slate-800 text-sm">
-    <button class="px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg">{{ lang.t().status }}</button>
-    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ lang.t().origin }}</button>
-    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ lang.t().destination }}</button>
-    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ lang.t().carrier }}</button>
-    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ lang.t().dateRangeFilter }}</button>
-    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ lang.t().moreFilters }}</button>
+    <button class="px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg">{{ 'orders.status' | translate }}</button>
+    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ 'orders.origin' | translate }}</button>
+    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ 'orders.destination' | translate }}</button>
+    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ 'orders.carrier' | translate }}</button>
+    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ 'orders.dateRangeFilter' | translate }}</button>
+    <button class="px-3 py-1.5 hover:bg-slate-800 rounded-lg transition">{{ 'orders.moreFilters' | translate }}</button>
   </div>
 
   <div class="flex-1 overflow-auto">
     <table class="w-full text-sm">
       <thead class="bg-[#0f172a] sticky top-0">
         <tr class="text-left text-slate-400 border-b border-slate-800">
-          <th class="px-6 py-3 font-medium">{{ lang.t().orderId }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().origin }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().destination }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().weight }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().volume }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().status }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().carrier }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().eta }}</th>
-          <th class="px-6 py-3 font-medium">{{ lang.t().priority }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.orderId' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.origin' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.destination' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.weight' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.volume' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.status' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.carrier' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.eta' | translate }}</th>
+          <th class="px-6 py-3 font-medium">{{ 'orders.priority' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -47,25 +47,25 @@
           <td class="px-6 py-4"><a href="#" class="text-blue-400 hover:text-blue-300 font-medium">{{ order.id }}</a></td>
           <td class="px-6 py-4">{{ order.origin.city }}, {{ order.origin.country }}</td>
           <td class="px-6 py-4">{{ order.destination.city }}, {{ order.destination.country }}</td>
-          <td class="px-6 py-4">{{ order.weight | number }}</td>
-          <td class="px-6 py-4">{{ order.volume }}</td>
-          <td class="px-6 py-4"><span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium border" [ngClass]="getStatusClass(order.status)">{{ order.status }}</span></td>
+          <td class="px-6 py-4">{{ order.weight | number : '1.0-0' : lang.locale() }}</td>
+          <td class="px-6 py-4">{{ order.volume | number : '1.1-1' : lang.locale() }}</td>
+          <td class="px-6 py-4"><span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium border" [ngClass]="getStatusClass(order.status)">{{ statusKey[order.status] | translate }}</span></td>
           <td class="px-6 py-4">{{ order.carrier }}</td>
-          <td class="px-6 py-4 text-slate-300">{{ order.eta }}</td>
-          <td class="px-6 py-4"><span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium border" [ngClass]="getPriorityClass(order.priority)">{{ order.priority }}</span></td>
+          <td class="px-6 py-4 text-slate-300">{{ order.eta | date: 'mediumDate' : undefined : lang.locale() }}</td>
+          <td class="px-6 py-4"><span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium border" [ngClass]="getPriorityClass(order.priority)">{{ priorityKey[order.priority] | translate }}</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between text-sm">
-    <div class="text-slate-400">{{ lang.t().showing }} 1 {{ lang.t().of }} {{ paginatedOrders.length }} {{ lang.t().of }} {{ totalOrders }} {{ lang.t().ordersWord }}</div>
+    <div class="text-slate-400">{{ 'pagination.showing' | translate: { from: paginatedOrders.length ? 1 : 0, to: paginatedOrders.length, total: totalOrders } }}</div>
     <div class="flex items-center gap-2">
-      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="px-3 py-1 rounded hover:bg-slate-800 disabled:opacity-50">{{ lang.t().prev }}</button>
+      <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="px-3 py-1 rounded hover:bg-slate-800 disabled:opacity-50">{{ 'pagination.prev' | translate }}</button>
       <button class="px-3 py-1 bg-blue-600 rounded text-white">1</button>
-      <button (click)="changePage(currentPage + 1)" class="px-3 py-1 rounded hover:bg-slate-800">{{ lang.t().next }}</button>
+      <button (click)="changePage(currentPage + 1)" class="px-3 py-1 rounded hover:bg-slate-800">{{ 'pagination.next' | translate }}</button>
       <div class="ml-4 flex items-center gap-2">
-        <span class="text-slate-400">{{ lang.t().rowsPerPage }}</span>
+        <span class="text-slate-400">{{ 'pagination.rowsPerPage' | translate }}</span>
         <select [(ngModel)]="rowsPerPage" class="bg-slate-800 border border-slate-700 rounded px-2 py-1 text-sm">
           <option [value]="10">10</option>
           <option [value]="25">25</option>

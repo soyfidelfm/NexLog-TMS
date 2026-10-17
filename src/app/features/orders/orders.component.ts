@@ -1,3 +1,4 @@
+import { TranslatePipe } from '@ngx-translate/core';
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,12 +19,17 @@ interface Order {
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent {
   readonly lang = inject(LanguageService);
+
+  readonly statusKey: Record<Order['status'], string> = {
+    'Delivered': 'status.delivered', 'In Transit': 'status.inTransit', 'Picked Up': 'status.pickedUp', 'Booked': 'status.booked', 'Delayed': 'status.delayed'
+  };
+  readonly priorityKey: Record<Order['priority'], string> = { Low: 'priority.low', Medium: 'priority.medium', High: 'priority.high' };
 
   searchQuery = '';
   currentPage = 1;
@@ -31,13 +37,13 @@ export class OrdersComponent {
   totalOrders = 248;
 
   orders: Order[] = [
-    { id: 'ORD-2025-00125', origin: { city: 'Shanghai', country: 'CN' }, destination: { city: 'Rotterdam', country: 'NL' }, weight: 12500, volume: 45.2, status: 'Delivered', carrier: 'Maersk Line', eta: 'May 18, 2025', priority: 'Low' },
-    { id: 'ORD-2025-00124', origin: { city: 'Hamburg', country: 'DE' }, destination: { city: 'Atlanta', country: 'US' }, weight: 8750, volume: 32.1, status: 'In Transit', carrier: 'Hapag-Lloyd', eta: 'May 23, 2025', priority: 'Medium' },
-    { id: 'ORD-2025-00123', origin: { city: 'Busan', country: 'KR' }, destination: { city: 'Los Angeles', country: 'US' }, weight: 15300, volume: 60.8, status: 'Picked Up', carrier: 'MSC', eta: 'May 22, 2025', priority: 'High' },
-    { id: 'ORD-2025-00122', origin: { city: 'Dubai', country: 'AE' }, destination: { city: 'Singapore', country: 'SG' }, weight: 6200, volume: 21.7, status: 'Booked', carrier: 'CMA CGM', eta: 'May 27, 2025', priority: 'Medium' },
-    { id: 'ORD-2025-00121', origin: { city: 'Rotterdam', country: 'NL' }, destination: { city: 'New York', country: 'US' }, weight: 9100, volume: 38.4, status: 'Delayed', carrier: 'OOCL', eta: 'May 20, 2025', priority: 'High' },
-    { id: 'ORD-2025-00120', origin: { city: 'Tokyo', country: 'JP' }, destination: { city: 'Sydney', country: 'AU' }, weight: 7400, volume: 28.9, status: 'In Transit', carrier: 'Evergreen', eta: 'May 24, 2025', priority: 'Low' },
-    { id: 'ORD-2025-00119', origin: { city: 'Ningbo', country: 'CN' }, destination: { city: 'Felixstowe', country: 'GB' }, weight: 11200, volume: 47.3, status: 'In Transit', carrier: 'COSCO Shipping', eta: 'May 25, 2025', priority: 'Medium' }
+    { id: 'ORD-2025-00125', origin: { city: 'Shanghai', country: 'CN' }, destination: { city: 'Rotterdam', country: 'NL' }, weight: 12500, volume: 45.2, status: 'Delivered', carrier: 'Maersk Line', eta: '2025-05-18', priority: 'Low' },
+    { id: 'ORD-2025-00124', origin: { city: 'Hamburg', country: 'DE' }, destination: { city: 'Atlanta', country: 'US' }, weight: 8750, volume: 32.1, status: 'In Transit', carrier: 'Hapag-Lloyd', eta: '2025-05-23', priority: 'Medium' },
+    { id: 'ORD-2025-00123', origin: { city: 'Busan', country: 'KR' }, destination: { city: 'Los Angeles', country: 'US' }, weight: 15300, volume: 60.8, status: 'Picked Up', carrier: 'MSC', eta: '2025-05-22', priority: 'High' },
+    { id: 'ORD-2025-00122', origin: { city: 'Dubai', country: 'AE' }, destination: { city: 'Singapore', country: 'SG' }, weight: 6200, volume: 21.7, status: 'Booked', carrier: 'CMA CGM', eta: '2025-05-27', priority: 'Medium' },
+    { id: 'ORD-2025-00121', origin: { city: 'Rotterdam', country: 'NL' }, destination: { city: 'New York', country: 'US' }, weight: 9100, volume: 38.4, status: 'Delayed', carrier: 'OOCL', eta: '2025-05-20', priority: 'High' },
+    { id: 'ORD-2025-00120', origin: { city: 'Tokyo', country: 'JP' }, destination: { city: 'Sydney', country: 'AU' }, weight: 7400, volume: 28.9, status: 'In Transit', carrier: 'Evergreen', eta: '2025-05-24', priority: 'Low' },
+    { id: 'ORD-2025-00119', origin: { city: 'Ningbo', country: 'CN' }, destination: { city: 'Felixstowe', country: 'GB' }, weight: 11200, volume: 47.3, status: 'In Transit', carrier: 'COSCO Shipping', eta: '2025-05-25', priority: 'Medium' }
   ];
 
   get filteredOrders() {

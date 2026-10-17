@@ -2,8 +2,8 @@
   <!-- Header -->
   <header class="flex items-center justify-between px-6 py-4 border-b border-gray-700/80 bg-gray-900/95">
     <div>
-      <h1 class="text-xl font-semibold tracking-tight">Rate Tables</h1>
-      <p class="text-xs text-gray-400 mt-0.5">Configure rate tables and manage role permissions</p>
+      <h1 class="text-xl font-semibold tracking-tight">{{ 'rateTables.title' | translate }}</h1>
+      <p class="text-xs text-gray-400 mt-0.5">{{ 'rateTables.subtitle' | translate }}</p>
     </div>
     <div class="flex items-center gap-3">
       <button
@@ -11,14 +11,14 @@
         (click)="resetForm()"
         class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
       >
-        New Rate
+        {{ 'rateTables.newRate' | translate }}
       </button>
       <button
         type="button"
         (click)="savePermissions()"
         class="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
       >
-        Save Permissions
+        {{ 'rateTables.savePerms' | translate }}
       </button>
     </div>
   </header>
@@ -28,95 +28,95 @@
     <aside class="w-[440px] min-w-[400px] border-r border-gray-700/80 overflow-y-auto p-5 bg-gray-900/50">
       <h2 class="text-sm font-semibold text-gray-200 mb-4 flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-        @if (selectedRateId()) { Edit Rate Table } @else { Configure Rate Table }
+        {{ (selectedRateId() ? 'rateTables.editTable' : 'rateTables.configureTable') | translate }}
       </h2>
 
       <form [formGroup]="rateForm" (ngSubmit)="saveRateTable()" class="space-y-4">
         <div>
-          <label class="label">Rate Table Name</label>
-          <input formControlName="name" class="input" placeholder="e.g. West Coast TL Standard" />
+          <label class="label">{{ 'rateTables.name' | translate }}</label>
+          <input formControlName="name" class="input" [placeholder]="'rateTables.namePh' | translate" />
         </div>
 
         <div>
-          <label class="label">Carrier</label>
+          <label class="label">{{ 'rateTables.carrier' | translate }}</label>
           <select formControlName="carrier" class="input">
-            <option value="">Select carrier</option>
-            <option>Swift Transportation</option>
-            <option>FedEx Freight</option>
-            <option>JB Hunt</option>
-            <option>Schneider</option>
-            <option>XPO Logistics</option>
-            <option>Old Dominion</option>
-            <option>Any Carrier</option>
+            <option value="">{{ 'rateTables.selectCarrier' | translate }}</option>
+            <option value="Swift Transportation">Swift Transportation</option>
+            <option value="FedEx Freight">FedEx Freight</option>
+            <option value="JB Hunt">JB Hunt</option>
+            <option value="Schneider">Schneider</option>
+            <option value="XPO Logistics">XPO Logistics</option>
+            <option value="Old Dominion">Old Dominion</option>
+            <option value="Any Carrier">{{ lang.text('rateTables', 'Any Carrier') }}</option>
           </select>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="label">Origin Zone</label>
+            <label class="label">{{ 'rateTables.originZone' | translate }}</label>
             <input formControlName="originZone" class="input" placeholder="CA, NV, AZ" />
           </div>
           <div>
-            <label class="label">Destination Zone</label>
-            <input formControlName="destinationZone" class="input" placeholder="All US / Northeast" />
+            <label class="label">{{ 'rateTables.destZone' | translate }}</label>
+            <input formControlName="destinationZone" class="input" [placeholder]="'rateTables.destZonePh' | translate" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="label">Mode</label>
+            <label class="label">{{ 'rateTables.mode' | translate }}</label>
             <select formControlName="mode" class="input">
-              <option>TL</option>
-              <option>LTL</option>
-              <option>Intermodal</option>
-              <option>Expedited</option>
-              <option>Partial</option>
+              <option value="TL">{{ lang.text('rateTables', 'TL') }}</option>
+              <option value="LTL">{{ lang.text('rateTables', 'LTL') }}</option>
+              <option value="Intermodal">{{ lang.text('rateTables', 'Intermodal') }}</option>
+              <option value="Expedited">{{ lang.text('rateTables', 'Expedited') }}</option>
+              <option value="Partial">{{ lang.text('rateTables', 'Partial') }}</option>
             </select>
           </div>
           <div>
-            <label class="label">Rate Type</label>
+            <label class="label">{{ 'rateTables.rateType' | translate }}</label>
             <select formControlName="rateType" class="input">
-              <option>Per Mile</option>
-              <option>Per CWT</option>
-              <option>Flat</option>
-              <option>Per Piece</option>
-              <option>Per Hour</option>
+              <option value="Per Mile">{{ lang.text('rateTables', 'Per Mile') }}</option>
+              <option value="Per CWT">{{ lang.text('rateTables', 'Per CWT') }}</option>
+              <option value="Flat">{{ lang.text('rateTables', 'Flat') }}</option>
+              <option value="Per Piece">{{ lang.text('rateTables', 'Per Piece') }}</option>
+              <option value="Per Hour">{{ lang.text('rateTables', 'Per Hour') }}</option>
             </select>
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="label">Base Rate</label>
+            <label class="label">{{ 'rateTables.baseRate' | translate }}</label>
             <input type="number" step="0.01" formControlName="baseRate" class="input" placeholder="0.00" />
           </div>
           <div>
-            <label class="label">Min Charge</label>
+            <label class="label">{{ 'rateTables.minCharge' | translate }}</label>
             <input type="number" step="0.01" formControlName="minCharge" class="input" placeholder="0.00" />
           </div>
           <div>
-            <label class="label">Fuel %</label>
+            <label class="label">{{ 'rateTables.fuelPct' | translate }}</label>
             <input type="number" step="0.1" formControlName="fuelSurcharge" class="input" placeholder="0" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="label">Effective From</label>
+            <label class="label">{{ 'rateTables.from' | translate }}</label>
             <input type="date" formControlName="effectiveFrom" class="input" />
           </div>
           <div>
-            <label class="label">Effective To</label>
+            <label class="label">{{ 'rateTables.to' | translate }}</label>
             <input type="date" formControlName="effectiveTo" class="input" />
           </div>
         </div>
 
         <div>
-          <label class="label">Status</label>
+          <label class="label">{{ 'rateTables.statusLabel' | translate }}</label>
           <select formControlName="status" class="input">
-            <option>Draft</option>
-            <option>Active</option>
-            <option>Expired</option>
+            <option value="Draft">{{ 'rateTables.status.' + 'Draft' | translate }}</option>
+            <option value="Active">{{ 'rateTables.status.' + 'Active' | translate }}</option>
+            <option value="Expired">{{ 'rateTables.status.' + 'Expired' | translate }}</option>
           </select>
         </div>
 
@@ -126,21 +126,21 @@
             class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
             [disabled]="isSaving()"
           >
-            @if (isSaving()) { Saving... } @else { @if (selectedRateId()) { Update Rate } @else { Save Rate Table } }
+            {{ (isSaving() ? 'rateTables.saving' : selectedRateId() ? 'rateTables.update' : 'rateTables.save') | translate }}
           </button>
           <button
             type="button"
             (click)="resetForm()"
             class="px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
           >
-            Cancel
+            {{ 'common.cancel' | translate }}
           </button>
         </div>
       </form>
 
       <!-- Existing Rate Tables mini list -->
       <div class="mt-8 pt-5 border-t border-gray-700/60">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">Existing Rate Tables</h3>
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">{{ 'rateTables.existing' | translate }}</h3>
         <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           @for (rate of rateTables(); track rate.id) {
             <button
@@ -151,7 +151,7 @@
               [class.ring-blue-500]="selectedRateId() === rate.id"
             >
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-100">{{ rate.name }}</span>
+                <span class="text-sm font-medium text-gray-100">{{ lang.text('rateTables', rate.name) }}</span>
                 <span
                   class="text-[10px] px-2 py-0.5 rounded-full font-medium"
                   [class.bg-emerald-500/20]="rate.status === 'Active'"
@@ -161,11 +161,11 @@
                   [class.bg-gray-500/20]="rate.status === 'Expired'"
                   [class.text-gray-400]="rate.status === 'Expired'"
                 >
-                  {{ rate.status }}
+                  {{ 'rateTables.status.' + rate.status | translate }}
                 </span>
               </div>
               <div class="text-xs text-gray-400 mt-1">
-                {{ rate.carrier }} · {{ rate.mode }} · {{ rate.rateType }}
+                {{ lang.text('rateTables', rate.carrier) }} · {{ lang.text('rateTables', rate.mode) }} · {{ lang.text('rateTables', rate.rateType) }}
               </div>
             </button>
           }
@@ -177,8 +177,8 @@
     <main class="flex-1 flex flex-col overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-700/60 flex items-center justify-between">
         <div>
-          <h2 class="text-sm font-semibold text-gray-200">Roles and Permissions</h2>
-          <p class="text-xs text-gray-400">Control access to rate tables and related actions</p>
+          <h2 class="text-sm font-semibold text-gray-200">{{ 'rateTables.roles' | translate }}</h2>
+          <p class="text-xs text-gray-400">{{ 'rateTables.rolesSub' | translate }}</p>
         </div>
       </div>
 
@@ -187,21 +187,21 @@
           <table class="w-full text-sm">
             <thead>
               <tr class="border-b border-gray-700 bg-gray-800/80">
-                <th class="text-left px-4 py-3 font-medium text-gray-300">Role</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">View</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">Create / Edit</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">Delete</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">Approve</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">Export</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">Manage Perms</th>
+                <th class="text-left px-4 py-3 font-medium text-gray-300">{{ 'rateTables.role' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.view' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.createEdit' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.delete' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.approve' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.export' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.manage' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               @for (role of roles(); track role.role; let i = $index) {
                 <tr class="border-b border-gray-700/50 hover:bg-gray-800/40 transition-colors">
                   <td class="px-4 py-3.5">
-                    <div class="font-medium text-gray-100">{{ role.role }}</div>
-                    <div class="text-xs text-gray-500">{{ role.description }}</div>
+                    <div class="font-medium text-gray-100">{{ lang.text('rateTables', role.role) }}</div>
+                    <div class="text-xs text-gray-500">{{ lang.text('rateTables', role.description) }}</div>
                   </td>
                   <td class="text-center px-3 py-3">
                     <input
@@ -258,12 +258,12 @@
         </div>
 
         <div class="mt-6 p-4 bg-gray-800/30 border border-gray-700/60 rounded-lg text-xs text-gray-400">
-          <p class="font-medium text-gray-300 mb-1">Permission notes</p>
+          <p class="font-medium text-gray-300 mb-1">{{ 'rateTables.notes' | translate }}</p>
           <ul class="list-disc list-inside space-y-1">
-            <li><strong class="text-gray-200">View</strong> — Can see rate tables and quotes</li>
-            <li><strong class="text-gray-200">Create / Edit</strong> — Can add or modify rate entries</li>
-            <li><strong class="text-gray-200">Approve</strong> — Can activate rates and approve changes</li>
-            <li><strong class="text-gray-200">Manage Perms</strong> — Can edit this permissions matrix</li>
+            <li><strong class="text-gray-200">{{ 'rateTables.perm.view' | translate }}</strong> — {{ 'rateTables.note.view' | translate }}</li>
+            <li><strong class="text-gray-200">{{ 'rateTables.perm.createEdit' | translate }}</strong> — {{ 'rateTables.note.createEdit' | translate }}</li>
+            <li><strong class="text-gray-200">{{ 'rateTables.perm.approve' | translate }}</strong> — {{ 'rateTables.note.approve' | translate }}</li>
+            <li><strong class="text-gray-200">{{ 'rateTables.perm.manage' | translate }}</strong> — {{ 'rateTables.note.manage' | translate }}</li>
           </ul>
         </div>
       </div>
