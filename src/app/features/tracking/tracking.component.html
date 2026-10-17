@@ -1,6 +1,6 @@
-<div class="flex h-full overflow-hidden p-4 gap-4 bg-[#0b1220] text-slate-100">
+<div class="flex h-full overflow-hidden p-4 gap-4 bg-slate-50 dark:bg-[#0b1220] text-slate-900 dark:text-slate-100">
   <!-- Map -->
-  <div class="flex-1 relative bg-[#0f172a] rounded-xl border border-slate-800 overflow-hidden">
+  <div class="flex-1 relative bg-white dark:bg-[#0f172a] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
     <div class="absolute inset-0 p-4 flex flex-col">
       <div class="flex items-center justify-between mb-2">
         <h2 class="text-lg font-semibold">{{ 'tracking.title' | translate }}</h2>
@@ -8,7 +8,7 @@
           <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> {{ 'tracking.live' | translate }}
         </span>
       </div>
-      <div class="relative flex-1 bg-[#1e293b] rounded-lg overflow-hidden">
+      <div class="relative flex-1 bg-white dark:bg-[#1e293b] rounded-lg overflow-hidden">
         <svg class="w-full h-full" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
           <defs>
             <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
@@ -30,20 +30,20 @@
   </div>
 
   <!-- Side Panel -->
-  <div class="w-[420px] bg-[#0f172a] rounded-xl border border-slate-800 flex flex-col overflow-hidden">
-    <div class="border-b border-slate-800 p-4 max-h-64 overflow-y-auto">
-      <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">{{ 'tracking.active' | translate }}</h3>
+  <div class="w-[420px] bg-white dark:bg-[#0f172a] rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden">
+    <div class="border-b border-slate-200 dark:border-slate-800 p-4 max-h-64 overflow-y-auto">
+      <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">{{ 'tracking.active' | translate }}</h3>
       <div *ngFor="let s of shipments"
            (click)="select(s)"
            class="p-3 rounded-lg mb-2 cursor-pointer transition border"
-           [class.bg-slate-800]="selected?.id === s.id"
+           [class.bg-slate-100 dark:bg-slate-800]="selected?.id === s.id"
            [class.border-slate-600]="selected?.id === s.id"
            [class.border-transparent]="selected?.id !== s.id">
         <div class="flex items-center justify-between mb-1">
           <span class="font-medium">{{ s.id }}</span>
           <span class="text-xs px-2 py-0.5 rounded-full" [ngClass]="getStatusColor(s.status)">{{ 'tracking.status.' + statusKey(s.status) | translate }}</span>
         </div>
-        <div class="text-xs text-slate-400">{{ s.origin }} → {{ s.destination }}</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">{{ s.origin }} → {{ s.destination }}</div>
         <div class="text-xs text-slate-500 mt-1">{{ 'tracking.eta' | translate }} {{ etaText(s.eta) }}</div>
       </div>
     </div>
@@ -54,28 +54,28 @@
           <h2 class="text-xl font-semibold">{{ selected.id }}</h2>
           <span class="text-xs px-2.5 py-1 rounded-full" [ngClass]="getStatusColor(selected.status)">{{ 'tracking.status.' + statusKey(selected.status) | translate }}</span>
         </div>
-        <p class="text-sm text-slate-400">{{ selected.orderNumber }}</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ selected.orderNumber }}</p>
       </div>
 
       <div class="grid grid-cols-2 gap-3 mb-5">
-        <div class="bg-slate-800/50 rounded-lg p-3">
-          <div class="text-xs text-slate-400">{{ 'tracking.eta' | translate }}</div>
+        <div class="bg-slate-100 dark:bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3">
+          <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'tracking.eta' | translate }}</div>
           <div class="font-semibold text-green-400">{{ etaText(selected.eta) }}</div>
         </div>
-        <div class="bg-slate-800/50 rounded-lg p-3">
-          <div class="text-xs text-slate-400">{{ 'tracking.progress' | translate }}</div>
+        <div class="bg-slate-100 dark:bg-slate-50 dark:bg-slate-800/50 rounded-lg p-3">
+          <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'tracking.progress' | translate }}</div>
           <div class="font-semibold">{{ selected.progress }}%</div>
         </div>
       </div>
 
       <div class="mb-5">
-        <div class="text-xs text-slate-400 mb-1">{{ 'tracking.driver' | translate }}</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 mb-1">{{ 'tracking.driver' | translate }}</div>
         <div class="font-medium">{{ selected.driver }}</div>
-        <div class="text-sm text-slate-400">{{ selected.driverPhone }}</div>
+        <div class="text-sm text-slate-500 dark:text-slate-400">{{ selected.driverPhone }}</div>
       </div>
 
       <div class="mb-5">
-        <h3 class="text-sm font-semibold text-slate-300 mb-3">{{ 'tracking.timeline' | translate }}</h3>
+        <h3 class="text-sm font-semibold text-slate-600 dark:text-slate-300 mb-3">{{ 'tracking.timeline' | translate }}</h3>
         <div class="space-y-3">
           <div *ngFor="let step of selected.timeline; let last = last" class="flex gap-3">
             <div class="flex flex-col items-center">
