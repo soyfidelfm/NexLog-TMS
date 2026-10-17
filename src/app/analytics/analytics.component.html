@@ -2,12 +2,12 @@
   <!-- Header -->
   <div class="dashboard-header">
     <div class="header-left">
-      <h1>Analytics Dashboard</h1>
-      <p class="subtitle">Transportation performance, costs and volumes</p>
+      <h1>{{ 'analytics.title' | translate }}</h1>
+      <p class="subtitle">{{ 'analytics.subtitle' | translate }}</p>
     </div>
     <div class="header-right">
       <button class="btn btn-primary" (click)="exportToCSV('lanes')">
-        <span class="icon">↓</span> Export All
+        <span class="icon">↓</span> {{ 'analytics.exportAll' | translate }}
       </button>
     </div>
   </div>
@@ -16,30 +16,30 @@
   <div class="filters-card">
     <div class="filters-row">
       <div class="filter-group">
-        <label>Date From</label>
+        <label>{{ 'analytics.dateFrom' | translate }}</label>
         <input type="date" [(ngModel)]="dateFrom" (change)="applyFilters()" class="form-control">
       </div>
       <div class="filter-group">
-        <label>Date To</label>
+        <label>{{ 'analytics.dateTo' | translate }}</label>
         <input type="date" [(ngModel)]="dateTo" (change)="applyFilters()" class="form-control">
       </div>
       <div class="filter-group">
-        <label>Mode</label>
+        <label>{{ 'analytics.mode' | translate }}</label>
         <select [(ngModel)]="selectedMode" (change)="applyFilters()" class="form-control">
-          <option value="all">All Modes</option>
-          <option *ngFor="let mode of modes" [value]="mode">{{ mode }}</option>
+          <option value="all">{{ 'analytics.allModes' | translate }}</option>
+          <option *ngFor="let mode of modes" [value]="mode">{{ 'analytics.modes.' + mode | translate }}</option>
         </select>
       </div>
       <div class="filter-group">
-        <label>Carrier</label>
+        <label>{{ 'analytics.carrier' | translate }}</label>
         <select [(ngModel)]="selectedCarrier" (change)="applyFilters()" class="form-control">
-          <option value="all">All Carriers</option>
-          <option *ngFor="let carrier of carriers" [value]="carrier">{{ carrier }}</option>
+          <option value="all">{{ 'analytics.allCarriers' | translate }}</option>
+          <option *ngFor="let carrier of carriers" [value]="carrier">{{ carrier === 'All' ? ('analytics.all' | translate) : carrier }}</option>
         </select>
       </div>
       <div class="filter-group filter-actions">
-        <button class="btn btn-secondary" (click)="applyFilters()">Apply</button>
-        <button class="btn btn-outline" (click)="setDefaultDates(); applyFilters()">Reset</button>
+        <button class="btn btn-secondary" (click)="applyFilters()">{{ 'analytics.apply' | translate }}</button>
+        <button class="btn btn-outline" (click)="setDefaultDates(); applyFilters()">{{ 'analytics.reset' | translate }}</button>
       </div>
     </div>
   </div>
@@ -47,23 +47,23 @@
   <!-- KPI Summary -->
   <div class="kpi-row">
     <div class="kpi-card">
-      <div class="kpi-label">Total Spend</div>
-      <div class="kpi-value">$3,466,500</div>
-      <div class="kpi-trend positive">+4.2% vs prior</div>
+      <div class="kpi-label">{{ 'analytics.totalSpend' | translate }}</div>
+      <div class="kpi-value">{{ 3466500 | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</div>
+      <div class="kpi-trend positive">{{ 'analytics.vsPrior' | translate }}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">On-Time %</div>
+      <div class="kpi-label">{{ 'analytics.onTimePct' | translate }}</div>
       <div class="kpi-value">94.8%</div>
-      <div class="kpi-trend positive">+1.3 pts</div>
+      <div class="kpi-trend positive">{{ 'analytics.pts' | translate }}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Total Volume</div>
-      <div class="kpi-value">2,400</div>
-      <div class="kpi-trend">loads</div>
+      <div class="kpi-label">{{ 'analytics.totalVolume' | translate }}</div>
+      <div class="kpi-value">{{ 2400 | number : '1.0-0' : lang.locale() }}</div>
+      <div class="kpi-trend">{{ 'analytics.loadsWord' | translate }}</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Avg Cost / Load</div>
-      <div class="kpi-value">$1,444</div>
+      <div class="kpi-label">{{ 'analytics.avgCostLoad' | translate }}</div>
+      <div class="kpi-value">{{ 1444 | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</div>
       <div class="kpi-trend negative">+2.1%</div>
     </div>
   </div>
@@ -73,21 +73,21 @@
     <!-- Cost per Lane -->
     <div class="card card-full">
       <div class="card-header">
-        <h2>Cost per Lane</h2>
-        <button class="btn btn-sm btn-outline" (click)="exportToCSV('lanes')">Export</button>
+        <h2>{{ 'analytics.costPerLane' | translate }}</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('lanes')">{{ 'common.export' | translate }}</button>
       </div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Lane</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Mode</th>
-                <th class="text-right">Avg Cost</th>
-                <th class="text-right">Total Cost</th>
-                <th class="text-right">Volume</th>
+                <th>{{ 'analytics.lane' | translate }}</th>
+                <th>{{ 'analytics.origin' | translate }}</th>
+                <th>{{ 'analytics.destination' | translate }}</th>
+                <th>{{ 'analytics.mode' | translate }}</th>
+                <th class="text-right">{{ 'analytics.avgCost' | translate }}</th>
+                <th class="text-right">{{ 'analytics.totalCost' | translate }}</th>
+                <th class="text-right">{{ 'analytics.volume' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -95,9 +95,9 @@
                 <td class="lane-code">{{ lane.lane }}</td>
                 <td>{{ lane.origin }}</td>
                 <td>{{ lane.destination }}</td>
-                <td><span class="mode-badge" [attr.data-mode]="lane.mode">{{ lane.mode }}</span></td>
-                <td class="text-right">${{ lane.avgCost | number }}</td>
-                <td class="text-right">${{ lane.totalCost | number }}</td>
+                <td><span class="mode-badge" [attr.data-mode]="lane.mode">{{ 'analytics.modes.' + lane.mode | translate }}</span></td>
+                <td class="text-right">{{ lane.avgCost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</td>
+                <td class="text-right">{{ lane.totalCost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</td>
                 <td class="text-right">{{ lane.volume }}</td>
               </tr>
             </tbody>
@@ -109,29 +109,29 @@
     <!-- Carrier Performance -->
     <div class="card">
       <div class="card-header">
-        <h2>Carrier Performance</h2>
-        <button class="btn btn-sm btn-outline" (click)="exportToCSV('carriers')">Export</button>
+        <h2>{{ 'analytics.carrierPerf' | translate }}</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('carriers')">{{ 'common.export' | translate }}</button>
       </div>
       <div class="card-body">
         <div class="table-responsive">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Carrier</th>
-                <th class="text-right">On-Time %</th>
-                <th class="text-right">Avg Cost</th>
-                <th class="text-right">Volume</th>
-                <th class="text-right">Claims</th>
-                <th class="text-center">Score</th>
+                <th>{{ 'analytics.carrier' | translate }}</th>
+                <th class="text-right">{{ 'analytics.onTimePct' | translate }}</th>
+                <th class="text-right">{{ 'analytics.avgCost' | translate }}</th>
+                <th class="text-right">{{ 'analytics.volume' | translate }}</th>
+                <th class="text-right">{{ 'analytics.claims' | translate }}</th>
+                <th class="text-center">{{ 'analytics.score' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let carrier of filteredCarriers">
                 <td class="carrier-name">{{ carrier.carrier }}</td>
                 <td class="text-right">
-                  <span [class]="getOnTimeClass(carrier.onTimePercent)">{{ carrier.onTimePercent }}%</span>
+                  <span [class]="getOnTimeClass(carrier.onTimePercent)">{{ carrier.onTimePercent | number:'1.1-1':lang.locale() }}%</span>
                 </td>
-                <td class="text-right">${{ carrier.avgCost | number }}</td>
+                <td class="text-right">{{ carrier.avgCost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</td>
                 <td class="text-right">{{ carrier.totalVolume }}</td>
                 <td class="text-right">{{ carrier.claims }}</td>
                 <td class="text-center">
@@ -147,8 +147,8 @@
     <!-- On-Time Trend -->
     <div class="card">
       <div class="card-header">
-        <h2>On-Time Delivery Trend</h2>
-        <button class="btn btn-sm btn-outline" (click)="exportToCSV('trends')">Export</button>
+        <h2>{{ 'analytics.trend' | translate }}</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('trends')">{{ 'common.export' | translate }}</button>
       </div>
       <div class="card-body">
         <div class="trend-chart">
@@ -156,10 +156,10 @@
             <div class="trend-item" *ngFor="let trend of filteredTrends">
               <div class="trend-bar-container">
                 <div class="trend-bar" [style.height.%]="trend.onTimePercent" [class]="getOnTimeClass(trend.onTimePercent)">
-                  <span class="trend-value">{{ trend.onTimePercent }}%</span>
+                  <span class="trend-value">{{ trend.onTimePercent | number:'1.1-1':lang.locale() }}%</span>
                 </div>
               </div>
-              <div class="trend-label">{{ trend.period }}</div>
+              <div class="trend-label">{{ 'analytics.week' | translate: { n: trend.period.split(' ')[1] } }}</div>
               <div class="trend-deliveries">{{ trend.totalDeliveries }}</div>
             </div>
           </div>
@@ -170,22 +170,22 @@
     <!-- Volume by Mode -->
     <div class="card">
       <div class="card-header">
-        <h2>Volume by Mode</h2>
-        <button class="btn btn-sm btn-outline" (click)="exportToCSV('modes')">Export</button>
+        <h2>{{ 'analytics.volByMode' | translate }}</h2>
+        <button class="btn btn-sm btn-outline" (click)="exportToCSV('modes')">{{ 'common.export' | translate }}</button>
       </div>
       <div class="card-body">
         <div class="mode-list">
           <div class="mode-item" *ngFor="let mode of filteredModes">
             <div class="mode-info">
-              <span class="mode-name">{{ mode.mode }}</span>
-              <span class="mode-percent">{{ mode.percentage }}%</span>
+              <span class="mode-name">{{ 'analytics.modes.' + mode.mode | translate }}</span>
+              <span class="mode-percent">{{ mode.percentage | number:'1.1-2':lang.locale() }}%</span>
             </div>
             <div class="mode-bar-container">
               <div class="mode-bar" [style.width.%]="mode.percentage" [attr.data-mode]="mode.mode"></div>
             </div>
             <div class="mode-stats">
-              <span>{{ mode.volume }} loads</span>
-              <span>${{ mode.cost | number }}</span>
+              <span>{{ 'analytics.loadsN' | translate: { n: (mode.volume | number:'1.0-0':lang.locale()) } }}</span>
+              <span>{{ mode.cost | currency:'USD':'symbol-narrow':'1.0-0':lang.locale() }}</span>
             </div>
           </div>
         </div>

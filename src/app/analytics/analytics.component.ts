@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../core/language.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -37,11 +40,13 @@ export interface ModeVolume {
 @Component({
   selector: 'app-analytics',
   standalone: true,
-  imports: [CommonModule, FormsModule, DecimalPipe],
+  imports: [TranslatePipe, CommonModule, FormsModule, DecimalPipe],
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss']
 })
 export class AnalyticsComponent implements OnInit {
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
   dateFrom: string = '';
   dateTo: string = '';
   selectedMode: string = 'all';
@@ -139,22 +144,22 @@ export class AnalyticsComponent implements OnInit {
       case 'lanes':
         data = this.filteredLaneCosts;
         filename = 'cost_per_lane.csv';
-        headers = ['Lane', 'Origin', 'Destination', 'Avg Cost', 'Total Cost', 'Volume', 'Mode'];
+        headers = ['analytics.csv.lane', 'analytics.csv.origin', 'analytics.csv.destination', 'analytics.csv.avgCost', 'analytics.csv.totalCost', 'analytics.csv.volume', 'analytics.csv.mode'].map(k => this.translate.instant(k));
         break;
       case 'carriers':
         data = this.filteredCarriers;
         filename = 'carrier_performance.csv';
-        headers = ['Carrier', 'On-Time %', 'Avg Cost', 'Total Volume', 'Claims', 'Score'];
+        headers = ['analytics.csv.carrier', 'analytics.csv.onTime', 'analytics.csv.avgCost', 'analytics.csv.totalVolume', 'analytics.csv.claims', 'analytics.csv.score'].map(k => this.translate.instant(k));
         break;
       case 'trends':
         data = this.filteredTrends;
         filename = 'on_time_trend.csv';
-        headers = ['Period', 'On-Time %', 'Total Deliveries'];
+        headers = ['analytics.csv.period', 'analytics.csv.onTime', 'analytics.csv.totalDeliveries'].map(k => this.translate.instant(k));
         break;
       case 'modes':
         data = this.filteredModes;
         filename = 'volume_by_mode.csv';
-        headers = ['Mode', 'Volume', 'Percentage', 'Cost'];
+        headers = ['analytics.csv.mode', 'analytics.csv.volume', 'analytics.csv.percentage', 'analytics.csv.cost'].map(k => this.translate.instant(k));
         break;
     }
 
