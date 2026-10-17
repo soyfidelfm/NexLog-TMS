@@ -377,6 +377,8 @@
     "logoAlt": "Logotipo de NexLog",
     "mainNav": "Navegación principal",
     "role": "Administrador",
+    "themeToDark": "Cambiar a tema oscuro",
+    "themeToLight": "Cambiar a tema claro",
     "tms": "Sistema de Gestión de Transporte",
     "toggleMenu": "Abrir/cerrar menú"
   },

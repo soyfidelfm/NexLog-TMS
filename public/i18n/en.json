@@ -377,6 +377,8 @@
     "logoAlt": "NexLog logo",
     "mainNav": "Main navigation",
     "role": "Administrator",
+    "themeToDark": "Switch to dark theme",
+    "themeToLight": "Switch to light theme",
     "tms": "Transportation Management System",
     "toggleMenu": "Toggle menu"
   },

@@ -1,9 +1,9 @@
 <aside
-  class="fixed inset-y-0 left-0 z-40 flex w-64 flex-shrink-0 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] transition-transform duration-200 lg:static lg:translate-x-0 lg:bg-slate-50 dark:lg:bg-slate-900/80"
+  class="fixed inset-y-0 left-0 z-40 flex w-64 flex-shrink-0 flex-col border-r border-line bg-surface transition-transform duration-200 lg:static lg:translate-x-0 lg:bg-panel/80"
   [class.-translate-x-full]="!open()"
   [attr.aria-label]="'layout.mainNav' | translate"
 >
-  <div class="flex h-16 items-center border-b border-slate-200 dark:border-slate-800 px-5">
+  <div class="flex h-16 items-center border-b border-line px-5">
     <a routerLink="/dashboard" class="flex items-center gap-3" (click)="navigate.emit()">
       @if (!logoFailed()) {
         <img src="/nexlog-logo-login.png" [alt]="'layout.logoAlt' | translate" class="h-9 w-auto object-contain"
@@ -12,8 +12,8 @@
         <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 text-sm font-bold text-white">N</div>
       }
       <div>
-        <div class="font-semibold leading-tight text-slate-900 dark:text-white">NexLog</div>
-        <div class="text-xs text-slate-500 dark:text-slate-400">TMS</div>
+        <div class="font-semibold leading-tight text-strong">NexLog</div>
+        <div class="text-xs text-muted">TMS</div>
       </div>
     </a>
   </div>
@@ -22,9 +22,9 @@
     @for (item of navItems; track item.path) {
       <a
         [routerLink]="item.path"
-        routerLinkActive="bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white"
+        routerLinkActive="bg-elevated text-strong"
         (click)="navigate.emit()"
-        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/70 hover:text-slate-900 dark:hover:text-white"
+        class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-body transition-colors hover:bg-elevated/70 hover:text-strong"
       >
         <span class="w-5 text-center text-lg">{{ item.icon }}</span>
         <span>{{ item.labelKey | translate }}</span>
@@ -32,7 +32,7 @@
     }
   </nav>
 
-  <div class="border-t border-slate-200 dark:border-slate-800 p-4 text-xs text-slate-500 dark:text-slate-500">
+  <div class="border-t border-line p-4 text-xs text-subtle">
     {{ 'layout.footer' | translate }}
   </div>
 </aside>
