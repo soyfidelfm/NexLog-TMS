@@ -3,7 +3,6 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 
 type AuditStatus = 'Pending' | 'Approved' | 'Disputed' | 'Adjusted';
 
@@ -25,7 +24,7 @@ interface FreightInvoice {
 @Component({
   selector: 'app-freight-audit',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, RouterLink],
+  imports: [TranslatePipe, CommonModule],
   templateUrl: './freight-audit.component.html',
   styleUrl: './freight-audit.component.scss',
 })

@@ -3,7 +3,6 @@ import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface Shipment {
   id: string;
@@ -26,7 +25,7 @@ interface Shipment {
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, RouterLink, RouterLinkActive],
+  imports: [TranslatePipe, CommonModule],
   templateUrl: './tracking.component.html',
   styleUrl: './tracking.component.scss'
 })
