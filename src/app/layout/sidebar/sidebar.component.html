@@ -3,17 +3,18 @@
   [class.-translate-x-full]="!open()"
   [attr.aria-label]="'layout.mainNav' | translate"
 >
-  <div class="flex h-20 items-center border-b border-line px-4">
-    <a routerLink="/dashboard" class="flex items-center gap-3.5" (click)="navigate.emit()">
+  <div class="flex h-20 shrink-0 items-center border-b border-line px-4">
+    <a routerLink="/dashboard" class="flex min-w-0 items-center gap-3" (click)="navigate.emit()">
       @if (!logoFailed()) {
-        <img src="/iconInside.png" [alt]="'layout.logoAlt' | translate" class="h-14 w-14 object-contain"
+        <img src="/iconInside.png" [alt]="'layout.logoAlt' | translate"
+             class="h-14 w-14 shrink-0 rounded-full bg-white object-contain p-1 shadow-sm ring-1 ring-line"
              (error)="logoFailed.set(true)" />
       } @else {
-        <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-lg font-bold text-white">N</div>
+        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-xl font-bold text-white">N</div>
       }
-      <div class="min-w-0">
-        <div class="text-lg font-semibold leading-tight text-strong truncate">NexLog</div>
-        <div class="text-[11px] text-muted leading-none mt-0.5">TMS</div>
+      <div class="min-w-0 leading-none">
+        <div class="truncate text-xl font-bold tracking-tight text-strong">NexLog</div>
+        <div class="mt-1 text-[10px] font-medium uppercase tracking-[0.2em] text-subtle">TMS</div>
       </div>
     </a>
   </div>
