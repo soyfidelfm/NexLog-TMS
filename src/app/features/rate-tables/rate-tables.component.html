@@ -1,22 +1,22 @@
-<div class="rate-tables-container h-full flex flex-col bg-gray-900 text-gray-100">
+<div class="rate-tables-container h-full flex flex-col bg-slate-50 dark:bg-gray-900 text-slate-900 dark:text-gray-100">
   <!-- Header -->
-  <header class="flex items-center justify-between px-6 py-4 border-b border-gray-700/80 bg-gray-900/95">
+  <header class="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-gray-700/80 bg-slate-50 dark:bg-white/95 dark:bg-gray-900/95">
     <div>
       <h1 class="text-xl font-semibold tracking-tight">{{ 'rateTables.title' | translate }}</h1>
-      <p class="text-xs text-gray-400 mt-0.5">{{ 'rateTables.subtitle' | translate }}</p>
+      <p class="text-xs text-slate-500 dark:text-gray-400 mt-0.5">{{ 'rateTables.subtitle' | translate }}</p>
     </div>
     <div class="flex items-center gap-3">
       <button
         type="button"
         (click)="resetForm()"
-        class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
+        class="px-4 py-2 text-sm font-medium rounded-lg border border-gray-600 text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:bg-gray-800 transition-colors"
       >
         {{ 'rateTables.newRate' | translate }}
       </button>
       <button
         type="button"
         (click)="savePermissions()"
-        class="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors"
+        class="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-900 dark:text-white transition-colors"
       >
         {{ 'rateTables.savePerms' | translate }}
       </button>
@@ -25,7 +25,7 @@
 
   <div class="flex-1 flex overflow-hidden">
     <!-- Left: Rate Table Form -->
-    <aside class="w-[440px] min-w-[400px] border-r border-gray-700/80 overflow-y-auto p-5 bg-gray-900/50">
+    <aside class="w-[440px] min-w-[400px] border-r border-slate-200 dark:border-gray-700/80 overflow-y-auto p-5 bg-slate-50 dark:bg-gray-900/50">
       <h2 class="text-sm font-semibold text-gray-200 mb-4 flex items-center gap-2">
         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
         {{ (selectedRateId() ? 'rateTables.editTable' : 'rateTables.configureTable') | translate }}
@@ -123,7 +123,7 @@
         <div class="flex gap-3 pt-2">
           <button
             type="submit"
-            class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
+            class="flex-1 bg-blue-600 hover:bg-blue-500 text-slate-900 dark:text-white font-medium py-2.5 rounded-lg transition-colors disabled:opacity-50"
             [disabled]="isSaving()"
           >
             {{ (isSaving() ? 'rateTables.saving' : selectedRateId() ? 'rateTables.update' : 'rateTables.save') | translate }}
@@ -131,7 +131,7 @@
           <button
             type="button"
             (click)="resetForm()"
-            class="px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-800 transition-colors"
+            class="px-4 py-2.5 text-sm font-medium rounded-lg border border-gray-600 text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:bg-gray-800 transition-colors"
           >
             {{ 'common.cancel' | translate }}
           </button>
@@ -139,19 +139,19 @@
       </form>
 
       <!-- Existing Rate Tables mini list -->
-      <div class="mt-8 pt-5 border-t border-gray-700/60">
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">{{ 'rateTables.existing' | translate }}</h3>
+      <div class="mt-8 pt-5 border-t border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-gray-400 mb-3">{{ 'rateTables.existing' | translate }}</h3>
         <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           @for (rate of rateTables(); track rate.id) {
             <button
               type="button"
               (click)="editRate(rate)"
-              class="w-full text-left p-3 rounded-lg border border-gray-700/70 bg-gray-800/50 hover:bg-gray-800 hover:border-gray-600 transition-all"
+              class="w-full text-left p-3 rounded-lg border border-slate-200 dark:border-gray-700/70 bg-slate-100 dark:bg-gray-800/50 hover:bg-slate-100 dark:bg-gray-800 hover:border-gray-600 transition-all"
               [class.ring-1]="selectedRateId() === rate.id"
               [class.ring-blue-500]="selectedRateId() === rate.id"
             >
               <div class="flex items-center justify-between">
-                <span class="text-sm font-medium text-gray-100">{{ lang.text('rateTables', rate.name) }}</span>
+                <span class="text-sm font-medium text-slate-900 dark:text-gray-100">{{ lang.text('rateTables', rate.name) }}</span>
                 <span
                   class="text-[10px] px-2 py-0.5 rounded-full font-medium"
                   [class.bg-emerald-500/20]="rate.status === 'Active'"
@@ -159,12 +159,12 @@
                   [class.bg-amber-500/20]="rate.status === 'Draft'"
                   [class.text-amber-300]="rate.status === 'Draft'"
                   [class.bg-gray-500/20]="rate.status === 'Expired'"
-                  [class.text-gray-400]="rate.status === 'Expired'"
+                  [class.text-slate-500 dark:text-gray-400]="rate.status === 'Expired'"
                 >
                   {{ 'rateTables.status.' + rate.status | translate }}
                 </span>
               </div>
-              <div class="text-xs text-gray-400 mt-1">
+              <div class="text-xs text-slate-500 dark:text-gray-400 mt-1">
                 {{ lang.text('rateTables', rate.carrier) }} · {{ lang.text('rateTables', rate.mode) }} · {{ lang.text('rateTables', rate.rateType) }}
               </div>
             </button>
@@ -175,32 +175,32 @@
 
     <!-- Main: Roles & Permissions Table -->
     <main class="flex-1 flex flex-col overflow-hidden">
-      <div class="px-6 py-4 border-b border-gray-700/60 flex items-center justify-between">
+      <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 flex items-center justify-between">
         <div>
           <h2 class="text-sm font-semibold text-gray-200">{{ 'rateTables.roles' | translate }}</h2>
-          <p class="text-xs text-gray-400">{{ 'rateTables.rolesSub' | translate }}</p>
+          <p class="text-xs text-slate-500 dark:text-gray-400">{{ 'rateTables.rolesSub' | translate }}</p>
         </div>
       </div>
 
       <div class="flex-1 overflow-auto p-6">
-        <div class="bg-gray-800/40 border border-gray-700/80 rounded-xl overflow-hidden">
+        <div class="bg-slate-100 dark:bg-gray-800/40 border border-slate-200 dark:border-gray-700/80 rounded-xl overflow-hidden">
           <table class="w-full text-sm">
             <thead>
-              <tr class="border-b border-gray-700 bg-gray-800/80">
-                <th class="text-left px-4 py-3 font-medium text-gray-300">{{ 'rateTables.role' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.view' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.createEdit' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.delete' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.approve' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.export' | translate }}</th>
-                <th class="text-center px-3 py-3 font-medium text-gray-300 text-xs">{{ 'rateTables.perm.manage' | translate }}</th>
+              <tr class="border-b border-slate-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-800/80">
+                <th class="text-left px-4 py-3 font-medium text-slate-600 dark:text-gray-300">{{ 'rateTables.role' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.view' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.createEdit' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.delete' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.approve' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.export' | translate }}</th>
+                <th class="text-center px-3 py-3 font-medium text-slate-600 dark:text-gray-300 text-xs">{{ 'rateTables.perm.manage' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               @for (role of roles(); track role.role; let i = $index) {
-                <tr class="border-b border-gray-700/50 hover:bg-gray-800/40 transition-colors">
+                <tr class="border-b border-slate-200 dark:border-slate-200/50 dark:border-gray-700/50 hover:bg-slate-100 dark:bg-gray-800/40 transition-colors">
                   <td class="px-4 py-3.5">
-                    <div class="font-medium text-gray-100">{{ lang.text('rateTables', role.role) }}</div>
+                    <div class="font-medium text-slate-900 dark:text-gray-100">{{ lang.text('rateTables', role.role) }}</div>
                     <div class="text-xs text-gray-500">{{ lang.text('rateTables', role.description) }}</div>
                   </td>
                   <td class="text-center px-3 py-3">
@@ -257,8 +257,8 @@
           </table>
         </div>
 
-        <div class="mt-6 p-4 bg-gray-800/30 border border-gray-700/60 rounded-lg text-xs text-gray-400">
-          <p class="font-medium text-gray-300 mb-1">{{ 'rateTables.notes' | translate }}</p>
+        <div class="mt-6 p-4 bg-slate-100 dark:bg-gray-800/30 border border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 rounded-lg text-xs text-slate-500 dark:text-gray-400">
+          <p class="font-medium text-slate-600 dark:text-gray-300 mb-1">{{ 'rateTables.notes' | translate }}</p>
           <ul class="list-disc list-inside space-y-1">
             <li><strong class="text-gray-200">{{ 'rateTables.perm.view' | translate }}</strong> — {{ 'rateTables.note.view' | translate }}</li>
             <li><strong class="text-gray-200">{{ 'rateTables.perm.createEdit' | translate }}</strong> — {{ 'rateTables.note.createEdit' | translate }}</li>
