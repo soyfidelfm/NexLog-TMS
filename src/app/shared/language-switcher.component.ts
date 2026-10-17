@@ -8,15 +8,15 @@ import { LanguageService, Lang } from '../core/language.service';
   imports: [TranslatePipe],
   template: `
     <div role="group" [attr.aria-label]="'common.language' | translate"
-         class="flex items-center overflow-hidden rounded-lg border border-slate-700 bg-slate-800/60 text-xs font-medium">
+         class="flex items-center overflow-hidden rounded-lg border border-line-strong bg-elevated/60 text-xs font-medium">
       @for (l of langs; track l; let last = $last) {
         <button type="button" (click)="lang.setLang(l)" [attr.aria-pressed]="lang.lang() === l"
                 [attr.title]="'common.lang.' + l | translate"
                 class="px-3 py-1.5 transition"
-                [class]="lang.lang() === l ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-700 hover:text-white'">
+                [class]="lang.lang() === l ? 'bg-blue-600 text-white' : 'text-muted hover:bg-elevated-2 hover:text-strong'">
           {{ l.toUpperCase() }}
         </button>
-        @if (!last) { <span class="text-slate-600">|</span> }
+        @if (!last) { <span class="text-faint">|</span> }
       }
     </div>
   `,

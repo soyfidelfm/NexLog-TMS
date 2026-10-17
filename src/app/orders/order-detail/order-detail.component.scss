@@ -1,3 +1,15 @@
+/* Scrollbar theme tokens */
+:host {
+  --od-scroll-track: #0a0f1c;
+  --od-scroll-thumb: #334155;
+  --od-scroll-thumb-hover: #475569;
+}
+:host-context([data-theme="light"]) {
+  --od-scroll-track: #eceff5;
+  --od-scroll-thumb: #cbd5e1;
+  --od-scroll-thumb-hover: #94a3b8;
+}
+
 :host {
   display: block;
   height: 100%;
@@ -10,14 +22,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0f1c;
+  background: var(--od-scroll-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--od-scroll-thumb);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--od-scroll-thumb-hover);
 }
