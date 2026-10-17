@@ -1,9 +1,19 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  @apply bg-slate-50 text-slate-900;
+}
+
+html.dark, html.dark body {
   background: #0b1220;
   color: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
 }
