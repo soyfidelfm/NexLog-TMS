@@ -1,7 +1,7 @@
-import { Component, output, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
+import { ThemeService } from '../../core/theme.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageSwitcherComponent } from '../../shared/language-switcher.component';
-import { ThemeService } from '../../core/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -12,5 +12,5 @@ import { ThemeService } from '../../core/theme.service';
 })
 export class HeaderComponent {
   readonly toggleMenu = output<void>();
-  themeService = inject(ThemeService);
+  readonly theme = inject(ThemeService);
 }

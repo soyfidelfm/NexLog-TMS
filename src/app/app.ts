@@ -10,5 +10,6 @@ import { ThemeService } from './core/theme.service';
   styleUrl: './app.scss',
 })
 export class App {
-  private themeService = inject(ThemeService);
+  /** Instantiated at startup so the saved theme is applied on every route. */
+  private readonly theme = inject(ThemeService);
 }
