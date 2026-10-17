@@ -1,9 +1,9 @@
-<div class="exception-container h-full flex flex-col bg-gray-900 text-gray-100">
+<div class="exception-container h-full flex flex-col bg-slate-50 dark:bg-gray-900 text-slate-900 dark:text-gray-100">
   <!-- Header -->
-  <header class="border-b border-gray-700/60 px-6 py-4 flex items-center justify-between bg-gray-900/95">
+  <header class="border-b border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 px-6 py-4 flex items-center justify-between bg-slate-50 dark:bg-white/95 dark:bg-gray-900/95">
     <div>
       <h1 class="text-2xl font-semibold tracking-tight">{{ 'exceptions.title' | translate }}</h1>
-      <p class="text-sm text-gray-400 mt-0.5">{{ 'exceptions.subtitle' | translate }}</p>
+      <p class="text-sm text-slate-500 dark:text-gray-400 mt-0.5">{{ 'exceptions.subtitle' | translate }}</p>
     </div>
     <div class="flex items-center gap-3">
       <div class="flex gap-2 text-xs">
@@ -17,19 +17,19 @@
 
   <div class="flex-1 flex overflow-hidden">
     <!-- Left: List -->
-    <aside class="w-[420px] min-w-[380px] border-r border-gray-700/60 flex flex-col bg-gray-900/80">
+    <aside class="w-[420px] min-w-[380px] border-r border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 flex flex-col bg-slate-50 dark:bg-white/80 dark:bg-gray-900/80">
       <!-- Filters -->
-      <div class="p-4 border-b border-gray-700/50 space-y-3">
+      <div class="p-4 border-b border-slate-200 dark:border-slate-200/50 dark:border-gray-700/50 space-y-3">
         <input
           type="text"
           [placeholder]="'exceptions.search' | translate"
-          class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500"
+          class="w-full bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500"
           [ngModel]="searchTerm()"
           (ngModelChange)="searchTerm.set($event)"
         />
         <div class="flex gap-2">
           <select
-            class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            class="flex-1 bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             [ngModel]="filterSeverity()"
             (ngModelChange)="filterSeverity.set($event)"
           >
@@ -40,7 +40,7 @@
             <option value="Low">{{ 'severity.Low' | translate }}</option>
           </select>
           <select
-            class="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+            class="flex-1 bg-slate-100 dark:bg-gray-800 border border-slate-200 dark:border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
             [ngModel]="filterStatus()"
             (ngModelChange)="filterStatus.set($event)"
           >
@@ -59,18 +59,18 @@
           <button
             type="button"
             (click)="select(ex)"
-            class="w-full text-left px-4 py-3.5 border-b border-gray-800/80 hover:bg-gray-800/60 transition-colors"
-            [class.bg-gray-800/80]="selectedId() === ex.id"
+            class="w-full text-left px-4 py-3.5 border-b border-gray-800/80 hover:bg-slate-100 dark:bg-gray-800/60 transition-colors"
+            [class.bg-slate-100 dark:bg-gray-800/80]="selectedId() === ex.id"
             [class.border-l-2]="selectedId() === ex.id"
             [class.border-l-blue-500]="selectedId() === ex.id"
           >
             <div class="flex items-start justify-between gap-2">
               <div class="min-w-0">
                 <div class="flex items-center gap-2 mb-1">
-                  <span class="text-xs font-mono text-gray-400">{{ ex.id }}</span>
+                  <span class="text-xs font-mono text-slate-500 dark:text-gray-400">{{ ex.id }}</span>
                   <span class="text-[10px] px-1.5 py-0.5 rounded border" [ngClass]="severityClass(ex.severity)">{{ 'severity.' + ex.severity | translate }}</span>
                 </div>
-                <p class="text-sm font-medium text-gray-100 truncate">{{ lang.text('exceptions', ex.title) }}</p>
+                <p class="text-sm font-medium text-slate-900 dark:text-gray-100 truncate">{{ lang.text('exceptions', ex.title) }}</p>
                 <p class="text-xs text-gray-500 mt-0.5">{{ ex.loadId }} · {{ ex.carrier }}</p>
               </div>
               <span class="text-[10px] px-1.5 py-0.5 rounded shrink-0" [ngClass]="statusClass(ex.status)">{{ 'exceptions.status.' + ex.status | translate }}</span>
@@ -98,7 +98,7 @@
                 <span class="text-xs px-2 py-0.5 rounded border" [ngClass]="severityClass(ex.severity)">{{ 'severity.' + ex.severity | translate }}</span>
                 <span class="text-xs px-2 py-0.5 rounded" [ngClass]="statusClass(ex.status)">{{ 'exceptions.status.' + ex.status | translate }}</span>
               </div>
-              <p class="text-sm text-gray-400">{{ ex.id }} · {{ ex.loadId }}{{ ex.orderId ? ' · ' + ex.orderId : '' }} · {{ ex.carrier }}</p>
+              <p class="text-sm text-slate-500 dark:text-gray-400">{{ ex.id }} · {{ ex.loadId }}{{ ex.orderId ? ' · ' + ex.orderId : '' }} · {{ ex.carrier }}</p>
               <p class="text-xs text-gray-500 mt-1">{{ ex.location }} · {{ 'exceptions.opened' | translate: { date: (ex.openedAt | date: 'MMM d, y, HH:mm' : undefined : lang.locale()) } }}</p>
             </div>
             <div class="flex gap-2">
@@ -107,12 +107,12 @@
             </div>
           </div>
 
-          <p class="text-sm text-gray-300 mb-6 leading-relaxed">{{ lang.text('exceptions', ex.description) }}</p>
+          <p class="text-sm text-slate-600 dark:text-gray-300 mb-6 leading-relaxed">{{ lang.text('exceptions', ex.description) }}</p>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Timeline -->
             <section class="lg:col-span-1">
-              <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.timeline' | translate }}</h3>
+              <h3 class="text-sm font-semibold text-slate-600 dark:text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.timeline' | translate }}</h3>
               <div class="relative pl-4 space-y-4">
                 <div class="absolute left-[7px] top-1 bottom-1 w-px bg-gray-700"></div>
                 @for (ev of ex.timeline; track ev.time) {
@@ -120,7 +120,7 @@
                     <div class="absolute -left-[11px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-500 ring-4 ring-gray-900"></div>
                     <div class="text-xs text-gray-500">{{ ev.time }}</div>
                     <div class="text-sm font-medium text-gray-200">{{ lang.text('exceptions', ev.title) }}</div>
-                    <div class="text-xs text-gray-400 mt-0.5">{{ lang.text('exceptions', ev.description) }}</div>
+                    <div class="text-xs text-slate-500 dark:text-gray-400 mt-0.5">{{ lang.text('exceptions', ev.description) }}</div>
                     <div class="text-[11px] text-gray-500 mt-0.5">{{ lang.text('exceptions', ev.actor) }}</div>
                   </div>
                 }
@@ -131,10 +131,10 @@
             <div class="lg:col-span-2 space-y-6">
               <!-- Actions taken -->
               <section>
-                <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.actionsTaken' | translate }}</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.actionsTaken' | translate }}</h3>
                 <div class="space-y-2">
                   @for (act of ex.actions; track act.id) {
-                    <div class="bg-gray-800/60 border border-gray-700/70 rounded-lg px-3.5 py-2.5">
+                    <div class="bg-slate-100 dark:bg-gray-800/60 border border-slate-200 dark:border-gray-700/70 rounded-lg px-3.5 py-2.5">
                       <div class="flex items-center justify-between">
                         <span class="text-sm text-gray-200">{{ lang.text('exceptions', act.action) }}</span>
                         <span class="text-[11px] text-gray-500">{{ act.at }}</span>
@@ -149,18 +149,18 @@
 
               <!-- Communication log -->
               <section>
-                <h3 class="text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.commLog' | translate }}</h3>
+                <h3 class="text-sm font-semibold text-slate-600 dark:text-gray-300 mb-3 uppercase tracking-wide">{{ 'exceptions.commLog' | translate }}</h3>
                 <div class="space-y-2">
                   @for (comm of ex.communications; track comm.id) {
-                    <div class="bg-gray-800/50 border border-gray-700/60 rounded-lg px-3.5 py-2.5 text-sm">
+                    <div class="bg-slate-100 dark:bg-gray-800/50 border border-slate-200 dark:border-slate-200/60 dark:border-gray-700/60 rounded-lg px-3.5 py-2.5 text-sm">
                       <div class="flex items-center justify-between mb-1">
                         <div class="flex items-center gap-2">
-                          <span class="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-700 text-gray-300">{{ 'exceptions.channel.' + comm.channel | translate }}</span>
-                          <span class="text-xs text-gray-400">{{ lang.text('exceptions', comm.from) }} → {{ lang.text('exceptions', comm.to) }}</span>
+                          <span class="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-gray-700 text-slate-600 dark:text-gray-300">{{ 'exceptions.channel.' + comm.channel | translate }}</span>
+                          <span class="text-xs text-slate-500 dark:text-gray-400">{{ lang.text('exceptions', comm.from) }} → {{ lang.text('exceptions', comm.to) }}</span>
                         </div>
                         <span class="text-[11px] text-gray-500">{{ comm.at }}</span>
                       </div>
-                      <p class="text-gray-300 text-xs leading-relaxed">{{ lang.text('exceptions', comm.message) }}</p>
+                      <p class="text-slate-600 dark:text-gray-300 text-xs leading-relaxed">{{ lang.text('exceptions', comm.message) }}</p>
                     </div>
                   } @empty {
                     <p class="text-xs text-gray-500">{{ 'exceptions.noComms' | translate }}</p>
