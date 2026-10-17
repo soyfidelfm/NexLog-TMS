@@ -145,7 +145,6 @@
     "durationHm": "{{h}}h {{m}}m",
     "edit": "Edit",
     "export": "Export",
-    "help": "Help",
     "lang": {
       "en": "English",
       "es": "Spanish"
@@ -373,9 +372,13 @@
     "varianceN": "{{amount}} Variance"
   },
   "layout": {
+    "copyright": "© 2026 NexLog TMS. All rights reserved.",
     "footer": "NexLog TMS · Core",
+    "logoAlt": "NexLog logo",
+    "mainNav": "Main navigation",
     "role": "Administrator",
-    "tms": "Transportation Management System"
+    "tms": "Transportation Management System",
+    "toggleMenu": "Toggle menu"
   },
   "loadPlanning": {
     "allAssigned": "All orders assigned",
@@ -447,7 +450,6 @@
   "orderDetail": {
     "actions": "Actions",
     "back": "Back",
-    "brand": "Logistics",
     "destAddress": "Destination Address",
     "destCity": "Destination City",
     "destination": "Destination",
@@ -458,21 +460,8 @@
     "eta": "Estimated Arrival",
     "expand": "Expand map",
     "fitRoute": "Fit to Route",
-    "footer": "© 2024 TMS Logistics",
     "info": "Order Information",
     "moreDetails": "More Details",
-    "nav": {
-      "assets": "Assets",
-      "customers": "Customers",
-      "dashboard": "Dashboard",
-      "documents": "Documents",
-      "orders": "Orders",
-      "rates": "Rates",
-      "reports": "Reports",
-      "routing": "Routing",
-      "settings": "Settings",
-      "shipments": "Shipments"
-    },
     "origin": "Origin",
     "originAddress": "Origin Address",
     "originCity": "Origin City",
@@ -486,7 +475,6 @@
       "stackable": "Stackable",
       "temp": "Temperature Sensitive"
     },
-    "role": "Operations",
     "routeDistance": "Route Distance",
     "routeMapAlt": "Route map",
     "routePreview": "Route Preview",
