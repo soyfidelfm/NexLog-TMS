@@ -1,0 +1,17 @@
+<div class="flex h-screen overflow-hidden bg-[#0b1220] text-slate-100">
+  <app-sidebar [open]="menuOpen()" (navigate)="menuOpen.set(false)" />
+
+  @if (menuOpen()) {
+    <div class="fixed inset-0 z-30 bg-black/50 lg:hidden" (click)="menuOpen.set(false)" aria-hidden="true"></div>
+  }
+
+  <div class="flex min-w-0 flex-1 flex-col">
+    <app-header (toggleMenu)="menuOpen.set(!menuOpen())" />
+    <main class="flex-1 overflow-auto">
+      <router-outlet />
+    </main>
+    <footer class="flex-shrink-0 border-t border-slate-800 px-6 py-2 text-center text-[11px] text-slate-500">
+      {{ 'layout.copyright' | translate }}
+    </footer>
+  </div>
+</div>
