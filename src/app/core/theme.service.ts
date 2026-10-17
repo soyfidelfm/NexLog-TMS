@@ -1,4 +1,4 @@
-import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, effect, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export type Theme = 'light' | 'dark';
@@ -11,6 +11,7 @@ export class ThemeService {
   private isBrowser = isPlatformBrowser(this.platformId);
 
   readonly theme = signal<Theme>(this.getInitialTheme());
+  readonly isDark = computed(() => this.theme() === 'dark');
 
   constructor() {
     if (this.isBrowser) {
@@ -31,13 +32,11 @@ export class ThemeService {
 
   private applyTheme(theme: Theme) {
     const html = document.documentElement;
-    // Tailwind class strategy
     if (theme === 'dark') {
       html.classList.add('dark');
     } else {
       html.classList.remove('dark');
     }
-    // data-theme attribute for component SCSS tokens
     html.setAttribute('data-theme', theme);
     html.style.colorScheme = theme;
   }
