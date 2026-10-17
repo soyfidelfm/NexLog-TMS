@@ -1,47 +1,52 @@
-import { Injectable, effect, signal } from '@angular/core';
+import { Injectable, signal, effect, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'light' | 'dark';
 
-const STORAGE_KEY = 'nexlog.theme';
-
-/**
- * App theme (dark | light). Dark is the default.
- * The choice is persisted in localStorage ('nexlog.theme') and applied as
- * <html data-theme="..."> so the CSS tokens in styles.css switch globally.
- */
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ThemeService {
-  readonly theme = signal<Theme>(this.readStored());
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
+  readonly theme = signal<Theme>(this.getInitialTheme());
 
   constructor() {
-    effect(() => {
-      const t = this.theme();
-      document.documentElement.setAttribute('data-theme', t);
-      try {
-        localStorage.setItem(STORAGE_KEY, t);
-      } catch {
-        /* storage unavailable: keep the in-memory value */
-      }
-    });
-  }
-
-  isDark(): boolean {
-    return this.theme() === 'dark';
-  }
-
-  toggle(): void {
-    this.theme.update(t => (t === 'dark' ? 'light' : 'dark'));
-  }
-
-  setTheme(theme: Theme): void {
-    this.theme.set(theme);
-  }
-
-  private readStored(): Theme {
-    try {
-      return localStorage.getItem(STORAGE_KEY) === 'light' ? 'light' : 'dark';
-    } catch {
-      return 'dark';
+    if (this.isBrowser) {
+      effect(() => {
+        const current = this.theme();
+        this.applyTheme(current);
+        localStorage.setItem('nexlog-theme', current);
+      });
     }
+  }
+
+  private getInitialTheme(): Theme {
+    if (!this.isBrowser) return 'dark';
+    const stored = localStorage.getItem('nexlog-theme') as Theme | null;
+    if (stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  private applyTheme(theme: Theme) {
+    const html = document.documentElement;
+    // Tailwind class strategy
+    if (theme === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    // data-theme attribute for component SCSS tokens
+    html.setAttribute('data-theme', theme);
+    html.style.colorScheme = theme;
+  }
+
+  toggle() {
+    this.theme.update(t => t === 'dark' ? 'light' : 'dark');
+  }
+
+  setTheme(theme: Theme) {
+    this.theme.set(theme);
   }
 }
