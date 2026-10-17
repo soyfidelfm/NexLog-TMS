@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { LanguageService } from '../../core/language.service';
+import { ThemeService } from '../../core/theme.service';
 
 interface KPI {
   titleKey: string;
@@ -31,6 +32,7 @@ interface Alert {
 })
 export class DashboardComponent implements OnInit {
   readonly lang = inject(LanguageService);
+  private readonly theme = inject(ThemeService);
 
   private readonly translate = inject(TranslateService);
 
@@ -56,15 +58,22 @@ export class DashboardComponent implements OnInit {
       pointHoverRadius: 6
     }]
   };
-  weeklyVolumeOptions: ChartConfiguration['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      y: { beginAtZero: true, max: 2000, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-      x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-    }
-  };
+  weeklyVolumeOptions: ChartConfiguration['options'] = this.buildChartOptions(true);
+
+  /** Axis/grid colors follow the active theme (dark values are the original ones). */
+  private buildChartOptions(dark: boolean): ChartConfiguration['options'] {
+    const grid = dark ? 'rgba(255,255,255,0.05)' : 'rgba(15,23,42,0.06)';
+    const ticks = dark ? '#94a3b8' : '#56657a';
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 2000, grid: { color: grid }, ticks: { color: ticks } },
+        x: { grid: { display: false }, ticks: { color: ticks } }
+      }
+    };
+  }
   weeklyVolumeType: ChartType = 'line';
 
   carriers = [
@@ -92,6 +101,10 @@ export class DashboardComponent implements OnInit {
   ];
 
   constructor() {
+    // Recolor the chart when the theme changes.
+    effect(() => {
+      this.weeklyVolumeOptions = this.buildChartOptions(this.theme.isDark());
+    });
     // Rebuild chart labels whenever the language changes.
     effect(() => {
       const locale = this.lang.locale();
