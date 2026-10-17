@@ -191,23 +191,23 @@ export class CarrierManagementComponent {
   }
 
   getOnTimeClass(percent: number): string {
-    if (percent >= 95) return 'text-emerald-400';
-    if (percent >= 90) return 'text-amber-400';
-    return 'text-red-400';
+    if (percent >= 95) return 'text-emerald-ink';
+    if (percent >= 90) return 'text-amber-ink';
+    return 'text-red-ink';
   }
 
   getClaimsClass(rate: number): string {
-    if (rate <= 1) return 'text-emerald-400';
-    if (rate <= 2) return 'text-amber-400';
-    return 'text-red-400';
+    if (rate <= 1) return 'text-emerald-ink';
+    if (rate <= 2) return 'text-amber-ink';
+    return 'text-red-ink';
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Active': return 'bg-emerald-500/15 text-emerald-400';
-      case 'Inactive': return 'bg-slate-700 text-slate-400';
-      case 'Pending': return 'bg-amber-500/15 text-amber-400';
-      default: return 'bg-slate-700 text-slate-300';
+      case 'Active': return 'bg-emerald-500/15 text-emerald-ink';
+      case 'Inactive': return 'bg-elevated-2 text-muted';
+      case 'Pending': return 'bg-amber-500/15 text-amber-ink';
+      default: return 'bg-elevated-2 text-body';
     }
   }
 

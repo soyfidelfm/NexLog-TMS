@@ -1,13 +1,13 @@
-<div class="min-h-full bg-slate-50 dark:bg-[#0b1220] p-4 text-slate-700 dark:text-slate-200 lg:p-6">
+<div class="min-h-full bg-app p-4 text-secondary lg:p-6">
   <!-- Header -->
   <header class="mb-6 flex flex-wrap items-start justify-between gap-4">
     <div>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ 'carriers.title' | translate }}</h1>
-      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'carriers.subtitle' | translate }}</p>
+      <h1 class="text-3xl font-bold text-strong">{{ 'carriers.title' | translate }}</h1>
+      <p class="mt-1 text-sm text-muted">{{ 'carriers.subtitle' | translate }}</p>
     </div>
     <button
       (click)="addCarrier()"
-      class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-slate-900 dark:text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition"
+      class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
@@ -17,9 +17,9 @@
   </header>
 
   <!-- Filters -->
-  <section class="mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-3">
+  <section class="mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface p-3">
     <div class="relative flex-1 min-w-[220px]">
-      <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
       </svg>
       <input
@@ -27,14 +27,14 @@
         [ngModel]="searchQuery()"
         (ngModelChange)="searchQuery.set($event)"
         [placeholder]="'carriers.search' | translate"
-        class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0b1220] py-2 pl-9 pr-3 text-sm text-slate-700 dark:text-slate-200 placeholder-slate-500 focus:border-blue-500 focus:outline-none"
+        class="w-full rounded-lg border border-line-strong bg-app py-2 pl-9 pr-3 text-sm text-secondary placeholder-subtle focus:border-blue-500 focus:outline-none"
       />
     </div>
 
     <select
       [ngModel]="statusFilter()"
       (ngModelChange)="statusFilter.set($event)"
-      class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0b1220] px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:border-blue-500 focus:outline-none"
+      class="rounded-lg border border-line-strong bg-app px-3 py-2 text-sm text-secondary focus:border-blue-500 focus:outline-none"
     >
       <option value="All">{{ 'carriers.allStatuses' | translate }}</option>
       <option value="Active">{{ 'carriers.status.active' | translate }}</option>
@@ -43,7 +43,7 @@
     </select>
 
     <div class="flex items-center gap-2 text-sm">
-      <span class="text-slate-500 dark:text-slate-400 whitespace-nowrap">{{ 'carriers.minRating' | translate }}</span>
+      <span class="text-muted whitespace-nowrap">{{ 'carriers.minRating' | translate }}</span>
       <input
         type="range"
         min="0"
@@ -53,10 +53,10 @@
         (ngModelChange)="minRating.set(+$event)"
         class="w-24 accent-blue-500"
       />
-      <span class="w-8 text-right text-slate-600 dark:text-slate-300">{{ minRating() }}</span>
+      <span class="w-8 text-right text-body">{{ minRating() }}</span>
     </div>
 
-    <span class="ml-auto text-xs text-slate-500">
+    <span class="ml-auto text-xs text-subtle">
       {{ 'carriers.count' | translate: { n: filteredCarriers().length } }}
     </span>
   </section>
@@ -68,17 +68,17 @@
       @for (c of filteredCarriers(); track c.id) {
         <article
           (click)="select(c.id)"
-          class="cursor-pointer rounded-xl border bg-white dark:bg-[#0f172a] p-4 transition-colors"
-          [class]="selectedId() === c.id ? 'border-blue-500/60 ring-1 ring-blue-500/30' : 'border-slate-200 dark:border-slate-800 hover:border-slate-200 dark:border-slate-700'"
+          class="cursor-pointer rounded-xl border bg-surface p-4 transition-colors"
+          [class]="selectedId() === c.id ? 'border-blue-500/60 ring-1 ring-blue-500/30' : 'border-line hover:border-line-strong'"
         >
           <div class="flex items-start justify-between gap-3">
             <div class="flex items-center gap-3">
-              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-bold text-blue-400">
+              <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-elevated text-sm font-bold text-blue-ink">
                 {{ c.code }}
               </div>
               <div>
-                <div class="font-semibold text-slate-900 dark:text-white">{{ c.name }}</div>
-                <div class="text-xs text-slate-500">{{ c.city }}, {{ c.state }} · {{ c.mcNumber }}</div>
+                <div class="font-semibold text-strong">{{ c.name }}</div>
+                <div class="text-xs text-subtle">{{ c.city }}, {{ c.state }} · {{ c.mcNumber }}</div>
               </div>
             </div>
             <span class="rounded-md px-2 py-0.5 text-xs font-medium" [class]="getStatusClass(c.status)">
@@ -88,43 +88,43 @@
 
           <!-- Scorecard -->
           <div class="mt-4 grid grid-cols-3 gap-3 text-center">
-            <div class="rounded-lg bg-slate-50 dark:bg-[#0b1220] py-2">
+            <div class="rounded-lg bg-app py-2">
               <div class="text-lg font-bold" [class]="getOnTimeClass(c.onTimePercent)">
                 {{ c.onTimePercent | number:'1.1-1':lang.locale() }}%
               </div>
-              <div class="text-[11px] text-slate-500">{{ 'carriers.onTime' | translate }}</div>
+              <div class="text-[11px] text-subtle">{{ 'carriers.onTime' | translate }}</div>
             </div>
-            <div class="rounded-lg bg-slate-50 dark:bg-[#0b1220] py-2">
+            <div class="rounded-lg bg-app py-2">
               <div class="text-lg font-bold" [class]="getClaimsClass(c.claimsRate)">
                 {{ c.claimsRate | number:'1.1-1':lang.locale() }}%
               </div>
-              <div class="text-[11px] text-slate-500">{{ 'carriers.claims' | translate }}</div>
+              <div class="text-[11px] text-subtle">{{ 'carriers.claims' | translate }}</div>
             </div>
-            <div class="rounded-lg bg-slate-50 dark:bg-[#0b1220] py-2">
-              <div class="text-lg font-bold text-amber-400">{{ c.rating | number:'1.1-1':lang.locale() }}</div>
-              <div class="text-[11px] text-slate-500">{{ 'carriers.rating' | translate }}</div>
+            <div class="rounded-lg bg-app py-2">
+              <div class="text-lg font-bold text-amber-ink">{{ c.rating | number:'1.1-1':lang.locale() }}</div>
+              <div class="text-[11px] text-subtle">{{ 'carriers.rating' | translate }}</div>
             </div>
           </div>
 
-          <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
+          <div class="mt-3 flex items-center justify-between text-xs text-subtle">
             <span>{{ 'carriers.loads' | translate: { n: (c.totalLoads | number : '1.0-0' : lang.locale()) } }}</span>
-            <span class="text-amber-400/80">{{ getRatingStars(c.rating) }}</span>
+            <span class="text-amber-ink/80">{{ getRatingStars(c.rating) }}</span>
           </div>
         </article>
       } @empty {
-        <div class="rounded-xl border border-dashed border-slate-200 dark:border-slate-700 py-12 text-center text-slate-500">
+        <div class="rounded-xl border border-dashed border-line-strong py-12 text-center text-subtle">
           {{ 'carriers.empty' | translate }}
         </div>
       }
     </section>
 
     <!-- Detail panel -->
-    <aside class="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0f172a] p-5 max-h-[calc(100vh-280px)] overflow-y-auto">
+    <aside class="rounded-xl border border-line bg-surface p-5 max-h-[calc(100vh-280px)] overflow-y-auto">
       @if (selected(); as c) {
         <div class="mb-4 flex items-start justify-between">
           <div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ c.name }}</h2>
-            <p class="text-sm text-slate-500 dark:text-slate-400">{{ c.code }} · {{ c.city }}, {{ c.state }}</p>
+            <h2 class="text-xl font-bold text-strong">{{ c.name }}</h2>
+            <p class="text-sm text-muted">{{ c.code }} · {{ c.city }}, {{ c.state }}</p>
           </div>
           <span class="rounded-md px-2.5 py-1 text-xs font-medium" [class]="getStatusClass(c.status)">
             {{ statusKey[c.status] | translate }}
@@ -133,64 +133,64 @@
 
         <!-- Scorecard big -->
         <div class="mb-5 grid grid-cols-3 gap-2">
-          <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0b1220] p-3 text-center">
+          <div class="rounded-lg border border-line bg-app p-3 text-center">
             <div class="text-2xl font-bold" [class]="getOnTimeClass(c.onTimePercent)">{{ c.onTimePercent | number:'1.1-1':lang.locale() }}%</div>
-            <div class="text-xs text-slate-500">{{ 'carriers.onTime' | translate }}</div>
+            <div class="text-xs text-subtle">{{ 'carriers.onTime' | translate }}</div>
           </div>
-          <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0b1220] p-3 text-center">
+          <div class="rounded-lg border border-line bg-app p-3 text-center">
             <div class="text-2xl font-bold" [class]="getClaimsClass(c.claimsRate)">{{ c.claimsRate | number:'1.1-1':lang.locale() }}%</div>
-            <div class="text-xs text-slate-500">{{ 'carriers.claimsRate' | translate }}</div>
+            <div class="text-xs text-subtle">{{ 'carriers.claimsRate' | translate }}</div>
           </div>
-          <div class="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0b1220] p-3 text-center">
-            <div class="text-2xl font-bold text-amber-400">{{ c.rating | number:'1.1-1':lang.locale() }}</div>
-            <div class="text-xs text-slate-500">{{ 'carriers.rating' | translate }}</div>
+          <div class="rounded-lg border border-line bg-app p-3 text-center">
+            <div class="text-2xl font-bold text-amber-ink">{{ c.rating | number:'1.1-1':lang.locale() }}</div>
+            <div class="text-xs text-subtle">{{ 'carriers.rating' | translate }}</div>
           </div>
         </div>
 
         <div class="space-y-4 text-sm">
           <div>
-            <div class="mb-1 text-xs uppercase tracking-wide text-slate-500">{{ 'carriers.contact' | translate }}</div>
-            <div class="text-slate-700 dark:text-slate-200">{{ 'carriers.data.' + c.id + '.contact' | translate }}</div>
-            <div class="text-slate-500 dark:text-slate-400">{{ c.phone }}</div>
-            <div class="text-slate-500 dark:text-slate-400">{{ c.email }}</div>
+            <div class="mb-1 text-xs uppercase tracking-wide text-subtle">{{ 'carriers.contact' | translate }}</div>
+            <div class="text-secondary">{{ 'carriers.data.' + c.id + '.contact' | translate }}</div>
+            <div class="text-muted">{{ c.phone }}</div>
+            <div class="text-muted">{{ c.email }}</div>
           </div>
 
           <div>
-            <div class="mb-1 text-xs uppercase tracking-wide text-slate-500">{{ 'carriers.authority' | translate }}</div>
-            <div class="flex justify-between text-slate-600 dark:text-slate-300"><span>MC</span><span>{{ c.mcNumber }}</span></div>
-            <div class="flex justify-between text-slate-600 dark:text-slate-300"><span>DOT</span><span>{{ c.dotNumber }}</span></div>
+            <div class="mb-1 text-xs uppercase tracking-wide text-subtle">{{ 'carriers.authority' | translate }}</div>
+            <div class="flex justify-between text-body"><span>MC</span><span>{{ c.mcNumber }}</span></div>
+            <div class="flex justify-between text-body"><span>DOT</span><span>{{ c.dotNumber }}</span></div>
           </div>
 
           <div>
-            <div class="mb-1 text-xs uppercase tracking-wide text-slate-500">{{ 'carriers.equipment' | translate }}</div>
+            <div class="mb-1 text-xs uppercase tracking-wide text-subtle">{{ 'carriers.equipment' | translate }}</div>
             <div class="flex flex-wrap gap-1.5">
               @for (eq of c.equipment; track eq) {
-                <span class="rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-xs text-slate-600 dark:text-slate-300">{{ equipmentKey(eq) | translate }}</span>
+                <span class="rounded-md bg-elevated px-2 py-0.5 text-xs text-body">{{ equipmentKey(eq) | translate }}</span>
               }
             </div>
           </div>
 
           <div>
-            <div class="mb-1 text-xs uppercase tracking-wide text-slate-500">{{ 'carriers.notes' | translate }}</div>
-            <p class="text-slate-600 dark:text-slate-300 leading-relaxed">{{ 'carriers.data.' + c.id + '.notes' | translate }}</p>
+            <div class="mb-1 text-xs uppercase tracking-wide text-subtle">{{ 'carriers.notes' | translate }}</div>
+            <p class="text-body leading-relaxed">{{ 'carriers.data.' + c.id + '.notes' | translate }}</p>
           </div>
 
-          <div class="pt-2 border-t border-slate-200 dark:border-slate-800">
-            <div class="text-xs text-slate-500">{{ 'carriers.totalHandled' | translate }} <span class="text-slate-700 dark:text-slate-200 font-medium">{{ c.totalLoads | number : '1.0-0' : lang.locale() }}</span></div>
+          <div class="pt-2 border-t border-line">
+            <div class="text-xs text-subtle">{{ 'carriers.totalHandled' | translate }} <span class="text-secondary font-medium">{{ c.totalLoads | number : '1.0-0' : lang.locale() }}</span></div>
           </div>
         </div>
 
         <div class="mt-6 flex gap-2">
-          <button class="flex-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-50 dark:bg-slate-800/50 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:bg-slate-800">
+          <button class="flex-1 rounded-lg border border-line-strong bg-elevated/50 py-2 text-sm font-medium text-secondary hover:bg-elevated">
             {{ 'common.edit' | translate }}
           </button>
-          <button class="flex-1 rounded-lg bg-blue-600 py-2 text-sm font-semibold text-slate-900 dark:text-white hover:bg-blue-500">
+          <button class="flex-1 rounded-lg bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-500">
             {{ 'carriers.history' | translate }}
           </button>
         </div>
       } @else {
-        <div class="flex h-full min-h-[320px] flex-col items-center justify-center text-center text-slate-500">
-          <svg class="mb-3 h-12 w-12 text-slate-700" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <div class="flex h-full min-h-[320px] flex-col items-center justify-center text-center text-subtle">
+          <svg class="mb-3 h-12 w-12 text-ghost" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
           </svg>
           <p class="text-sm">{{ 'carriers.selectPrompt' | translate }}</p>

@@ -24,3 +24,11 @@
   from { opacity: 0; transform: translate(-50%, 8px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
+
+// Light theme: brighter, airier hero overlay (text stays white for contrast).
+:host-context([data-theme="light"]) {
+  .login-hero { background-color: #1e40af; }
+  .login-overlay {
+    background: linear-gradient(135deg, rgba(30, 64, 175, 0.86) 0%, rgba(37, 99, 235, 0.68) 50%, rgba(59, 130, 246, 0.5) 100%);
+  }
+}
