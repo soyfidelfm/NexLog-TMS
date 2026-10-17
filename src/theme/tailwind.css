@@ -1,0 +1,3 @@
+/* Tailwind + NexLog tokens, for `@reference` from component styles. */
+@import "tailwindcss";
+@import "./tokens.css";

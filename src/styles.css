@@ -1,19 +1,113 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/*
+ * NexLog theme tokens.
+ * Dark is the default (values identical to the original dark UI).
+ * Light is applied with <html data-theme="light"> (see core/theme.service.ts).
+ * Use the semantic utilities (bg-app, bg-surface, bg-elevated, border-line, text-muted, text-<hue>-ink, ...)
+ * instead of raw slate/gray classes so both themes stay in sync.
+ */
+@import "./theme/tokens.css";
+
+/* Screens built on Tailwind "gray" keep their exact dark tones. */
+:root:not([data-theme="light"]) .tone-gray {
+  --color-sunken: oklch(13% 0.028 261.692);
+  --color-panel: oklch(21% 0.034 264.665);
+  --color-elevated: oklch(27.8% 0.033 256.848);
+  --color-elevated-2: oklch(37.3% 0.034 259.733);
+  --color-elevated-3: oklch(44.6% 0.03 256.802);
+  --color-line: oklch(27.8% 0.033 256.848);
+  --color-line-strong: oklch(37.3% 0.034 259.733);
+  --color-line-stronger: oklch(44.6% 0.03 256.802);
+  --color-line-strongest: oklch(55.1% 0.027 264.364);
+  --color-primary: oklch(96.7% 0.003 264.542);
+  --color-secondary: oklch(92.8% 0.006 264.531);
+  --color-body: oklch(87.2% 0.01 258.338);
+  --color-muted: oklch(70.7% 0.022 261.325);
+  --color-subtle: oklch(55.1% 0.027 264.364);
+  --color-faint: oklch(44.6% 0.03 256.802);
+  --color-ghost: oklch(37.3% 0.034 259.733);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-map-grid: #dbe3ee;
+  --color-map-grid-2: #b6c2d2;
+  --color-map-land: #e8eef7;
+  --color-map-land-2: #d5deea;
+  --color-map-road: #c5d0de;
+  --color-map-node: #ffffff;
+  --color-map-node-text: #0f172a;
+  --color-map-node-ring: #ffffff;
+  --color-map-label: #475569;
+  --color-map-label-strong: #1e293b;
+  --color-map-label-depot: #334155;
+  --color-app: #f4f6fa;
+  --color-app-deep: #eceff5;
+  --color-surface: #ffffff;
+  --color-surface-alt: #ffffff;
+  --color-raised: #f8fafc;
+  --color-strong: #0f172a;
+  --color-sunken: #eef1f6;
+  --color-panel: #ffffff;
+  --color-elevated: #f1f5f9;
+  --color-elevated-2: #e2e8f0;
+  --color-elevated-3: #cbd5e1;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+  --color-line-stronger: #94a3b8;
+  --color-line-strongest: #64748b;
+  --color-primary: #0f172a;
+  --color-secondary: #1e293b;
+  --color-body: #334155;
+  --color-muted: #475569;
+  --color-subtle: #56657a;
+  --color-faint: #8492a6;
+  --color-ghost: #cbd5e1;
+  --color-amber-ink: oklch(47.3% 0.137 46.201);
+  --color-amber-ink-soft: oklch(47.3% 0.137 46.201);
+  --color-amber-ink-mid: oklch(55.5% 0.163 48.998);
+  --color-blue-ink: oklch(48.8% 0.243 264.376);
+  --color-blue-ink-soft: oklch(42.4% 0.199 265.638);
+  --color-blue-ink-mid: oklch(48.8% 0.243 264.376);
+  --color-emerald-ink: oklch(43.2% 0.095 166.913);
+  --color-emerald-ink-soft: oklch(43.2% 0.095 166.913);
+  --color-emerald-ink-mid: oklch(50.8% 0.118 165.612);
+  --color-green-ink: oklch(44.8% 0.119 151.328);
+  --color-green-ink-soft: oklch(44.8% 0.119 151.328);
+  --color-green-ink-mid: oklch(52.7% 0.154 150.069);
+  --color-orange-ink: oklch(47% 0.157 37.304);
+  --color-orange-ink-soft: oklch(47% 0.157 37.304);
+  --color-orange-ink-mid: oklch(55.3% 0.195 38.402);
+  --color-purple-ink: oklch(49.6% 0.265 301.924);
+  --color-purple-ink-soft: oklch(43.8% 0.218 303.724);
+  --color-purple-ink-mid: oklch(49.6% 0.265 301.924);
+  --color-red-ink: oklch(50.5% 0.213 27.518);
+  --color-red-ink-soft: oklch(44.4% 0.177 26.899);
+  --color-red-ink-mid: oklch(50.5% 0.213 27.518);
+  --color-violet-ink: oklch(49.1% 0.27 292.581);
+  --color-violet-ink-soft: oklch(43.2% 0.232 292.759);
+  --color-violet-ink-mid: oklch(49.1% 0.27 292.581);
+  --color-yellow-ink: oklch(47.6% 0.114 61.907);
+  --color-yellow-ink-soft: oklch(47.6% 0.114 61.907);
+  --color-yellow-ink-mid: oklch(55.4% 0.135 66.442);
+}
 
 html, body {
   height: 100%;
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  @apply bg-slate-50 text-slate-900;
-}
-
-html.dark, html.dark body {
   background: #0b1220;
   color: #f1f5f9;
 }
 
-* {
-  box-sizing: border-box;
+:root[data-theme="light"],
+:root[data-theme="light"] body {
+  background: var(--color-app);
+  color: var(--color-primary);
+}
+
+/* Light theme: subtle scrollbars that match the palette. */
+:root[data-theme="light"] * {
+  scrollbar-color: #cbd5e1 transparent;
 }

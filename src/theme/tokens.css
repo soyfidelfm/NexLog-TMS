@@ -1,0 +1,69 @@
+/* NexLog semantic color tokens (dark defaults). Shared by styles.css and component @reference. */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme static {
+  /* surfaces */
+  --color-app: #0b1220;
+  --color-app-deep: #0a0f1c;
+  --color-surface: #0f172a;
+  --color-surface-alt: #111827;
+  --color-raised: #1e293b;
+  --color-strong: #fff;
+  --color-sunken: oklch(12.9% 0.042 264.695);
+  --color-panel: oklch(20.8% 0.042 265.755);
+  --color-elevated: oklch(27.9% 0.041 260.031);
+  --color-elevated-2: oklch(37.2% 0.044 257.287);
+  --color-elevated-3: oklch(44.6% 0.043 257.281);
+  --color-line: oklch(27.9% 0.041 260.031);
+  --color-line-strong: oklch(37.2% 0.044 257.287);
+  --color-line-stronger: oklch(44.6% 0.043 257.281);
+  --color-line-strongest: oklch(55.4% 0.046 257.417);
+  --color-primary: oklch(96.8% 0.007 247.896);
+  --color-secondary: oklch(92.9% 0.013 255.508);
+  --color-body: oklch(86.9% 0.022 252.894);
+  --color-muted: oklch(70.4% 0.04 256.788);
+  --color-subtle: oklch(55.4% 0.046 257.417);
+  --color-faint: oklch(44.6% 0.043 257.281);
+  --color-ghost: oklch(37.2% 0.044 257.287);
+  /* SVG maps */
+  --color-map-grid: #1e293b;
+  --color-map-grid-2: #334155;
+  --color-map-land: #111c33;
+  --color-map-land-2: #1e293b;
+  --color-map-road: #1f2a44;
+  --color-map-node: #0b1220;
+  --color-map-node-text: #fff;
+  --color-map-node-ring: #0f172a;
+  --color-map-label: #94a3b8;
+  --color-map-label-strong: #e2e8f0;
+  --color-map-label-depot: #cbd5e1;
+  /* status / accent text */
+  --color-amber-ink: oklch(82.8% 0.189 84.429);
+  --color-amber-ink-soft: oklch(87.9% 0.169 91.605);
+  --color-amber-ink-mid: oklch(76.9% 0.188 70.08);
+  --color-blue-ink: oklch(70.7% 0.165 254.624);
+  --color-blue-ink-soft: oklch(80.9% 0.105 251.813);
+  --color-blue-ink-mid: oklch(62.3% 0.214 259.815);
+  --color-emerald-ink: oklch(76.5% 0.177 163.223);
+  --color-emerald-ink-soft: oklch(84.5% 0.143 164.978);
+  --color-emerald-ink-mid: oklch(69.6% 0.17 162.48);
+  --color-green-ink: oklch(79.2% 0.209 151.711);
+  --color-green-ink-soft: oklch(87.1% 0.15 154.449);
+  --color-green-ink-mid: oklch(72.3% 0.219 149.579);
+  --color-orange-ink: oklch(75% 0.183 55.934);
+  --color-orange-ink-soft: oklch(83.7% 0.128 66.29);
+  --color-orange-ink-mid: oklch(70.5% 0.213 47.604);
+  --color-purple-ink: oklch(71.4% 0.203 305.504);
+  --color-purple-ink-soft: oklch(82.7% 0.119 306.383);
+  --color-purple-ink-mid: oklch(62.7% 0.265 303.9);
+  --color-red-ink: oklch(70.4% 0.191 22.216);
+  --color-red-ink-soft: oklch(80.8% 0.114 19.571);
+  --color-red-ink-mid: oklch(63.7% 0.237 25.331);
+  --color-violet-ink: oklch(70.2% 0.183 293.541);
+  --color-violet-ink-soft: oklch(81.1% 0.111 293.571);
+  --color-violet-ink-mid: oklch(60.6% 0.25 292.717);
+  --color-yellow-ink: oklch(85.2% 0.199 91.936);
+  --color-yellow-ink-soft: oklch(90.5% 0.182 98.111);
+  --color-yellow-ink-mid: oklch(79.5% 0.184 86.047);
+}
