@@ -20,6 +20,7 @@ interface Load {
 }
 
 @Component({
+  host: { class: 'tone-gray' },
   selector: 'app-tendering',
   standalone: true,
   imports: [TranslatePipe, CommonModule, FormsModule],

@@ -126,10 +126,10 @@ export class TrackingComponent {
 
   getStatusColor(status: string): string {
     switch (status) {
-      case 'In Transit': return 'bg-blue-500/20 text-blue-400';
-      case 'Out for Delivery': return 'bg-green-500/20 text-green-400';
-      case 'Delayed': return 'bg-orange-500/20 text-orange-400';
-      default: return 'bg-slate-500/20 text-slate-400';
+      case 'In Transit': return 'bg-blue-500/20 text-blue-ink';
+      case 'Out for Delivery': return 'bg-green-500/20 text-green-ink';
+      case 'Delayed': return 'bg-orange-500/20 text-orange-ink';
+      default: return 'bg-slate-500/20 text-muted';
     }
   }
 }
