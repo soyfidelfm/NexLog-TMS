@@ -1,6 +1,7 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ThemeService } from '../../core/theme.service';
 
 export interface NavItem {
   labelKey: string;
@@ -19,8 +20,8 @@ export class SidebarComponent {
   /** Mobile drawer state (controlled by the layout). */
   readonly open = input(false);
   readonly navigate = output<void>();
-  /** Falls back to the text mark if /nexlog-logo-login.png is missing. */
   readonly logoFailed = signal(false);
+  readonly theme = inject(ThemeService);
 
   readonly navItems: NavItem[] = [
     { labelKey: 'nav.dashboard', path: '/dashboard', icon: '📊' },
