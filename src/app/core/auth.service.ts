@@ -9,6 +9,9 @@ export class AuthService {
   /** True when Auth0 reports an authenticated session */
   readonly isAuthenticated = toSignal(this.auth0.isAuthenticated$, { initialValue: false });
 
+  /** Auth0 user profile (name, picture, email, etc.) */
+  readonly user = toSignal(this.auth0.user$, { initialValue: null });
+
   loginWith(provider?: 'google-oauth2' | 'windowslive' | 'discord'): void {
     this.auth0.loginWithRedirect({
       appState: { target: '/dashboard' },
