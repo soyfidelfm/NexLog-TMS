@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, effect } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -11,6 +11,7 @@ export class AuthService {
 
   loginWith(provider?: 'google-oauth2' | 'windowslive' | 'discord'): void {
     this.auth0.loginWithRedirect({
+      appState: { target: '/dashboard' },
       authorizationParams: provider ? { connection: provider } : undefined
     });
   }
