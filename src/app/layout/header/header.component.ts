@@ -18,6 +18,7 @@ export class HeaderComponent {
   readonly auth = inject(AuthService);
 
   readonly menuOpen = signal(false);
+  readonly avatarFailed = signal(false);
 
   toggleUserMenu() {
     this.menuOpen.update(v => !v);
