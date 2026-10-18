@@ -1,4 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../core/services/order.service';
@@ -7,12 +9,18 @@ import { Order } from '../../core/models';
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
 export class OrdersComponent implements OnInit {
   private orderService = inject(OrderService);
+  readonly lang = inject(LanguageService);
+
+  readonly statusKey: Record<Order['status'], string> = {
+    'Delivered': 'status.delivered', 'In Transit': 'status.inTransit', 'Picked Up': 'status.pickedUp', 'Booked': 'status.booked', 'Delayed': 'status.delayed'
+  };
+  readonly priorityKey: Record<Order['priority'], string> = { Low: 'priority.low', Medium: 'priority.medium', High: 'priority.high' };
 
   searchQuery = '';
   currentPage = 1;
@@ -45,21 +53,21 @@ export class OrdersComponent implements OnInit {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Delivered': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'In Transit': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'Picked Up': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      case 'Booked': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
-      case 'Delayed': return 'bg-red-500/20 text-red-400 border-red-500/30';
-      default: return 'bg-slate-500/20 text-slate-400';
+      case 'Delivered': return 'bg-green-500/20 text-green-ink border-green-500/30';
+      case 'In Transit': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
+      case 'Picked Up': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
+      case 'Booked': return 'bg-yellow-500/20 text-yellow-ink border-yellow-500/30';
+      case 'Delayed': return 'bg-red-500/20 text-red-ink border-red-500/30';
+      default: return 'bg-slate-500/20 text-muted';
     }
   }
 
   getPriorityClass(priority: string): string {
     switch (priority) {
-      case 'Low': return 'bg-green-500/20 text-green-400 border-green-500/30';
-      case 'Medium': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-      case 'High': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-      default: return 'bg-slate-500/20 text-slate-400';
+      case 'Low': return 'bg-green-500/20 text-green-ink border-green-500/30';
+      case 'Medium': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
+      case 'High': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
+      default: return 'bg-slate-500/20 text-muted';
     }
   }
 

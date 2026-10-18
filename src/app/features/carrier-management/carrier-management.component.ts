@@ -1,4 +1,7 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { LanguageService } from '../../core/language.service';
+import { equipmentKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarrierService } from '../../core/services/carrier.service';
@@ -7,12 +10,16 @@ import { Carrier } from '../../core/models';
 @Component({
   selector: 'app-carrier-management',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule],
   templateUrl: './carrier-management.component.html',
   styleUrl: './carrier-management.component.scss',
 })
 export class CarrierManagementComponent implements OnInit {
   private carrierService = inject(CarrierService);
+  readonly lang = inject(LanguageService);
+  private readonly translate = inject(TranslateService);
+  readonly equipmentKey = equipmentKey;
+  readonly statusKey: Record<Carrier['status'], string> = { Active: 'carriers.status.active', Inactive: 'carriers.status.inactive', Pending: 'carriers.status.pending' };
 
   searchQuery = signal('');
   statusFilter = signal<'All' | 'Active' | 'Inactive' | 'Pending'>('All');
@@ -57,27 +64,27 @@ export class CarrierManagementComponent implements OnInit {
   }
 
   getOnTimeClass(percent: number): string {
-    if (percent >= 95) return 'text-emerald-400';
-    if (percent >= 90) return 'text-amber-400';
-    return 'text-red-400';
+    if (percent >= 95) return 'text-emerald-ink';
+    if (percent >= 90) return 'text-amber-ink';
+    return 'text-red-ink';
   }
 
   getClaimsClass(rate: number): string {
-    if (rate <= 1) return 'text-emerald-400';
-    if (rate <= 2) return 'text-amber-400';
-    return 'text-red-400';
+    if (rate <= 1) return 'text-emerald-ink';
+    if (rate <= 2) return 'text-amber-ink';
+    return 'text-red-ink';
   }
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Active': return 'bg-emerald-500/15 text-emerald-400';
-      case 'Inactive': return 'bg-slate-700 text-slate-400';
-      case 'Pending': return 'bg-amber-500/15 text-amber-400';
-      default: return 'bg-slate-700 text-slate-300';
+      case 'Active': return 'bg-emerald-500/15 text-emerald-ink';
+      case 'Inactive': return 'bg-elevated-2 text-muted';
+      case 'Pending': return 'bg-amber-500/15 text-amber-ink';
+      default: return 'bg-elevated-2 text-body';
     }
   }
 
   addCarrier() {
-    alert('Add Carrier form (to be implemented)');
+    alert(this.translate.instant('carriers.addTodo'));
   }
 }
