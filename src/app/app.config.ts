@@ -6,9 +6,11 @@ import localeEsMx from '@angular/common/locales/es-MX';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { provideAuth0 } from '@auth0/auth0-angular';
 import { routes } from './app.routes';
 import { LanguageService } from './core/language.service';
 import { TranslatedTitleStrategy } from './core/translated-title.strategy';
+import { environment } from '../environments/environment';
 
 registerLocaleData(localeEsMx, 'es-MX');
 
@@ -24,5 +26,12 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(LanguageService).init()),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
     provideCharts(withDefaultRegisterables()),
+    provideAuth0({
+      domain: environment.auth0.domain,
+      clientId: environment.auth0.clientId,
+      authorizationParams: {
+        redirect_uri: window.location.origin
+      }
+    })
   ],
 };
