@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
 import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
+import { effect } from '@angular/core';
 
 type Provider = 'google' | 'microsoft' | 'discord' | 'email';
 
@@ -19,7 +20,7 @@ interface Feature {
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
@@ -40,6 +41,17 @@ export class LoginComponent {
     discord: 'discord',
     email: undefined
   };
+
+  constructor() {
+    // Si ya está autenticado al llegar al login, mandarlo al dashboard
+    effect(() => {
+      if (this.auth.isAuthenticated()) {
+        this.router.navigateByUrl('/dashboard');
+      }
+    });
+  }
+
+  ngOnInit(): void {}
 
   signIn(provider: Provider): void {
     const connection = this.connectionMap[provider];
