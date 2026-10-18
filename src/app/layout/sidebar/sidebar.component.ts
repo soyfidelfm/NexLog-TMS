@@ -23,6 +23,13 @@ export class SidebarComponent {
   readonly logoFailed = signal(false);
   readonly theme = inject(ThemeService);
 
+  /** Desktop collapsed state */
+  readonly collapsed = signal(false);
+
+  toggleCollapsed() {
+    this.collapsed.update(v => !v);
+  }
+
   readonly navItems: NavItem[] = [
     { labelKey: 'nav.dashboard', path: '/dashboard', icon: '📊' },
     { labelKey: 'nav.orders', path: '/orders', icon: '📦' },
