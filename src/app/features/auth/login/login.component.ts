@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
 import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
+import { ThemeService } from '../../../core/theme.service';
 import { effect } from '@angular/core';
 
 type Provider = 'google' | 'microsoft' | 'discord' | 'email';
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
+  readonly theme = inject(ThemeService);
 
   readonly features: Feature[] = [
     { icon: 'pin', title: 'Real-Time Tracking', description: 'Monitor shipments and assets in real time.' },
@@ -43,7 +45,6 @@ export class LoginComponent implements OnInit {
   };
 
   constructor() {
-    // Si ya está autenticado al llegar al login, mandarlo al dashboard
     effect(() => {
       if (this.auth.isAuthenticated()) {
         this.router.navigateByUrl('/dashboard');
