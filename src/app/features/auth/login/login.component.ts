@@ -4,7 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
 import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
 
-type Provider = 'google' | 'microsoft' | 'apple' | 'email';
+type Provider = 'google' | 'microsoft' | 'discord' | 'email';
 
 interface Feature {
   icon: 'pin' | 'network' | 'truck' | 'audit';
@@ -34,24 +34,20 @@ export class LoginComponent {
   readonly toast = signal<string | null>(null);
   private toastTimer?: ReturnType<typeof setTimeout>;
 
-  private readonly labels: Record<Provider, string> = {
-    google: 'Google',
-    microsoft: 'Microsoft',
-    apple: 'Apple',
-    email: 'email'
+  private readonly connectionMap: Record<Provider, string | undefined> = {
+    google: 'google-oauth2',
+    microsoft: 'windowslive',
+    discord: 'discord',
+    email: undefined
   };
 
   signIn(provider: Provider): void {
-    // Demo auth: mark as logged in and go to dashboard.
-    // Replace with real OAuth / email flow later.
-    console.log(`[NexLog] Sign in with ${provider}`);
-    this.auth.login();
-    this.router.navigateByUrl('/dashboard');
+    const connection = this.connectionMap[provider];
+    this.auth.loginWith(connection as any);
   }
 
   createAccount(event: Event): void {
     event.preventDefault();
-    console.log('[NexLog] Create account clicked');
     this.showToast(this.translate.instant('login.comingSoon'));
   }
 
