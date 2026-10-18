@@ -1,50 +1,31 @@
-import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LanguageService } from '../../core/language.service';
-
-interface Order {
-  id: string;
-  origin: { city: string; country: string };
-  destination: { city: string; country: string };
-  weight: number;
-  volume: number;
-  status: 'Delivered' | 'In Transit' | 'Picked Up' | 'Booked' | 'Delayed';
-  carrier: string;
-  eta: string;
-  priority: 'Low' | 'Medium' | 'High';
-}
+import { OrderService } from '../../core/services/order.service';
+import { Order } from '../../core/models';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss'
 })
-export class OrdersComponent {
-  readonly lang = inject(LanguageService);
-
-  readonly statusKey: Record<Order['status'], string> = {
-    'Delivered': 'status.delivered', 'In Transit': 'status.inTransit', 'Picked Up': 'status.pickedUp', 'Booked': 'status.booked', 'Delayed': 'status.delayed'
-  };
-  readonly priorityKey: Record<Order['priority'], string> = { Low: 'priority.low', Medium: 'priority.medium', High: 'priority.high' };
+export class OrdersComponent implements OnInit {
+  private orderService = inject(OrderService);
 
   searchQuery = '';
   currentPage = 1;
   rowsPerPage = 10;
   totalOrders = 248;
 
-  orders: Order[] = [
-    { id: 'ORD-2025-00125', origin: { city: 'Shanghai', country: 'CN' }, destination: { city: 'Rotterdam', country: 'NL' }, weight: 12500, volume: 45.2, status: 'Delivered', carrier: 'Maersk Line', eta: '2025-05-18', priority: 'Low' },
-    { id: 'ORD-2025-00124', origin: { city: 'Hamburg', country: 'DE' }, destination: { city: 'Atlanta', country: 'US' }, weight: 8750, volume: 32.1, status: 'In Transit', carrier: 'Hapag-Lloyd', eta: '2025-05-23', priority: 'Medium' },
-    { id: 'ORD-2025-00123', origin: { city: 'Busan', country: 'KR' }, destination: { city: 'Los Angeles', country: 'US' }, weight: 15300, volume: 60.8, status: 'Picked Up', carrier: 'MSC', eta: '2025-05-22', priority: 'High' },
-    { id: 'ORD-2025-00122', origin: { city: 'Dubai', country: 'AE' }, destination: { city: 'Singapore', country: 'SG' }, weight: 6200, volume: 21.7, status: 'Booked', carrier: 'CMA CGM', eta: '2025-05-27', priority: 'Medium' },
-    { id: 'ORD-2025-00121', origin: { city: 'Rotterdam', country: 'NL' }, destination: { city: 'New York', country: 'US' }, weight: 9100, volume: 38.4, status: 'Delayed', carrier: 'OOCL', eta: '2025-05-20', priority: 'High' },
-    { id: 'ORD-2025-00120', origin: { city: 'Tokyo', country: 'JP' }, destination: { city: 'Sydney', country: 'AU' }, weight: 7400, volume: 28.9, status: 'In Transit', carrier: 'Evergreen', eta: '2025-05-24', priority: 'Low' },
-    { id: 'ORD-2025-00119', origin: { city: 'Ningbo', country: 'CN' }, destination: { city: 'Felixstowe', country: 'GB' }, weight: 11200, volume: 47.3, status: 'In Transit', carrier: 'COSCO Shipping', eta: '2025-05-25', priority: 'Medium' }
-  ];
+  orders: Order[] = [];
+
+  ngOnInit(): void {
+    this.orderService.getOrders().subscribe(data => {
+      this.orders = data;
+    });
+  }
 
   get filteredOrders() {
     if (!this.searchQuery) return this.orders;
@@ -64,21 +45,21 @@ export class OrdersComponent {
 
   getStatusClass(status: string): string {
     switch (status) {
-      case 'Delivered': return 'bg-green-500/20 text-green-ink border-green-500/30';
-      case 'In Transit': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
-      case 'Picked Up': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
-      case 'Booked': return 'bg-yellow-500/20 text-yellow-ink border-yellow-500/30';
-      case 'Delayed': return 'bg-red-500/20 text-red-ink border-red-500/30';
-      default: return 'bg-slate-500/20 text-muted';
+      case 'Delivered': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'In Transit': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'Picked Up': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      case 'Booked': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'Delayed': return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default: return 'bg-slate-500/20 text-slate-400';
     }
   }
 
   getPriorityClass(priority: string): string {
     switch (priority) {
-      case 'Low': return 'bg-green-500/20 text-green-ink border-green-500/30';
-      case 'Medium': return 'bg-blue-500/20 text-blue-ink border-blue-500/30';
-      case 'High': return 'bg-purple-500/20 text-purple-ink border-purple-500/30';
-      default: return 'bg-slate-500/20 text-muted';
+      case 'Low': return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'Medium': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'High': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
+      default: return 'bg-slate-500/20 text-slate-400';
     }
   }
 
