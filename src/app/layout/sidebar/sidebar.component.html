@@ -6,7 +6,8 @@
   <div class="flex h-20 shrink-0 items-center border-b border-line px-4">
     <a routerLink="/dashboard" class="flex min-w-0 items-center gap-3" (click)="navigate.emit()">
       @if (!logoFailed()) {
-        <img src="/iconInside.png" [alt]="'layout.logoAlt' | translate"
+        <img [src]="theme.isDark() ? '/iconLoginLight.png' : '/iconLogin.png'"
+             [alt]="'layout.logoAlt' | translate"
              class="h-14 w-14 shrink-0 rounded-full bg-white object-contain p-1 shadow-sm ring-1 ring-line"
              (error)="logoFailed.set(true)" />
       } @else {
