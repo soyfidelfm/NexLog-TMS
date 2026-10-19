@@ -7,3 +7,7 @@ export * from './invoice.model';
 export * from './route.model';
 export * from './shipment.model';
 export * from './dashboard.model';
+export * from './exception.model';
+export * from './analytics.model';
+export * from './rate-table.model';
+export * from './client-portal.model';
