@@ -3,19 +3,8 @@ import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@a
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LanguageService } from '../../core/language.service';
-
-interface CarrierQuote {
-  id: string;
-  carrier: string;
-  price: number;
-  transitDays: number;
-  serviceType: string;
-  onTimePercent: number;
-  rating: number;
-  fuelSurcharge: number;
-  total: number;
-  notes?: string;
-}
+import { RatingService } from '../../core/services/rating.service';
+import { CarrierQuote } from '../../core/models';
 
 @Component({
   host: { class: 'tone-gray' },
@@ -29,6 +18,7 @@ interface CarrierQuote {
 export class RatingComponent {
   readonly lang = inject(LanguageService);
   private readonly fb = inject(FormBuilder);
+  private ratingService = inject(RatingService);
 
   quoteForm: FormGroup = this.fb.group({
     originCity: ['', Validators.required],
@@ -64,16 +54,10 @@ export class RatingComponent {
     }
     this.isLoading.set(true);
     this.quotes.set([]);
-    setTimeout(() => {
-      this.quotes.set([
-        { id: '1', carrier: 'FedEx Freight', price: 485.50, transitDays: 3, serviceType: 'Priority', onTimePercent: 96.2, rating: 4.7, fuelSurcharge: 42.30, total: 527.80, notes: 'bestExpress' },
-        { id: '2', carrier: 'UPS Freight', price: 462.00, transitDays: 4, serviceType: 'Standard', onTimePercent: 94.8, rating: 4.5, fuelSurcharge: 38.90, total: 500.90 },
-        { id: '3', carrier: 'XPO Logistics', price: 439.75, transitDays: 5, serviceType: 'Economy', onTimePercent: 91.5, rating: 4.2, fuelSurcharge: 35.20, total: 474.95, notes: 'lowestPrice' },
-        { id: '4', carrier: 'Old Dominion', price: 451.20, transitDays: 4, serviceType: 'Standard', onTimePercent: 97.1, rating: 4.8, fuelSurcharge: 39.50, total: 490.70 },
-        { id: '5', carrier: 'Estes Express', price: 478.00, transitDays: 3, serviceType: 'Priority', onTimePercent: 93.4, rating: 4.4, fuelSurcharge: 41.00, total: 519.00 }
-      ]);
+    this.ratingService.getQuotes().subscribe(data => {
+      this.quotes.set(data);
       this.isLoading.set(false);
-    }, 800);
+    });
   }
 
   setSort(sort: 'price' | 'transit'): void {
