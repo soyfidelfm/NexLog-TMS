@@ -1,9 +1,10 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
-import { ROUTES, SUMMARY, OptRoute, Stop } from './route-optimization.data';
+import { RouteOptimizationService } from '../../core/services/route-optimization.service';
+import { OptRoute, RouteSummary, Stop } from '../../core/models';
 
 @Component({
   selector: 'app-route-optimization',
@@ -12,20 +13,27 @@ import { ROUTES, SUMMARY, OptRoute, Stop } from './route-optimization.data';
   templateUrl: './route-optimization.component.html',
   styleUrl: './route-optimization.component.scss',
 })
-export class RouteOptimizationComponent {
+export class RouteOptimizationComponent implements OnInit {
+  private routeOptService = inject(RouteOptimizationService);
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
-  routes = ROUTES;
-  summary = SUMMARY;
+
+  routes: OptRoute[] = [];
+  summary: RouteSummary | null = null;
   selected = signal<string | null>(null);
   optimizing = signal(false);
   objective = signal<'distance' | 'time' | 'cost'>('cost');
 
+  ngOnInit(): void {
+    this.routeOptService.getRoutes().subscribe(data => this.routes = data);
+    this.routeOptService.getSummary().subscribe(data => this.summary = data);
+  }
+
   active = computed<OptRoute | null>(() => this.routes.find(r => r.id === this.selected()) ?? null);
-  kmSaved = computed(() => this.summary.before.km - this.summary.after.km);
-  costSaved = computed(() => this.summary.before.cost - this.summary.after.cost);
-  kmPct = computed(() => Math.round((this.kmSaved() / this.summary.before.km) * 100));
-  costPct = computed(() => Math.round((this.costSaved() / this.summary.before.cost) * 100));
+  kmSaved = computed(() => this.summary ? this.summary.before.km - this.summary.after.km : 0);
+  costSaved = computed(() => this.summary ? this.summary.before.cost - this.summary.after.cost : 0);
+  kmPct = computed(() => this.summary && this.summary.before.km ? Math.round((this.kmSaved() / this.summary.before.km) * 100) : 0);
+  costPct = computed(() => this.summary && this.summary.before.cost ? Math.round((this.costSaved() / this.summary.before.cost) * 100) : 0);
   totals = computed(() => this.routes.reduce((a, r) => ({
     km: a.km + r.distanceKm, min: a.min + r.durationMin, cost: a.cost + r.cost, stops: a.stops + r.stops.length - 1,
   }), { km: 0, min: 0, cost: 0, stops: 0 }));

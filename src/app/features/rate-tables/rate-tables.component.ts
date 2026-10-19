@@ -1,37 +1,12 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, inject, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-
-interface RateTable {
-  id: string;
-  name: string;
-  carrier: string;
-  originZone: string;
-  destinationZone: string;
-  mode: string;
-  rateType: string;
-  baseRate: number;
-  minCharge: number;
-  fuelSurcharge: number;
-  effectiveFrom: string;
-  effectiveTo: string;
-  status: 'Active' | 'Draft' | 'Expired';
-}
-
-interface RolePermission {
-  role: string;
-  description: string;
-  view: boolean;
-  createEdit: boolean;
-  delete: boolean;
-  approve: boolean;
-  export: boolean;
-  managePermissions: boolean;
-}
+import { RateTableService } from '../../core/services/rate-table.service';
+import { RateTable, RolePermission } from '../../core/models';
 
 @Component({
   host: { class: 'tone-gray' },
@@ -42,8 +17,9 @@ interface RolePermission {
   styleUrl: './rate-tables.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RateTablesComponent {
+export class RateTablesComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private rateTableService = inject(RateTableService);
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
 
@@ -62,109 +38,16 @@ export class RateTablesComponent {
     status: ['Draft', Validators.required],
   });
 
-  rateTables = signal<RateTable[]>([
-    {
-      id: 'RT-001',
-      name: 'West Coast TL Standard',
-      carrier: 'Swift Transportation',
-      originZone: 'CA, NV, AZ',
-      destinationZone: 'All US',
-      mode: 'TL',
-      rateType: 'Per Mile',
-      baseRate: 2.45,
-      minCharge: 850,
-      fuelSurcharge: 18.5,
-      effectiveFrom: '2026-01-01',
-      effectiveTo: '2026-12-31',
-      status: 'Active',
-    },
-    {
-      id: 'RT-002',
-      name: 'LTL Regional East',
-      carrier: 'FedEx Freight',
-      originZone: 'NY, NJ, PA',
-      destinationZone: 'Northeast',
-      mode: 'LTL',
-      rateType: 'Per CWT',
-      baseRate: 18.75,
-      minCharge: 125,
-      fuelSurcharge: 22.0,
-      effectiveFrom: '2026-03-01',
-      effectiveTo: '2026-09-30',
-      status: 'Active',
-    },
-    {
-      id: 'RT-003',
-      name: 'Intermodal Flat Rate',
-      carrier: 'JB Hunt',
-      originZone: 'Midwest',
-      destinationZone: 'West Coast',
-      mode: 'Intermodal',
-      rateType: 'Flat',
-      baseRate: 1850,
-      minCharge: 1850,
-      fuelSurcharge: 12.0,
-      effectiveFrom: '2026-06-01',
-      effectiveTo: '',
-      status: 'Draft',
-    },
-  ]);
-
-  roles = signal<RolePermission[]>([
-    {
-      role: 'Admin',
-      description: 'Full system access',
-      view: true,
-      createEdit: true,
-      delete: true,
-      approve: true,
-      export: true,
-      managePermissions: true,
-    },
-    {
-      role: 'Dispatcher',
-      description: 'Operations & load planning',
-      view: true,
-      createEdit: true,
-      delete: false,
-      approve: false,
-      export: true,
-      managePermissions: false,
-    },
-    {
-      role: 'Carrier Manager',
-      description: 'Carrier relations & scoring',
-      view: true,
-      createEdit: true,
-      delete: false,
-      approve: true,
-      export: true,
-      managePermissions: false,
-    },
-    {
-      role: 'Billing',
-      description: 'Invoices & freight audit',
-      view: true,
-      createEdit: false,
-      delete: false,
-      approve: true,
-      export: true,
-      managePermissions: false,
-    },
-    {
-      role: 'Read Only',
-      description: 'View-only access',
-      view: true,
-      createEdit: false,
-      delete: false,
-      approve: false,
-      export: false,
-      managePermissions: false,
-    },
-  ]);
+  rateTables = signal<RateTable[]>([]);
+  roles = signal<RolePermission[]>([]);
 
   isSaving = signal(false);
   selectedRateId = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.rateTableService.getRateTables().subscribe(data => this.rateTables.set(data));
+    this.rateTableService.getRoles().subscribe(data => this.roles.set(data));
+  }
 
   saveRateTable(): void {
     if (this.rateForm.invalid) {
@@ -191,17 +74,17 @@ export class RateTablesComponent {
       status: value.status,
     };
 
-    setTimeout(() => {
+    this.rateTableService.saveRateTable(newRate).subscribe(saved => {
       if (this.selectedRateId()) {
         this.rateTables.update(list =>
-          list.map(r => (r.id === this.selectedRateId() ? newRate : r))
+          list.map(r => (r.id === this.selectedRateId() ? saved : r))
         );
       } else {
-        this.rateTables.update(list => [...list, newRate]);
+        this.rateTables.update(list => [...list, saved]);
       }
       this.isSaving.set(false);
       this.resetForm();
-    }, 600);
+    });
   }
 
   editRate(rate: RateTable): void {
@@ -246,8 +129,8 @@ export class RateTablesComponent {
   }
 
   savePermissions(): void {
-    // In real app: call API to persist roles/permissions
-    console.log('Permissions saved:', this.roles());
-    alert(this.translate.instant('rateTables.permsSaved'));
+    this.rateTableService.savePermissions(this.roles()).subscribe(() => {
+      alert(this.translate.instant('rateTables.permsSaved'));
+    });
   }
 }
