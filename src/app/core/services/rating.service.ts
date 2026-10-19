@@ -1,10 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
-import { CarrierQuote } from '../models';
+import { CarrierQuote, QuoteRequest } from '../models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RatingService {
-  getQuotes(): Observable<CarrierQuote[]> {
+  private readonly baseUrl = environment.apiUrl;
+
+  getQuotes(request: QuoteRequest): Observable<CarrierQuote[]> {
+    // TODO: replace mock with real API call:
+    // return this.http.post<CarrierQuote[]>(`${this.baseUrl}/quotes`, request);
+
+    console.log('Quote request ready for API:', request);
+
     const mockQuotes: CarrierQuote[] = [
       {
         id: '1',
