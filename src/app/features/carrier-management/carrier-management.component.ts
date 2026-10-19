@@ -3,19 +3,20 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { equipmentKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CarrierService } from '../../core/services/carrier.service';
 import { Carrier } from '../../core/models';
 
 @Component({
   selector: 'app-carrier-management',
   standalone: true,
-  imports: [TranslatePipe, CommonModule, FormsModule],
+  imports: [TranslatePipe, CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './carrier-management.component.html',
   styleUrl: './carrier-management.component.scss',
 })
 export class CarrierManagementComponent implements OnInit {
   private carrierService = inject(CarrierService);
+  private fb = inject(FormBuilder);
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
   readonly equipmentKey = equipmentKey;
@@ -25,10 +26,26 @@ export class CarrierManagementComponent implements OnInit {
   statusFilter = signal<'All' | 'Active' | 'Inactive' | 'Pending'>('All');
   minRating = signal(0);
   selectedId = signal<string | null>(null);
+  showAddForm = signal(false);
 
   carriers: Carrier[] = [];
 
+  addForm = this.fb.group({
+    name: ['', Validators.required],
+    code: ['', Validators.required],
+    mcNumber: ['', Validators.required],
+    contact: [''],
+    email: ['', Validators.email],
+    phone: [''],
+    city: [''],
+    state: [''],
+  });
+
   ngOnInit(): void {
+    this.loadCarriers();
+  }
+
+  private loadCarriers() {
     this.carrierService.getCarriers().subscribe(data => {
       this.carriers = data;
     });
@@ -84,7 +101,23 @@ export class CarrierManagementComponent implements OnInit {
     }
   }
 
-  addCarrier() {
-    alert(this.translate.instant('carriers.addTodo'));
+  openAddForm() {
+    this.showAddForm.set(true);
+    this.addForm.reset();
+  }
+
+  closeAddForm() {
+    this.showAddForm.set(false);
+  }
+
+  submitAdd() {
+    if (this.addForm.invalid) {
+      this.addForm.markAllAsTouched();
+      return;
+    }
+    this.carrierService.createCarrier(this.addForm.value as Partial<Carrier>).subscribe(() => {
+      this.closeAddForm();
+      this.loadCarriers();
+    });
   }
 }
