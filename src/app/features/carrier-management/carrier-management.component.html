@@ -6,7 +6,7 @@
       <p class="mt-1 text-sm text-muted">{{ 'carriers.subtitle' | translate }}</p>
     </div>
     <button
-      (click)="addCarrier()"
+      (click)="openAddForm()"
       class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 hover:bg-blue-500 transition"
     >
       <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -15,6 +15,59 @@
       {{ 'carriers.add' | translate }}
     </button>
   </header>
+
+  <!-- Add Carrier Modal -->
+  @if (showAddForm()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" (click)="closeAddForm()">
+      <div class="w-full max-w-lg rounded-xl bg-surface p-6 shadow-xl" (click)="$event.stopPropagation()">
+        <h2 class="mb-4 text-xl font-semibold text-strong">{{ 'carriers.add' | translate }}</h2>
+        <form [formGroup]="addForm" (ngSubmit)="submitAdd()" class="space-y-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-muted">Name</label>
+              <input formControlName="name" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="text-xs text-muted">Code</label>
+              <input formControlName="code" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-muted">MC Number</label>
+            <input formControlName="mcNumber" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-muted">Contact</label>
+              <input formControlName="contact" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="text-xs text-muted">Email</label>
+              <input formControlName="email" type="email" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-muted">Phone</label>
+              <input formControlName="phone" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="text-xs text-muted">City</label>
+              <input formControlName="city" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+            </div>
+          </div>
+          <div>
+            <label class="text-xs text-muted">State</label>
+            <input formControlName="state" class="mt-1 w-full rounded-lg border border-line-strong bg-app px-3 py-2 text-sm" />
+          </div>
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" (click)="closeAddForm()" class="rounded-lg border border-line-strong px-4 py-2 text-sm">{{ 'common.cancel' | translate }}</button>
+            <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500">{{ 'common.save' | translate }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
 
   <!-- Filters -->
   <section class="mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface p-3">
