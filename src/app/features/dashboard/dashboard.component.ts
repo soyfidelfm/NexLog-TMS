@@ -5,23 +5,8 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 import { LanguageService } from '../../core/language.service';
 import { ThemeService } from '../../core/theme.service';
-
-interface KPI {
-  titleKey: string;
-  value: string;
-  changeKey: string;
-  changePositive: boolean;
-  icon: string;
-  color: string;
-}
-
-interface Alert {
-  id: string;
-  titleKey: string;
-  descKey: string;
-  time: string;
-  color: string;
-}
+import { DashboardService } from '../../core/services/dashboard.service';
+import { KPI, Alert } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,17 +16,13 @@ interface Alert {
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
   readonly lang = inject(LanguageService);
   private readonly theme = inject(ThemeService);
-
   private readonly translate = inject(TranslateService);
 
-  kpiData = [
-    { titleKey: 'kpiShipments', value: '1,248', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '12.5%', date: '2024-05-19' }, changePositive: true, icon: 'truck', color: 'blue' },
-    { titleKey: 'kpiOnTime', value: '92.6%', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '3.4%', date: '2024-05-19' }, changePositive: true, icon: 'check', color: 'green' },
-    { titleKey: 'kpiCost', value: '$2.45M', changeKey: 'dashboard.changeVsPeriod', changeParams: { arrow: '↓', delta: '5.7%' }, changePositive: false, icon: 'dollar', color: 'purple' },
-    { titleKey: 'kpiExceptions', value: '27', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '8', date: '2024-05-19' }, changePositive: false, icon: 'alert', color: 'orange' }
-  ];
+  kpiData: KPI[] = [];
+  alertData: Alert[] = [];
 
   private readonly weekDays = ['2024-05-20', '2024-05-21', '2024-05-22', '2024-05-23', '2024-05-24', '2024-05-25', '2024-05-26'];
   weeklyVolumeData: ChartData<'line'> = {
@@ -84,14 +65,6 @@ export class DashboardComponent implements OnInit {
     { name: 'Other Carriers', nameKey: 'dashboard.otherCarriers', percentage: 8.5, color: '#64748b' }
   ];
 
-  alertData = [
-    { id: '1', titleKey: 'alertDelay', descKey: 'alertDelayDesc', timeKey: 'time.minAgo', n: 10, color: 'red' },
-    { id: '2', titleKey: 'alertException', descKey: 'alertExceptionDesc', timeKey: 'time.minAgo', n: 35, color: 'orange' },
-    { id: '3', titleKey: 'alertCost', descKey: 'alertCostDesc', timeKey: 'time.hoursAgo', n: 1, color: 'yellow' },
-    { id: '4', titleKey: 'alertWeather', descKey: 'alertWeatherDesc', timeKey: 'time.hoursAgo', n: 2, color: 'blue' }
-  ];
-
-
   mapMarkers = [
     { x: 20, y: 40, color: 'blue' }, { x: 25, y: 55, color: 'blue' },
     { x: 35, y: 45, color: 'green' }, { x: 45, y: 50, color: 'green' },
@@ -119,5 +92,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dashboardService.getKpis().subscribe(data => {
+      this.kpiData = data;
+    });
+    this.dashboardService.getAlerts().subscribe(data => {
+      this.alertData = data;
+    });
+  }
 }
