@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LanguageService } from '../../core/language.service';
 import { RatingService } from '../../core/services/rating.service';
-import { CarrierQuote } from '../../core/models';
+import { CarrierQuote, QuoteRequest } from '../../core/models';
 
 @Component({
   host: { class: 'tone-gray' },
@@ -52,11 +52,20 @@ export class RatingComponent {
       this.quoteForm.markAllAsTouched();
       return;
     }
+
+    const request: QuoteRequest = this.quoteForm.value;
     this.isLoading.set(true);
     this.quotes.set([]);
-    this.ratingService.getQuotes().subscribe(data => {
-      this.quotes.set(data);
-      this.isLoading.set(false);
+
+    this.ratingService.getQuotes(request).subscribe({
+      next: data => {
+        this.quotes.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => {
+        this.isLoading.set(false);
+        // TODO: show error toast
+      }
     });
   }
 
