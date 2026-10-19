@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Carrier } from '../models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class CarrierService {
+  private readonly baseUrl = environment.apiUrl;
+
   private mockCarriers: Carrier[] = [
     {
       id: 'CR-001',
@@ -122,10 +125,27 @@ export class CarrierService {
   ];
 
   getCarriers(): Observable<Carrier[]> {
+    // TODO: return this.http.get<Carrier[]>(`${this.baseUrl}/carriers`);
     return of(this.mockCarriers);
   }
 
   getCarrierById(id: string): Observable<Carrier | undefined> {
     return of(this.mockCarriers.find(c => c.id === id));
+  }
+
+  createCarrier(carrier: Partial<Carrier>): Observable<Carrier> {
+    // TODO: return this.http.post<Carrier>(`${this.baseUrl}/carriers`, carrier);
+    const newCarrier: Carrier = {
+      id: 'CR-' + Date.now().toString().slice(-6),
+      status: 'Pending',
+      onTimePercent: 0,
+      claimsRate: 0,
+      rating: 0,
+      totalLoads: 0,
+      equipment: [],
+      ...carrier,
+    } as Carrier;
+    this.mockCarriers.push(newCarrier);
+    return of(newCarrier);
   }
 }
