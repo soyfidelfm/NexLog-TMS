@@ -12,3 +12,18 @@ export interface CarrierQuote {
   total: number;
   notes?: string;
 }
+
+export interface QuoteRequest {
+  originCity: string;
+  originZip: string;
+  destinationCity: string;
+  destinationZip: string;
+  weight: number;
+  length?: number;
+  width?: number;
+  height?: number;
+  pieces: number;
+  commodity: string;
+  pickupDate: string;
+  serviceLevel: string;
+}
