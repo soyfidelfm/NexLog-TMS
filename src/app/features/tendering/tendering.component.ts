@@ -24,6 +24,10 @@ export class TenderingComponent implements OnInit {
   searchTerm = signal('');
 
   ngOnInit(): void {
+    this.loadLoads();
+  }
+
+  private loadLoads() {
     this.loadService.getLoads().subscribe(data => {
       this.loads.set(data);
     });
@@ -51,19 +55,23 @@ export class TenderingComponent implements OnInit {
 
   tender(load: Load): void {
     if (load.status === 'Accepted') return;
-    this.loads.set(this.loads().map((l) => l.id === load.id ? { ...l, status: 'Pending' as TenderStatus, tenderedAt: new Date().toISOString(), selectedCarrier: l.selectedCarrier || 'Prime Inc' } : l));
+    this.loadService.tender(load.id, load.selectedCarrier || undefined).subscribe(() => {
+      this.loadLoads();
+    });
   }
 
   cascade(load: Load): void {
-    const carriers = ['Swift Transportation', 'Knight-Swift', 'Schneider', 'Werner Enterprises', 'J.B. Hunt', 'Prime Inc'];
-    const nextIndex = (load.cascadeCount + 1) % carriers.length;
-    this.loads.set(this.loads().map((l) => l.id === load.id ? { ...l, status: 'Pending' as TenderStatus, selectedCarrier: carriers[nextIndex], cascadeCount: l.cascadeCount + 1, tenderedAt: new Date().toISOString() } : l));
+    this.loadService.cascade(load.id).subscribe(() => {
+      this.loadLoads();
+    });
   }
 
   reassign(load: Load): void {
     const carriers = ['Swift Transportation', 'Knight-Swift', 'Schneider', 'Werner Enterprises', 'J.B. Hunt'];
     const next = carriers[(carriers.indexOf(load.selectedCarrier || '') + 1) % carriers.length] || carriers[0];
-    this.loads.set(this.loads().map((l) => l.id === load.id ? { ...l, selectedCarrier: next, status: 'Pending' as TenderStatus, cascadeCount: 0 } : l));
+    this.loadService.reassign(load.id, next).subscribe(() => {
+      this.loadLoads();
+    });
   }
 
   getStatusClass(status: TenderStatus): string {
