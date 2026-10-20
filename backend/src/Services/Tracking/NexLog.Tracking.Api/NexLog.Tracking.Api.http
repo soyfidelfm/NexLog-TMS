@@ -1,0 +1,7 @@
+@host = http://localhost:5109
+
+GET {{host}}/api/shipments?page=1&pageSize=10
+
+###
+
+GET {{host}}/health
