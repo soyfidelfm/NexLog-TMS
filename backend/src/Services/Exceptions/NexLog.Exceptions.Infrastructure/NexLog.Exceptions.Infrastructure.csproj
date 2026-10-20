@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\NexLog.Exceptions.Application\NexLog.Exceptions.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+</Project>

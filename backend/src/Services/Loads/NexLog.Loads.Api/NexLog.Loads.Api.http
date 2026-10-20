@@ -1,0 +1,15 @@
+@host = http://localhost:5103
+
+GET {{host}}/api/loads?page=1&pageSize=10
+
+###
+
+GET {{host}}/api/trailers?page=1&pageSize=10
+
+###
+
+GET {{host}}/api/planning-orders?page=1&pageSize=10
+
+###
+
+GET {{host}}/health
