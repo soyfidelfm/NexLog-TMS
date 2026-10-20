@@ -6,12 +6,12 @@ import localeEsMx from '@angular/common/locales/es-MX';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { provideAuth0 } from '@auth0/auth0-angular';
+import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { routes } from './app.routes';
 import { LanguageService } from './core/language.service';
 import { TranslatedTitleStrategy } from './core/translated-title.strategy';
 import { environment } from '../environments/environment';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { apiErrorInterceptor } from './core/interceptors/auth.interceptor';
 
 registerLocaleData(localeEsMx, 'es-MX');
 
@@ -19,10 +19,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([apiErrorInterceptor, authHttpInterceptorFn])),
     provideTranslateService({
       fallbackLang: 'es',
-      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json' }),
+      loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json', useHttpBackend: true }),
     }),
     provideAppInitializer(() => inject(LanguageService).init()),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
@@ -31,7 +31,19 @@ export const appConfig: ApplicationConfig = {
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
       authorizationParams: {
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin,
+        audience: environment.auth0.audience
+      },
+      cacheLocation: 'localstorage',
+      useRefreshTokens: true,
+      // Attach the access token only to calls to our API Gateway.
+      httpInterceptor: {
+        allowedList: [
+          {
+            uri: `${environment.apiUrl}/*`,
+            tokenOptions: { authorizationParams: { audience: environment.auth0.audience } }
+          }
+        ]
       }
     })
   ],

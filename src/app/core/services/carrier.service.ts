@@ -1,151 +1,29 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { ApiClient } from '../api/api-client.service';
 import { Carrier } from '../models';
-import { environment } from '../../../environments/environment';
 
+/** Carriers microservice: /api/carriers */
 @Injectable({ providedIn: 'root' })
 export class CarrierService {
-  private readonly baseUrl = environment.apiUrl;
-
-  private mockCarriers: Carrier[] = [
-    {
-      id: 'CR-001',
-      name: 'Swift Transportation',
-      code: 'SWFT',
-      status: 'Active',
-      onTimePercent: 96.4,
-      claimsRate: 0.8,
-      rating: 4.7,
-      totalLoads: 1240,
-      mcNumber: 'MC-133655',
-      dotNumber: 'DOT-542389',
-      contact: 'Dispatch Desk',
-      phone: '(800) 555-0142',
-      email: 'dispatch@swift.com',
-      city: 'Phoenix',
-      state: 'AZ',
-      equipment: ['Dry Van', 'Reefer', 'Flatbed'],
-      notes: 'Preferred partner for West Coast lanes. Excellent communication.',
-    },
-    {
-      id: 'CR-002',
-      name: 'Schneider National',
-      code: 'SNDR',
-      status: 'Active',
-      onTimePercent: 94.1,
-      claimsRate: 1.2,
-      rating: 4.5,
-      totalLoads: 980,
-      mcNumber: 'MC-133655',
-      dotNumber: 'DOT-542390',
-      contact: 'Capacity Team',
-      phone: '(800) 555-0198',
-      email: 'capacity@schneider.com',
-      city: 'Green Bay',
-      state: 'WI',
-      equipment: ['Dry Van', 'Intermodal'],
-      notes: 'Strong in Midwest. Request 24h notice for reefer.',
-    },
-    {
-      id: 'CR-003',
-      name: 'J.B. Hunt',
-      code: 'JBHT',
-      status: 'Active',
-      onTimePercent: 97.8,
-      claimsRate: 0.5,
-      rating: 4.9,
-      totalLoads: 1560,
-      mcNumber: 'MC-135797',
-      dotNumber: 'DOT-612455',
-      contact: 'Dedicated Ops',
-      phone: '(800) 555-0177',
-      email: 'ops@jbhunt.com',
-      city: 'Lowell',
-      state: 'AR',
-      equipment: ['Dry Van', 'Intermodal', 'Dedicated'],
-      notes: 'Top performer. Priority for high-value loads.',
-    },
-    {
-      id: 'CR-004',
-      name: 'Werner Enterprises',
-      code: 'WERN',
-      status: 'Active',
-      onTimePercent: 92.3,
-      claimsRate: 1.5,
-      rating: 4.2,
-      totalLoads: 740,
-      mcNumber: 'MC-165372',
-      dotNumber: 'DOT-53467',
-      contact: 'Fleet Manager',
-      phone: '(800) 555-0133',
-      email: 'fleet@werner.com',
-      city: 'Omaha',
-      state: 'NE',
-      equipment: ['Dry Van', 'Flatbed'],
-      notes: 'Good for long-haul. Occasional delays on weekends.',
-    },
-    {
-      id: 'CR-005',
-      name: 'Landstar System',
-      code: 'LSTR',
-      status: 'Inactive',
-      onTimePercent: 89.6,
-      claimsRate: 2.1,
-      rating: 3.8,
-      totalLoads: 310,
-      mcNumber: 'MC-166960',
-      dotNumber: 'DOT-221578',
-      contact: 'Agent Network',
-      phone: '(800) 555-0120',
-      email: 'agents@landstar.com',
-      city: 'Jacksonville',
-      state: 'FL',
-      equipment: ['Owner Operator', 'Specialized'],
-      notes: 'On hold pending insurance renewal.',
-    },
-    {
-      id: 'CR-006',
-      name: 'Knight-Swift',
-      code: 'KNX',
-      status: 'Pending',
-      onTimePercent: 95.0,
-      claimsRate: 0.9,
-      rating: 4.4,
-      totalLoads: 0,
-      mcNumber: 'MC-227271',
-      dotNumber: 'DOT-264184',
-      contact: 'Onboarding',
-      phone: '(800) 555-0188',
-      email: 'onboarding@knights.com',
-      city: 'Phoenix',
-      state: 'AZ',
-      equipment: ['Dry Van'],
-      notes: 'New carrier. Awaiting final document verification.',
-    },
-  ];
+  private readonly api = inject(ApiClient);
 
   getCarriers(): Observable<Carrier[]> {
-    // TODO: return this.http.get<Carrier[]>(`${this.baseUrl}/carriers`);
-    return of(this.mockCarriers);
+    return this.api.list<Carrier>('carriers');
   }
 
   getCarrierById(id: string): Observable<Carrier | undefined> {
-    return of(this.mockCarriers.find(c => c.id === id));
+    return this.api.find<Carrier>(`carriers/${encodeURIComponent(id)}`);
   }
 
   createCarrier(carrier: Partial<Carrier>): Observable<Carrier> {
-    // TODO: return this.http.post<Carrier>(`${this.baseUrl}/carriers`, carrier);
-    const newCarrier: Carrier = {
-      id: 'CR-' + Date.now().toString().slice(-6),
-      status: 'Pending',
-      onTimePercent: 0,
-      claimsRate: 0,
-      rating: 0,
-      totalLoads: 0,
-      equipment: [],
-      ...carrier,
-    } as Carrier;
-    this.mockCarriers.push(newCarrier);
-    return of(newCarrier);
+    // The API requires every field; fill defaults for the ones the form doesn't collect. id is generated server-side.
+    const body: Omit<Carrier, 'id'> = {
+      name: '', code: '', status: 'Pending', onTimePercent: 0, claimsRate: 0, rating: 0, totalLoads: 0,
+      mcNumber: '', dotNumber: '', contact: '', phone: '', email: '', city: '', state: '', equipment: [], notes: '',
+      ...Object.fromEntries(Object.entries(carrier).filter(([, v]) => v !== null && v !== undefined)),
+    } as Omit<Carrier, 'id'>;
+    return this.api.post<Carrier>('carriers', body);
   }
 }
