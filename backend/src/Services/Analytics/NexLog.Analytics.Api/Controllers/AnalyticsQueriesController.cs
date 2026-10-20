@@ -1,0 +1,1 @@
+$file:/workspace/NexLog-TMS/backend/src/Services/Analytics/NexLog.Analytics.Api/Controllers/AnalyticsQueriesController.cs

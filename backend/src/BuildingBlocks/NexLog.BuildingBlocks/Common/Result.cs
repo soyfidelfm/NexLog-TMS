@@ -1,0 +1,1 @@
+$file:/workspace/NexLog-TMS/backend/src/BuildingBlocks/NexLog.BuildingBlocks/Common/Result.cs
