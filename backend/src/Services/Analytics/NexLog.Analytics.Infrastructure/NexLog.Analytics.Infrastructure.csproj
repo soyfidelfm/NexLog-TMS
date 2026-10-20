@@ -1,1 +1,6 @@
-$file:/workspace/NexLog-TMS/backend/src/Services/Analytics/NexLog.Analytics.Infrastructure/NexLog.Analytics.Infrastructure.csproj
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\NexLog.Analytics.Application\NexLog.Analytics.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+</Project>

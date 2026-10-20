@@ -1,1 +1,6 @@
-$file:/workspace/NexLog-TMS/backend/src/Services/Carriers/NexLog.Carriers.Infrastructure/NexLog.Carriers.Infrastructure.csproj
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\NexLog.Carriers.Application\NexLog.Carriers.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+</Project>

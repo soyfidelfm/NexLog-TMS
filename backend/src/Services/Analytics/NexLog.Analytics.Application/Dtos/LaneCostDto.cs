@@ -1,1 +1,15 @@
-$file:/workspace/NexLog-TMS/backend/src/Services/Analytics/NexLog.Analytics.Application/Dtos/LaneCostDto.cs
+using System.ComponentModel.DataAnnotations;
+using NexLog.Analytics.Domain;
+
+namespace NexLog.Analytics.Application.Dtos;
+
+/// <summary>Mirrors the Angular model (camelCase JSON). Id is optional on POST (auto-generated).</summary>
+public sealed record LaneCostDto(
+    string? Id,
+    [Required] string Lane,
+    string Origin,
+    string Destination,
+    decimal AvgCost,
+    decimal TotalCost,
+    int Volume,
+    string Mode);

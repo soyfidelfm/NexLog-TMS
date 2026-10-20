@@ -1,1 +1,6 @@
-$file:/workspace/NexLog-TMS/backend/src/Services/Carriers/NexLog.Carriers.Application/NexLog.Carriers.Application.csproj
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\NexLog.Carriers.Domain\NexLog.Carriers.Domain.csproj" />
+  </ItemGroup>
+</Project>

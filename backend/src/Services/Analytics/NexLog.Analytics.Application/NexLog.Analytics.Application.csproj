@@ -1,1 +1,6 @@
-$file:/workspace/NexLog-TMS/backend/src/Services/Analytics/NexLog.Analytics.Application/NexLog.Analytics.Application.csproj
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\NexLog.Analytics.Domain\NexLog.Analytics.Domain.csproj" />
+  </ItemGroup>
+</Project>

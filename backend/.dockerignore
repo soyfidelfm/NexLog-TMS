@@ -1,1 +1,3 @@
-$file:/workspace/NexLog-TMS/backend/.dockerignore
+**/bin
+**/obj
+**/.vs
