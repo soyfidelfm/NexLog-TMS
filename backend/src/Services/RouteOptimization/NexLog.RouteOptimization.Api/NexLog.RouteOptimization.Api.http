@@ -1,0 +1,11 @@
+@host = http://localhost:5104
+
+GET {{host}}/api/routes?page=1&pageSize=10
+
+###
+
+GET {{host}}/api/route-runs?page=1&pageSize=10
+
+###
+
+GET {{host}}/health

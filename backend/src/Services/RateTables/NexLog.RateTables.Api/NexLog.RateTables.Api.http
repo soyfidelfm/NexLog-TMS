@@ -1,0 +1,11 @@
+@host = http://localhost:5112
+
+GET {{host}}/api/rate-tables?page=1&pageSize=10
+
+###
+
+GET {{host}}/api/role-permissions?page=1&pageSize=10
+
+###
+
+GET {{host}}/health

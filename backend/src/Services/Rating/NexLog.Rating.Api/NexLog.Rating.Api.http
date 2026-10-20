@@ -1,0 +1,7 @@
+@host = http://localhost:5105
+
+GET {{host}}/api/quotes?page=1&pageSize=10
+
+###
+
+GET {{host}}/health
