@@ -3,4 +3,7 @@
     <ProjectReference Include="..\NexLog.Analytics.Application\NexLog.Analytics.Application.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Persistence\SeedData\*.json" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,37 @@
+[
+ {
+  "id": "MV-01",
+  "mode": "Truck",
+  "volume": 1250,
+  "percentage": 52.1,
+  "cost": 1875000
+ },
+ {
+  "id": "MV-02",
+  "mode": "Rail",
+  "volume": 480,
+  "percentage": 20,
+  "cost": 432000
+ },
+ {
+  "id": "MV-03",
+  "mode": "Air",
+  "volume": 210,
+  "percentage": 8.75,
+  "cost": 735000
+ },
+ {
+  "id": "MV-04",
+  "mode": "Ocean",
+  "volume": 320,
+  "percentage": 13.3,
+  "cost": 256000
+ },
+ {
+  "id": "MV-05",
+  "mode": "Intermodal",
+  "volume": 140,
+  "percentage": 5.85,
+  "cost": 168000
+ }
+]

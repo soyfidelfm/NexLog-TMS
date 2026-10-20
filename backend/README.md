@@ -173,7 +173,61 @@ Para aplicar migraciones solo manualmente pon `"Database": { "MigrateOnStartup":
 Apunta los servicios del frontend a `http://localhost:5100/api/...` (CORS ya permite `http://localhost:4200`; configurable en `Cors:Origins`). Las listas vienen paginadas: usa `response.items`.
 
 ## Pendiente / siguientes pasos
-- Autenticación/autorización (JWT) — el login del frontend aún es demo.
-- Reemplazar los mocks de `src/app/core/services/*.ts` por llamadas HTTP (`environment.apiUrl`).
+- Pruebas de integración automatizadas para auth (hoy se prueba con `tools/auth-test`).
+- Paginación del lado servidor en las tablas del frontend (hoy pide hasta 200 filas).
 - Mensajería entre servicios (p. ej. Tendering → Loads, Tracking → Exceptions) con eventos (RabbitMQ/MassTransit).
 - Tests unitarios/integración (Testcontainers).
+
+## Seguridad · Auth0 (JWT Bearer)
+
+El frontend inicia sesión con Auth0 (`@auth0/auth0-angular`) y manda un **access token RS256** en `Authorization: Bearer …` a cada llamada a `environment.apiUrl` (`http://localhost:5100/api`). El gateway y **cada microservicio** validan el token: issuer `https://{Auth0:Domain}/`, audience `{Auth0:Audience}`, expiración y firma (llaves públicas JWKS obtenidas de los metadatos OIDC). No se necesita ningún secreto en el backend.
+
+- Todos los endpoints requieren usuario autenticado (fallback policy) → **401** sin token o con token inválido/expirado/audience distinto.
+- Anónimos: `/health` y `/swagger` (Swagger trae el botón **Authorize** con esquema Bearer).
+- El portal de clientes (`/api/portal/*`) también requiere sesión, porque en el frontend está detrás del guard.
+- Permisos opcionales: con `Auth0:EnforcePermissions=true`, GET/HEAD exigen `read:tms` y POST/PUT/DELETE `write:tms` (claim `permissions` de RBAC o `scope`) → **403** si faltan. Por defecto está apagado.
+- CORS: solo `http://localhost:4200` (configurable en `Cors:Origins`) con los headers `Authorization`, `Content-Type`, `Accept`, `Accept-Language`.
+
+### Configuración en el dashboard de Auth0
+
+1. **Applications → APIs → Create API**
+   - Name: `NexLog TMS API`
+   - Identifier (audience): `https://api.nexlog-tms` (no se puede cambiar después; si usas otro, cámbialo también en el frontend y el backend)
+   - Signing algorithm: **RS256**
+   - En *Settings*: activa **Allow Offline Access** (el frontend usa refresh tokens).
+   - Opcional (*Permissions*): agrega `read:tms` y `write:tms`; en *RBAC Settings* activa **Enable RBAC** y **Add Permissions in the Access Token**, y asígnalos a roles/usuarios.
+2. **Applications → Applications → (la SPA, clientId `sIFP0DQPkWTDjkfikEmfv90xaptToZUE`) → Settings**
+   - Application type: Single Page Application
+   - Allowed Callback URLs: `http://localhost:4200`
+   - Allowed Logout URLs: `http://localhost:4200`
+   - Allowed Web Origins: `http://localhost:4200`
+   - Allowed Origins (CORS): `http://localhost:4200`
+   - *Refresh Token Rotation*: activado.
+   - En la pestaña **APIs** de la aplicación (o en *APIs → Machine to Machine / User Access*), autoriza el acceso de la SPA a la API `NexLog TMS API`.
+   - Agrega tu dominio de producción a las mismas listas cuando publiques el frontend.
+
+### Variables de configuración (backend)
+
+| Clave (appsettings `Auth0`) | Variable de entorno | Valor por defecto |
+|---|---|---|
+| `Domain` | `AUTH0__DOMAIN` | `dev-fidelfm.us.auth0.com` |
+| `Audience` | `AUTH0__AUDIENCE` | `https://api.nexlog-tms` |
+| `Enabled` | `AUTH0__ENABLED` | `true` (`false` = todo anónimo, solo para desarrollo) |
+| `EnforcePermissions` | `AUTH0__ENFORCEPERMISSIONS` | `false` |
+| `ReadPermission` / `WritePermission` | `AUTH0__READPERMISSION` / `AUTH0__WRITEPERMISSION` | `read:tms` / `write:tms` |
+| `Authority` | `AUTH0__AUTHORITY` | vacío → `https://{Domain}/` (útil para pruebas o custom domain) |
+
+En Docker Compose: crea `backend/.env` con `AUTH0_DOMAIN=...` y `AUTH0_AUDIENCE=...` (se pasan a todos los servicios y al gateway).
+
+Frontend (`src/environments/environment.ts`): `auth0.domain`, `auth0.clientId`, `auth0.audience` (= `Auth0:Audience`) y `apiUrl`.
+
+### Probar
+
+```bash
+# Sin token -> 401
+curl -i http://localhost:5100/api/orders
+# Con un token real: inicia sesión en http://localhost:4200, DevTools > Network > copia el header Authorization
+curl -H "Authorization: Bearer <token>" http://localhost:5100/api/orders
+```
+
+**Sin Auth0 (pruebas automáticas):** `tools/auth-test/local-issuer.sh` levanta un emisor OIDC local con una llave RSA de prueba y `tools/auth-test/mint.py` firma tokens RS256. Arranca los servicios con `Auth0__Authority=http://localhost:9999/ Auth0__RequireHttpsMetadata=false` y prueba token válido (200), expirado / audience incorrecto / basura (401) y, con `Auth0__EnforcePermissions=true`, un token solo `read:tms` (GET 200, DELETE 403). La validación usa exactamente el mismo código que con Auth0; solo cambia de dónde se descargan las llaves.

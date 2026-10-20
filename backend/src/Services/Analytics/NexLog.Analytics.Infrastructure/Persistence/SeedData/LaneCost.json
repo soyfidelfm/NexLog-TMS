@@ -1,0 +1,82 @@
+[
+ {
+  "id": "LC-01",
+  "lane": "LAX-CHI",
+  "origin": "Los Angeles, CA",
+  "destination": "Chicago, IL",
+  "avgCost": 1850,
+  "totalCost": 92500,
+  "volume": 50,
+  "mode": "Truck"
+ },
+ {
+  "id": "LC-02",
+  "lane": "NYC-MIA",
+  "origin": "New York, NY",
+  "destination": "Miami, FL",
+  "avgCost": 2100,
+  "totalCost": 63000,
+  "volume": 30,
+  "mode": "Truck"
+ },
+ {
+  "id": "LC-03",
+  "lane": "SEA-DEN",
+  "origin": "Seattle, WA",
+  "destination": "Denver, CO",
+  "avgCost": 1450,
+  "totalCost": 43500,
+  "volume": 30,
+  "mode": "Rail"
+ },
+ {
+  "id": "LC-04",
+  "lane": "DAL-ATL",
+  "origin": "Dallas, TX",
+  "destination": "Atlanta, GA",
+  "avgCost": 1200,
+  "totalCost": 48000,
+  "volume": 40,
+  "mode": "Truck"
+ },
+ {
+  "id": "LC-05",
+  "lane": "ORD-LAX",
+  "origin": "Chicago, IL",
+  "destination": "Los Angeles, CA",
+  "avgCost": 1950,
+  "totalCost": 78000,
+  "volume": 40,
+  "mode": "Air"
+ },
+ {
+  "id": "LC-06",
+  "lane": "HOU-PHX",
+  "origin": "Houston, TX",
+  "destination": "Phoenix, AZ",
+  "avgCost": 980,
+  "totalCost": 29400,
+  "volume": 30,
+  "mode": "Intermodal"
+ },
+ {
+  "id": "LC-07",
+  "lane": "BOS-DC",
+  "origin": "Boston, MA",
+  "destination": "Washington, DC",
+  "avgCost": 750,
+  "totalCost": 22500,
+  "volume": 30,
+  "mode": "Truck"
+ },
+ {
+  "id": "LC-08",
+  "lane": "SFO-PDX",
+  "origin": "San Francisco, CA",
+  "destination": "Portland, OR",
+  "avgCost": 620,
+  "totalCost": 18600,
+  "volume": 30,
+  "mode": "Truck"
+ }
+]

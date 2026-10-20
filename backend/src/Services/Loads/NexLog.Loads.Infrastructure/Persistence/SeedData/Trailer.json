@@ -1,0 +1,73 @@
+[
+ {
+  "id": "TRL-01",
+  "name": "Trailer 01",
+  "type": "Dry Van 53'",
+  "maxWeight": 45000,
+  "maxVolume": 3800,
+  "assigned": [
+   {
+    "id": "ORD-1038",
+    "customer": "Pacific Steel",
+    "origin": "Long Beach, CA",
+    "destination": "Phoenix, AZ",
+    "weight": 18500,
+    "volume": 980,
+    "priority": "High"
+   },
+   {
+    "id": "ORD-1040",
+    "customer": "Valley Produce",
+    "origin": "Fresno, CA",
+    "destination": "Tucson, AZ",
+    "weight": 9200,
+    "volume": 640,
+    "priority": "Medium"
+   }
+  ]
+ },
+ {
+  "id": "TRL-02",
+  "name": "Trailer 02",
+  "type": "Dry Van 53'",
+  "maxWeight": 45000,
+  "maxVolume": 3800,
+  "assigned": [
+   {
+    "id": "ORD-1035",
+    "customer": "WestCoast Logistics",
+    "origin": "Los Angeles, CA",
+    "destination": "Las Vegas, NV",
+    "weight": 12400,
+    "volume": 720,
+    "priority": "Medium"
+   }
+  ]
+ },
+ {
+  "id": "TRL-03",
+  "name": "Trailer 03",
+  "type": "Reefer 53'",
+  "maxWeight": 42000,
+  "maxVolume": 3400,
+  "assigned": []
+ },
+ {
+  "id": "TRL-04",
+  "name": "Trailer 04",
+  "type": "Dry Van 48'",
+  "maxWeight": 40000,
+  "maxVolume": 3200,
+  "assigned": [
+   {
+    "id": "ORD-1031",
+    "customer": "Mountain Goods",
+    "origin": "San Bernardino, CA",
+    "destination": "Salt Lake City, UT",
+    "weight": 7800,
+    "volume": 410,
+    "priority": "Low"
+   }
+  ]
+ }
+]

@@ -1,0 +1,50 @@
+[
+ {
+  "id": "OT-01",
+  "period": "Week 1",
+  "onTimePercent": 91.2,
+  "totalDeliveries": 420
+ },
+ {
+  "id": "OT-02",
+  "period": "Week 2",
+  "onTimePercent": 92.8,
+  "totalDeliveries": 455
+ },
+ {
+  "id": "OT-03",
+  "period": "Week 3",
+  "onTimePercent": 94.1,
+  "totalDeliveries": 480
+ },
+ {
+  "id": "OT-04",
+  "period": "Week 4",
+  "onTimePercent": 93.5,
+  "totalDeliveries": 465
+ },
+ {
+  "id": "OT-05",
+  "period": "Week 5",
+  "onTimePercent": 95.2,
+  "totalDeliveries": 510
+ },
+ {
+  "id": "OT-06",
+  "period": "Week 6",
+  "onTimePercent": 94.8,
+  "totalDeliveries": 495
+ },
+ {
+  "id": "OT-07",
+  "period": "Week 7",
+  "onTimePercent": 96.1,
+  "totalDeliveries": 530
+ },
+ {
+  "id": "OT-08",
+  "period": "Week 8",
+  "onTimePercent": 95.7,
+  "totalDeliveries": 520
+ }
+]

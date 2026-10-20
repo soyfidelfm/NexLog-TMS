@@ -1,4 +1,5 @@
 # NexLog TMS backend: PostgreSQL + 14 microservices + YARP gateway
+# AUTH0_DOMAIN / AUTH0_AUDIENCE se pueden poner en backend/.env
 # docker compose up --build   -> gateway http://localhost:5100
 services:
   postgres:
@@ -21,6 +22,8 @@ services:
         ASSEMBLY: NexLog.Orders.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_orders;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5101:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -33,6 +36,8 @@ services:
         ASSEMBLY: NexLog.Carriers.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_carriers;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5102:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -45,6 +50,8 @@ services:
         ASSEMBLY: NexLog.Loads.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_loads;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5103:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -57,6 +64,8 @@ services:
         ASSEMBLY: NexLog.RouteOptimization.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_routing;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5104:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -69,6 +78,8 @@ services:
         ASSEMBLY: NexLog.Rating.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_rating;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5105:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -81,6 +92,8 @@ services:
         ASSEMBLY: NexLog.Tendering.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_tendering;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5106:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -93,6 +106,8 @@ services:
         ASSEMBLY: NexLog.Documents.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_documents;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5107:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -105,6 +120,8 @@ services:
         ASSEMBLY: NexLog.FreightAudit.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_freight_audit;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5108:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -117,6 +134,8 @@ services:
         ASSEMBLY: NexLog.Tracking.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_tracking;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5109:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -129,6 +148,8 @@ services:
         ASSEMBLY: NexLog.Exceptions.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_exceptions;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5110:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -141,6 +162,8 @@ services:
         ASSEMBLY: NexLog.Analytics.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_analytics;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5111:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -153,6 +176,8 @@ services:
         ASSEMBLY: NexLog.RateTables.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_rate_tables;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5112:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -165,6 +190,8 @@ services:
         ASSEMBLY: NexLog.ClientPortal.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_client_portal;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5113:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -177,6 +204,8 @@ services:
         ASSEMBLY: NexLog.Dashboard.Api
     environment:
       ConnectionStrings__Default: Host=postgres;Port=5432;Database=nexlog_dashboard;Username=postgres;Password=postgres
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
     ports: ["5114:8080"]
     depends_on:
       postgres: { condition: service_healthy }
@@ -188,6 +217,8 @@ services:
         PROJECT: src/ApiGateway/NexLog.ApiGateway/NexLog.ApiGateway.csproj
         ASSEMBLY: NexLog.ApiGateway
     environment:
+      AUTH0__DOMAIN: ${AUTH0_DOMAIN:-dev-fidelfm.us.auth0.com}
+      AUTH0__AUDIENCE: ${AUTH0_AUDIENCE:-https://api.nexlog-tms}
       ReverseProxy__Clusters__orders__Destinations__d1__Address: http://orders:8080/
       ReverseProxy__Clusters__carriers__Destinations__d1__Address: http://carriers:8080/
       ReverseProxy__Clusters__loads__Destinations__d1__Address: http://loads:8080/

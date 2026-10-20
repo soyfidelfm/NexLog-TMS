@@ -9,7 +9,7 @@ public sealed record KpiDto(
     [Required] string TitleKey,
     string Value,
     string ChangeKey,
-    Dictionary<string, string> ChangeParams,
+    Dictionary<string, object?> ChangeParams,
     bool ChangePositive,
     string Icon,
     string Color,

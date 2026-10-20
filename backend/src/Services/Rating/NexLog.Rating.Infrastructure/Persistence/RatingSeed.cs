@@ -7,17 +7,21 @@ namespace NexLog.Rating.Infrastructure.Persistence;
 /// <summary>Seed data aligned with the Angular mock services (src/app/core/services).</summary>
 public static class RatingSeed
 {
+    private static readonly System.Text.Json.JsonSerializerOptions Json = new(System.Text.Json.JsonSerializerDefaults.Web);
+
+    /// <summary>Reads an embedded SeedData/*.json file (exported from the Angular mocks).</summary>
+    private static List<T> Load<T>(string file)
+    {
+        var asm = typeof(RatingSeed).Assembly;
+        var name = asm.GetManifestResourceNames().Single(n => n.EndsWith("SeedData." + file));
+        using var stream = asm.GetManifestResourceStream(name)!;
+        return System.Text.Json.JsonSerializer.Deserialize<List<T>>(stream, Json) ?? [];
+    }
+
     public static async Task SeedAsync(RatingDbContext db)
     {
         if (!await db.CarrierQuotes.AnyAsync())
-        {
-            db.CarrierQuotes.AddRange(new List<CarrierQuote>
-            {
-            new() { Id = "1", Carrier = "Swift Transportation", Price = 1850m, Currency = "USD", TransitDays = 3, ServiceType = "Standard", OnTimePercent = 96m, Rating = 4.7m, FuelSurcharge = 185m, Total = 2035m },
-            new() { Id = "2", Carrier = "Schneider National", Price = 1720m, Currency = "USD", TransitDays = 4, ServiceType = "Economy", OnTimePercent = 94m, Rating = 4.5m, FuelSurcharge = 172m, Total = 1892m },
-            new() { Id = "3", Carrier = "J.B. Hunt", Price = 2240m, Currency = "USD", TransitDays = 2, ServiceType = "Expedited", OnTimePercent = 97m, Rating = 4.6m, FuelSurcharge = 224m, Total = 2464m }
-            });
-        }
+            db.CarrierQuotes.AddRange(Load<CarrierQuote>("CarrierQuote.json"));
 
         await db.SaveChangesAsync();
     }

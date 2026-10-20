@@ -1,12 +1,21 @@
 // API Gateway (YARP): single entry point http://localhost:5100/api/* -> each microservice.
+// Validates the Auth0 JWT (same rules as the services) and forwards the Authorization header untouched.
+using NexLog.BuildingBlocks.Web.Hosting;
+using NexLog.BuildingBlocks.Web.Security;
+using Yarp.ReverseProxy.Transforms;
+
 var builder = WebApplication.CreateBuilder(args);
-var origins = builder.Configuration.GetSection("Cors:Origins").Get<string[]>() ?? ["http://localhost:4200"];
-builder.Services.AddCors(o => o.AddPolicy("frontend", p => p.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod()));
-builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Services.AddNexLogCors(builder.Configuration);
+builder.Services.AddNexLogAuth0(builder.Configuration);
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"))
+    // CORS is answered by the gateway; drop Origin so services don't add duplicate CORS headers.
+    .AddTransforms(t => t.AddRequestHeaderRemove("Origin"));
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
-app.UseCors("frontend");
-app.MapHealthChecks("/health");
-app.MapReverseProxy();
+app.UseCors(ServiceHostExtensions.CorsPolicy);
+app.UseNexLogAuth();
+app.MapHealthChecks("/health").AllowAnonymous();
+app.MapReverseProxy();   // covered by the fallback policy (authenticated user required)
 app.Run();

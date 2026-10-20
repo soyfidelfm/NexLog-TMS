@@ -1,0 +1,13 @@
+[
+ {
+  "id": "POD-0001",
+  "signature": "",
+  "photoUrl": "",
+  "gpsLat": 34.0522,
+  "gpsLng": -118.2437,
+  "address": "1234 Delivery St, Los Angeles, CA 90001",
+  "deliveredAt": "2026-10-15 14:28",
+  "signedBy": "John Martinez",
+  "notes": "Delivered in good condition. Left at front door as requested."
+ }
+]
