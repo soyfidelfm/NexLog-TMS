@@ -61,6 +61,7 @@ export interface OrderDetail {
     date: string;
     completed: boolean;
     current: boolean;
+    estimated?: boolean;
   }[];
 }
 

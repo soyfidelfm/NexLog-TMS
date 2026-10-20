@@ -24,6 +24,7 @@
   </header>
 
   <!-- Summary -->
+  @if (summary(); as summary) {
   <section class="mb-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
     <div class="kpi">
       <span class="kpi-label">{{ 'routeOpt.distanceSaved' | translate }}</span>
@@ -46,12 +47,13 @@
       <span class="kpi-hint">{{ 'routeOpt.lastRun' | translate: { date: (summary.lastRun | date: 'medium' : undefined : lang.locale()) } }}</span>
     </div>
   </section>
+  }
 
   <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
     <!-- Map -->
     <section class="relative overflow-hidden rounded-xl border border-line bg-surface">
       <div class="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
-        @for (r of routes; track r.id) {
+        @for (r of routes(); track r.id) {
           <button (click)="toggle(r.id)" class="flex items-center gap-2 rounded-full border border-line-strong bg-app/90 px-3 py-1 text-xs backdrop-blur"
             [class.ring-2]="selected() === r.id" [style.--tw-ring-color]="r.color">
             <span class="h-2.5 w-2.5 rounded-full" [style.background]="r.color"></span>{{ r.id }} · {{ 'routeOpt.route.' + r.id | translate }}
@@ -69,7 +71,7 @@
         <path class="stroke-map-grid fill-map-land" d="M60 120 Q300 40 620 50 T880 160 L870 520 Q700 690 380 680 T40 560 Z"/>
         <path class="stroke-map-road" d="M80 340 H860 M470 40 V690 M150 600 L800 120" stroke-width="3" stroke-dasharray="2 8" fill="none"/>
 
-        @for (r of routes; track r.id) {
+        @for (r of routes(); track r.id) {
           <g [style.opacity]="dim(r) ? 0.15 : 1" class="cursor-pointer transition-opacity" (click)="toggle(r.id)">
             <path [attr.d]="path(r)" fill="none" [attr.stroke]="r.color" stroke-width="10" stroke-opacity=".18" stroke-linecap="round" stroke-linejoin="round"/>
             <path [attr.d]="path(r)" fill="none" [attr.stroke]="r.color" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="route-dash" filter="url(#glow)"/>
@@ -98,7 +100,7 @@
 
     <!-- Side panel -->
     <aside class="flex max-h-[720px] flex-col gap-4 overflow-y-auto pr-1">
-      @for (r of routes; track r.id) {
+      @for (r of routes(); track r.id) {
         <article (click)="toggle(r.id)" class="cursor-pointer rounded-xl border bg-surface p-4 transition-colors"
           [class]="selected() === r.id ? 'border-blue-500/60' : 'border-line hover:border-line-strong'">
           <div class="mb-3 flex items-start justify-between gap-2">

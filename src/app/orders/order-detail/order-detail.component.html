@@ -1,3 +1,4 @@
+@if (order(); as o) {
 <div class="min-h-full bg-app-deep text-primary flex">
   <!-- Main Content -->
   <main class="flex-1 flex flex-col">
@@ -7,7 +8,7 @@
         <button class="text-muted hover:text-strong" [attr.aria-label]="'orderDetail.back' | translate" [attr.title]="'orderDetail.back' | translate">←</button>
         <div>
           <h1 class="text-xl font-semibold">{{ 'orderDetail.title' | translate }}</h1>
-          <span class="text-blue-ink font-mono text-sm">{{ order().id }}</span>
+          <span class="text-blue-ink font-mono text-sm">{{ o.id }}</span>
         </div>
       </div>
       <div class="flex items-center gap-4">
@@ -18,7 +19,7 @@
     <!-- Timeline -->
     <div class="px-6 py-4 border-b border-line">
       <div class="flex items-center justify-between max-w-5xl mx-auto">
-        @for (step of order().timeline; track step.label; let i = $index) {
+        @for (step of o.timeline; track step.label; let i = $index) {
           <div class="flex flex-col items-center relative">
             <div class="text-xs text-muted mb-2 text-center max-w-[100px]">{{ step.label | translate }}</div>
             <div class="text-[10px] text-subtle mb-1">{{ step.estimated ? ('orderDetail.est' | translate) + ' ' : '' }}{{ step.date | date: 'MMM d, HH:mm' : undefined : lang.locale() }}</div>
@@ -30,7 +31,7 @@
               } @else {
                 <div class="w-6 h-6 rounded-full bg-elevated-2 border-2 border-line-stronger"></div>
               }
-              @if (i < order().timeline.length - 1) {
+              @if (i < o.timeline.length - 1) {
                 <div class="absolute top-1/2 left-full w-full h-0.5 -translate-y-1/2"
                      [class]="step.completed ? 'bg-emerald-500' : 'bg-elevated-2'"
                      style="width: calc(100% + 2rem); margin-left: 1.5rem;"></div>
@@ -60,10 +61,10 @@
               <div class="flex items-start gap-2">
                 <span class="text-blue-ink mt-0.5">📍</span>
                 <div>
-                  <div class="font-medium">{{ order().origin.city }}</div>
-                  <div class="text-sm text-body">{{ order().origin.address }}</div>
-                  <div class="text-sm text-muted">{{ order().origin.zip }}</div>
-                  <div class="text-xs text-subtle mt-1">🕒 {{ order().origin.date | date: 'mediumDate' : undefined : lang.locale() }}, {{ order().origin.window }}</div>
+                  <div class="font-medium">{{ o.origin.city }}</div>
+                  <div class="text-sm text-body">{{ o.origin.address }}</div>
+                  <div class="text-sm text-muted">{{ o.origin.zip }}</div>
+                  <div class="text-xs text-subtle mt-1">🕒 {{ o.origin.date | date: 'mediumDate' : undefined : lang.locale() }}, {{ o.origin.window }}</div>
                 </div>
               </div>
             </div>
@@ -73,10 +74,10 @@
               <div class="flex items-start gap-2">
                 <span class="text-purple-ink mt-0.5">📍</span>
                 <div>
-                  <div class="font-medium">{{ order().destination.city }}</div>
-                  <div class="text-sm text-body">{{ order().destination.address }}</div>
-                  <div class="text-sm text-muted">{{ order().destination.zip }}</div>
-                  <div class="text-xs text-subtle mt-1">🕒 {{ order().destination.date | date: 'mediumDate' : undefined : lang.locale() }}, {{ order().destination.window }}</div>
+                  <div class="font-medium">{{ o.destination.city }}</div>
+                  <div class="text-sm text-body">{{ o.destination.address }}</div>
+                  <div class="text-sm text-muted">{{ o.destination.zip }}</div>
+                  <div class="text-xs text-subtle mt-1">🕒 {{ o.destination.date | date: 'mediumDate' : undefined : lang.locale() }}, {{ o.destination.window }}</div>
                 </div>
               </div>
             </div>
@@ -84,24 +85,24 @@
             <div class="grid grid-cols-3 gap-4 pt-2">
               <div class="bg-elevated/50 rounded-lg p-3">
                 <div class="text-xs text-muted">{{ 'orderDetail.weight' | translate }}</div>
-                <div class="font-semibold">{{ order().weightLbs | number : '1.0-0' : lang.locale() }} lb</div>
-                <div class="text-xs text-subtle">{{ order().weightKg | number : '1.0-0' : lang.locale() }} kg</div>
+                <div class="font-semibold">{{ o.weightLbs | number : '1.0-0' : lang.locale() }} lb</div>
+                <div class="text-xs text-subtle">{{ o.weightKg | number : '1.0-0' : lang.locale() }} kg</div>
               </div>
               <div class="bg-elevated/50 rounded-lg p-3">
                 <div class="text-xs text-muted">{{ 'orderDetail.dimensions' | translate }}</div>
-                <div class="font-semibold text-sm">{{ 'orderDetail.dimsFt' | translate: { l: order().dimensions.lengthFt, w: order().dimensions.widthFt, h: order().dimensions.heightFt } }}</div>
-                <div class="text-xs text-subtle">{{ order().dimensions.lengthM }} m × {{ order().dimensions.widthM }} m × {{ order().dimensions.heightM }} m</div>
+                <div class="font-semibold text-sm">{{ 'orderDetail.dimsFt' | translate: { l: o.dimensions.lengthFt, w: o.dimensions.widthFt, h: o.dimensions.heightFt } }}</div>
+                <div class="text-xs text-subtle">{{ o.dimensions.lengthM }} m × {{ o.dimensions.widthM }} m × {{ o.dimensions.heightM }} m</div>
               </div>
               <div class="bg-elevated/50 rounded-lg p-3">
                 <div class="text-xs text-muted">{{ 'orderDetail.productType' | translate }}</div>
-                <div class="font-semibold text-sm">{{ productKey(order().productType) | translate }}</div>
+                <div class="font-semibold text-sm">{{ productKey(o.productType) | translate }}</div>
               </div>
             </div>
 
             <div>
               <div class="text-sm text-muted mb-2">{{ 'orderDetail.specialReq' | translate }}</div>
               <div class="flex flex-wrap gap-2">
-                @for (req of order().specialRequirements; track req) {
+                @for (req of o.specialRequirements; track req) {
                   <span class="px-3 py-1 bg-elevated text-body text-xs rounded-full border border-line-strong">{{ reqKey[req] | translate }}</span>
                 }
               </div>
@@ -190,8 +191,8 @@
             <span class="text-emerald-ink">📏</span>
             <div>
               <div class="text-xs text-muted">{{ 'orderDetail.routeDistance' | translate }}</div>
-              <div class="font-semibold">{{ order().routeDistanceMi | number:'1.1-1' : lang.locale() }} mi</div>
-              <div class="text-xs text-subtle">{{ order().routeDistanceKm | number:'1.1-1' : lang.locale() }} km</div>
+              <div class="font-semibold">{{ o.routeDistanceMi | number:'1.1-1' : lang.locale() }} mi</div>
+              <div class="text-xs text-subtle">{{ o.routeDistanceKm | number:'1.1-1' : lang.locale() }} km</div>
             </div>
           </div>
           <div class="bg-elevated/50 rounded-lg p-3 flex items-center gap-3">
@@ -205,7 +206,7 @@
             <span class="text-emerald-ink">🚚</span>
             <div>
               <div class="text-xs text-muted">{{ 'orderDetail.eta' | translate }}</div>
-              <div class="font-semibold">{{ order().estimatedArrival | date: 'MMM d, y, HH:mm' : undefined : lang.locale() }}</div>
+              <div class="font-semibold">{{ o.estimatedArrival | date: 'MMM d, y, HH:mm' : undefined : lang.locale() }}</div>
             </div>
           </div>
         </div>
@@ -213,3 +214,4 @@
     </div>
   </main>
 </div>
+}

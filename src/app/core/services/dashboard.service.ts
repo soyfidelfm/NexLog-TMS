@@ -5,81 +5,17 @@ import { KPI, Alert } from '../models';
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private mockKpis: KPI[] = [
-    {
-      title: 'Total Shipments Today',
-      value: '1,248',
-      change: '↑ 12.5% vs May 19, 2024',
-      changePositive: true,
-      icon: 'truck',
-      color: 'blue',
-      sparkline: [980, 1050, 1100, 1150, 1200, 1248]
-    },
-    {
-      title: 'On-Time Delivery %',
-      value: '92.6%',
-      change: '↑ 3.4% vs May 19, 2024',
-      changePositive: true,
-      icon: 'check',
-      color: 'green',
-      sparkline: [88, 89, 90, 91, 92, 92.6]
-    },
-    {
-      title: 'Freight Cost This Month',
-      value: '$2.45M',
-      change: '↓ 5.7% vs Apr 20 – May 19',
-      changePositive: false,
-      icon: 'dollar',
-      color: 'purple',
-      sparkline: [2.8, 2.7, 2.6, 2.5, 2.48, 2.45]
-    },
-    {
-      title: 'Active Exceptions',
-      value: '27',
-      change: '↑ 8 vs May 19, 2024',
-      changePositive: false,
-      icon: 'alert',
-      color: 'orange',
-      sparkline: [15, 18, 20, 22, 25, 27]
-    }
+    { titleKey: 'kpiShipments', value: '1,248', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '12.5%', date: '2024-05-19' }, changePositive: true, icon: 'truck', color: 'blue', sparkline: [980, 1050, 1100, 1150, 1200, 1248] },
+    { titleKey: 'kpiOnTime', value: '92.6%', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '3.4%', date: '2024-05-19' }, changePositive: true, icon: 'check', color: 'green', sparkline: [88, 89, 90, 91, 92, 92.6] },
+    { titleKey: 'kpiCost', value: '$2.45M', changeKey: 'dashboard.changeVsPeriod', changeParams: { arrow: '↓', delta: '5.7%' }, changePositive: false, icon: 'dollar', color: 'purple', sparkline: [2.8, 2.7, 2.6, 2.5, 2.48, 2.45] },
+    { titleKey: 'kpiExceptions', value: '27', changeKey: 'dashboard.changeVsDate', changeParams: { arrow: '↑', delta: '8', date: '2024-05-19' }, changePositive: false, icon: 'alert', color: 'orange', sparkline: [15, 18, 20, 22, 25, 27] }
   ];
 
   private mockAlerts: Alert[] = [
-    {
-      id: '1',
-      type: 'delay',
-      title: 'Delay: Shipment #SHP0048912',
-      description: 'Houston, TX → Phoenix, AZ • 2h 15m delay',
-      time: '10 min ago',
-      icon: 'alert-triangle',
-      color: 'red'
-    },
-    {
-      id: '2',
-      type: 'exception',
-      title: 'Carrier Exception: SHP0048876',
-      description: 'Equipment issue reported',
-      time: '35 min ago',
-      icon: 'alert-circle',
-      color: 'orange'
-    },
-    {
-      id: '3',
-      type: 'cost',
-      title: 'High Freight Cost Alert',
-      description: 'Route #RT-2093 above budget by 18%',
-      time: '1h ago',
-      icon: 'dollar-sign',
-      color: 'yellow'
-    },
-    {
-      id: '4',
-      type: 'weather',
-      title: 'Weather Advisory: Southeast',
-      description: 'Storms expected to impact delivery',
-      time: '2h ago',
-      icon: 'cloud-rain',
-      color: 'blue'
-    }
+    { id: '1', type: 'delay', titleKey: 'alertDelay', descKey: 'alertDelayDesc', timeKey: 'time.minAgo', n: 10, icon: 'alert-triangle', color: 'red' },
+    { id: '2', type: 'exception', titleKey: 'alertException', descKey: 'alertExceptionDesc', timeKey: 'time.minAgo', n: 35, icon: 'alert-circle', color: 'orange' },
+    { id: '3', type: 'cost', titleKey: 'alertCost', descKey: 'alertCostDesc', timeKey: 'time.hoursAgo', n: 1, icon: 'dollar-sign', color: 'yellow' },
+    { id: '4', type: 'weather', titleKey: 'alertWeather', descKey: 'alertWeatherDesc', timeKey: 'time.hoursAgo', n: 2, icon: 'cloud-rain', color: 'blue' }
   ];
 
   getKpis(): Observable<KPI[]> {

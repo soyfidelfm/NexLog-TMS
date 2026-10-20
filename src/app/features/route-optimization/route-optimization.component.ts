@@ -18,23 +18,23 @@ export class RouteOptimizationComponent implements OnInit {
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
 
-  routes: OptRoute[] = [];
-  summary: RouteSummary | null = null;
+  routes = signal<OptRoute[]>([]);
+  summary = signal<RouteSummary | null>(null);
   selected = signal<string | null>(null);
   optimizing = signal(false);
   objective = signal<'distance' | 'time' | 'cost'>('cost');
 
   ngOnInit(): void {
-    this.routeOptService.getRoutes().subscribe(data => this.routes = data);
-    this.routeOptService.getSummary().subscribe(data => this.summary = data);
+    this.routeOptService.getRoutes().subscribe(data => this.routes.set(data));
+    this.routeOptService.getSummary().subscribe(data => this.summary.set(data));
   }
 
-  active = computed<OptRoute | null>(() => this.routes.find(r => r.id === this.selected()) ?? null);
-  kmSaved = computed(() => this.summary ? this.summary.before.km - this.summary.after.km : 0);
-  costSaved = computed(() => this.summary ? this.summary.before.cost - this.summary.after.cost : 0);
-  kmPct = computed(() => this.summary && this.summary.before.km ? Math.round((this.kmSaved() / this.summary.before.km) * 100) : 0);
-  costPct = computed(() => this.summary && this.summary.before.cost ? Math.round((this.costSaved() / this.summary.before.cost) * 100) : 0);
-  totals = computed(() => this.routes.reduce((a, r) => ({
+  active = computed<OptRoute | null>(() => this.routes().find(r => r.id === this.selected()) ?? null);
+  kmSaved = computed(() => { const s = this.summary(); return s ? s.before.km - s.after.km : 0; });
+  costSaved = computed(() => { const s = this.summary(); return s ? s.before.cost - s.after.cost : 0; });
+  kmPct = computed(() => { const s = this.summary(); return s && s.before.km ? Math.round((this.kmSaved() / s.before.km) * 100) : 0; });
+  costPct = computed(() => { const s = this.summary(); return s && s.before.cost ? Math.round((this.costSaved() / s.before.cost) * 100) : 0; });
+  totals = computed(() => this.routes().reduce((a, r) => ({
     km: a.km + r.distanceKm, min: a.min + r.durationMin, cost: a.cost + r.cost, stops: a.stops + r.stops.length - 1,
   }), { km: 0, min: 0, cost: 0, stops: 0 }));
 

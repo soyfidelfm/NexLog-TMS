@@ -1,19 +1,28 @@
+/** Dashboard KPI card. Text is resolved through ngx-translate keys (ES/EN). */
 export interface KPI {
-  title: string;
+  /** Key under `dashboard.` (e.g. `kpiShipments`). */
+  titleKey: string;
   value: string;
-  change: string;
+  /** Full translation key for the change line (e.g. `dashboard.changeVsDate`). */
+  changeKey: string;
+  changeParams?: Record<string, string | number>;
   changePositive: boolean;
   icon: string;
   color: string;
   sparkline?: number[];
 }
 
+/** Dashboard alert row. Text is resolved through ngx-translate keys (ES/EN). */
 export interface Alert {
   id: string;
   type: 'delay' | 'exception' | 'cost' | 'weather';
-  title: string;
-  description: string;
-  time: string;
+  /** Key under `dashboard.` (e.g. `alertDelay`). */
+  titleKey: string;
+  /** Key under `dashboard.` (e.g. `alertDelayDesc`). */
+  descKey: string;
+  /** Full translation key for the relative time (e.g. `time.minAgo`). */
+  timeKey: string;
+  n: number;
   icon: string;
   color: string;
 }
