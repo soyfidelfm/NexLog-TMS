@@ -1,0 +1,7 @@
+@host = http://localhost:5110
+
+GET {{host}}/api/exceptions?page=1&pageSize=10
+
+###
+
+GET {{host}}/health

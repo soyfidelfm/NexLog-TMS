@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks\NexLog.BuildingBlocks.csproj" />
+  </ItemGroup>
+</Project>

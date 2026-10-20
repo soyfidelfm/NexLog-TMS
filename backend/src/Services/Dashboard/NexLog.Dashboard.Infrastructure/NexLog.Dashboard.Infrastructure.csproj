@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\NexLog.Dashboard.Application\NexLog.Dashboard.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+</Project>
