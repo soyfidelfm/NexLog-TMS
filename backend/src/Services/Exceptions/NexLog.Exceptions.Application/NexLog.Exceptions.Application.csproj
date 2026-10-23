@@ -1,6 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\NexLog.Exceptions.Domain\NexLog.Exceptions.Domain.csproj" />
-  </ItemGroup>
-</Project>

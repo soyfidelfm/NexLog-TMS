@@ -1,7 +1,0 @@
-@host = http://localhost:5102
-
-GET {{host}}/api/carriers?page=1&pageSize=10
-
-###
-
-GET {{host}}/health

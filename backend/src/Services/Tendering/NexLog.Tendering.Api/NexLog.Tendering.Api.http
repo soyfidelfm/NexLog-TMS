@@ -1,7 +1,0 @@
-@host = http://localhost:5106
-
-GET {{host}}/api/tenders?page=1&pageSize=10
-
-###
-
-GET {{host}}/health

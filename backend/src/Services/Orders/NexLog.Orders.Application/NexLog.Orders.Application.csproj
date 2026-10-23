@@ -1,6 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\NexLog.Orders.Domain\NexLog.Orders.Domain.csproj" />
-  </ItemGroup>
-</Project>

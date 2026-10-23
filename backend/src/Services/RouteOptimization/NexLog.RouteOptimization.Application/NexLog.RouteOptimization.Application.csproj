@@ -1,6 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\NexLog.RouteOptimization.Domain\NexLog.RouteOptimization.Domain.csproj" />
-  </ItemGroup>
-</Project>

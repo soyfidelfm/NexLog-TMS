@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\NexLog.RateTables.Application\NexLog.RateTables.Application.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\NexLog.BuildingBlocks.Web\NexLog.BuildingBlocks.Web.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Persistence\SeedData\*.json" />
-  </ItemGroup>
-</Project>

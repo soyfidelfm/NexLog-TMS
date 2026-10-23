@@ -1,7 +1,0 @@
-@host = http://localhost:5108
-
-GET {{host}}/api/invoices?page=1&pageSize=10
-
-###
-
-GET {{host}}/health
