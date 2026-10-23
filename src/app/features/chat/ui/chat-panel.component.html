@@ -1,0 +1,95 @@
+@if (chat.panelOpen()) {
+  <section id="chat-panel" role="dialog" [attr.aria-label]="'chat.title' | translate" (keydown.escape)="onEscape($event)"
+           class="chat-panel fixed inset-0 z-[70] flex flex-col overflow-hidden bg-panel text-primary sm:inset-auto sm:bottom-4 sm:right-4 sm:h-[min(36rem,calc(100dvh-6rem))] sm:w-[24rem] sm:rounded-2xl sm:border sm:border-line-strong sm:shadow-2xl">
+    @if (chat.composing()) {
+      <app-new-chat (closed)="close()" />
+    } @else if (chat.activeId()) {
+      <app-chat-thread (closed)="close()" />
+    } @else {
+      <header class="flex items-center gap-2 border-b border-line px-4 py-3">
+        <h2 class="flex-1 text-base font-semibold text-strong">{{ 'chat.title' | translate }}</h2>
+        @if (chat.mode() === 'mock') {
+          <span class="rounded-full bg-amber-ink/15 px-2 py-0.5 text-[11px] font-medium text-amber-ink" [title]="'chat.demoHint' | translate">
+            {{ 'chat.demo' | translate }}
+          </span>
+        }
+        <button type="button" (click)="chat.startComposing()" [attr.aria-label]="'chat.newChat' | translate" [title]="'chat.newChat' | translate"
+                class="rounded-lg p-1.5 text-muted hover:bg-elevated hover:text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+        <button type="button" (click)="close()" [attr.aria-label]="'chat.close' | translate"
+                class="rounded-lg p-1.5 text-muted hover:bg-elevated hover:text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      @if (connectionIssue()) {
+        <div class="border-b border-line bg-amber-ink/10 px-4 py-1.5 text-xs text-amber-ink" role="status">{{ 'chat.reconnecting' | translate }}</div>
+      }
+
+      <div class="px-3 pt-3">
+        <label class="sr-only" for="chat-filter">{{ 'chat.filterLabel' | translate }}</label>
+        <input id="chat-filter" type="search" autocomplete="off" [value]="filter()" (input)="filter.set($any($event.target).value)"
+               [placeholder]="'chat.filterPlaceholder' | translate"
+               class="w-full rounded-full border border-line-strong bg-elevated px-4 py-2 text-sm text-primary placeholder:text-subtle focus:border-blue-500 focus:outline-none" />
+      </div>
+
+      <div class="mt-2 flex-1 overflow-y-auto pb-2">
+        @if (chat.loadingConversations() && !chat.conversationsLoaded()) {
+          <div class="flex flex-col gap-3 px-4 py-3" role="status" [attr.aria-label]="'chat.loadingConversations' | translate">
+            @for (i of [1, 2, 3, 4]; track i) {
+              <div class="flex items-center gap-3">
+                <div class="skeleton h-11 w-11 rounded-full bg-elevated"></div>
+                <div class="flex-1 space-y-2"><div class="skeleton h-3 w-1/2 rounded bg-elevated"></div><div class="skeleton h-3 w-3/4 rounded bg-elevated"></div></div>
+              </div>
+            }
+          </div>
+        } @else if (chat.conversationsError() && !chat.conversationsLoaded()) {
+          <div class="flex flex-col items-center gap-3 px-6 py-10 text-center text-sm text-muted" role="alert">
+            <span>{{ 'chat.errors.loadConversations' | translate }}</span>
+            <button type="button" (click)="chat.loadConversations()" class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500">{{ 'chat.retry' | translate }}</button>
+          </div>
+        } @else if (!chat.conversations().length) {
+          <div class="flex flex-col items-center gap-3 px-6 py-12 text-center">
+            <span class="text-3xl" aria-hidden="true">💬</span>
+            <p class="text-sm font-medium text-strong">{{ 'chat.empty.title' | translate }}</p>
+            <p class="text-xs text-muted">{{ 'chat.empty.body' | translate }}</p>
+            <button type="button" (click)="chat.startComposing()" class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500">{{ 'chat.newChat' | translate }}</button>
+          </div>
+        } @else if (!rows().length) {
+          <p class="px-6 py-8 text-center text-sm text-muted">{{ 'chat.noMatches' | translate }}</p>
+        } @else {
+          <ul [attr.aria-label]="'chat.conversations' | translate">
+            @for (r of rows(); track r.id) {
+              <li>
+                <button type="button" (click)="chat.openConversation(r.id)"
+                        class="flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-elevated focus:outline-none focus-visible:bg-elevated"
+                        [attr.aria-label]="(r.unread ? ('chat.rowUnread' | translate: { name: r.name, count: r.unread }) : r.name)">
+                  <app-user-avatar [name]="r.name" [url]="r.peer?.avatarUrl" [online]="r.peer?.online" size="lg" />
+                  <span class="min-w-0 flex-1">
+                    <span class="flex items-baseline gap-2">
+                      <span class="truncate text-sm" [class]="r.unread ? 'font-semibold text-strong' : 'font-medium text-primary'">{{ r.name }}</span>
+                      <span class="ml-auto shrink-0 text-[11px]" [class]="r.unread ? 'font-semibold text-blue-ink' : 'text-subtle'">{{ r.time }}</span>
+                    </span>
+                    <span class="mt-0.5 flex items-center gap-2">
+                      @if (r.typing) {
+                        <span class="truncate text-xs italic text-blue-ink">{{ 'chat.typingShort' | translate }}</span>
+                      } @else if (r.failed) {
+                        <span class="truncate text-xs text-red-ink">{{ 'chat.failed' | translate }}</span>
+                      } @else {
+                        <span class="truncate text-xs" [class]="r.unread ? 'font-medium text-body' : 'text-muted'">{{ r.preview || ('chat.noMessages' | translate) }}</span>
+                      }
+                      @if (r.unread) {
+                        <span class="ml-auto flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-blue-600 px-1.5 text-[10px] font-bold text-white">{{ badge(r.unread) }}</span>
+                      }
+                    </span>
+                  </span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    }
+  </section>
+}
