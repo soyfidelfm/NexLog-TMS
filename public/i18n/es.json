@@ -113,6 +113,101 @@
     "title": "Gestión de transportistas",
     "totalHandled": "Total de cargas gestionadas:"
   },
+  "chat": {
+    "activeNow": "Activo ahora",
+    "back": "Volver",
+    "close": "Cerrar chat",
+    "conversations": "Conversaciones",
+    "demo": "Datos de ejemplo",
+    "demoHint": "Datos de ejemplo: el backend del chat aún no está conectado",
+    "discard": "Eliminar",
+    "empty": {
+      "body": "Inicia un chat con cualquier persona de tu equipo.",
+      "title": "Aún no tienes conversaciones"
+    },
+    "errors": {
+      "loadConversations": "No se pudieron cargar tus conversaciones.",
+      "loadMessages": "No se pudieron cargar los mensajes.",
+      "openFailed": "No se pudo abrir la conversación.",
+      "search": "La búsqueda falló. Inténtalo de nuevo."
+    },
+    "failed": "No enviado",
+    "filterLabel": "Buscar conversaciones",
+    "filterPlaceholder": "Buscar conversaciones",
+    "history": "Conversación con {{name}}",
+    "inputLabel": "Mensaje",
+    "loadOlder": "Cargar mensajes anteriores",
+    "loadingConversations": "Cargando conversaciones",
+    "loadingMessages": "Cargando mensajes",
+    "loadingOlder": "Cargando mensajes anteriores",
+    "mock": {
+      "filler": {
+        "1": "¡Buenos días! ¿Alguna novedad de las recolecciones de hoy?",
+        "2": "Todos los camiones salieron del patio a tiempo.",
+        "3": "¿Puedes revisar el peso de la siguiente carga?",
+        "4": "Listo, está dentro del límite.",
+        "5": "El cliente confirmó la ventana de entrega.",
+        "6": "¡Perfecto, gracias!"
+      },
+      "incoming": {
+        "lena": "¡Hola! ACME pregunta por la hora estimada del envío SHP-1201."
+      },
+      "reply": {
+        "1": "¡Entendido, gracias!",
+        "2": "Me encargo, te aviso en unos minutos.",
+        "3": "Me parece bien 👍",
+        "4": "Déjame revisarlo con el transportista y te confirmo.",
+        "5": "Confirmado.",
+        "6": "¿Lo vemos después de comer?"
+      },
+      "seed": {
+        "dana1": "La carga LD-2041 está lista para recolección en el andén 4.",
+        "dana2": "El operador llega a las 14:30. ¿Puedes confirmar el BOL?",
+        "dana3": "Además, el refrigerado debe pre-enfriarse a 2 °C.",
+        "marcos1": "La confirmación de tarifa para la ruta MTY → LAX está lista.",
+        "me1": "Perfecto, asigno un transportista ahora.",
+        "me2": "Gracias, aprobada.",
+        "priya1": "La factura INV-7788 tiene una diferencia de $120. ¿La puedes revisar?"
+      },
+      "titles": {
+        "accountManager": "Gerente de cuenta",
+        "auditAnalyst": "Analista de auditoría de fletes",
+        "carrierRep": "Representante de transportista",
+        "customerService": "Servicio al cliente",
+        "dispatcher": "Despachador",
+        "driver": "Operador",
+        "warehouse": "Supervisor de almacén"
+      }
+    },
+    "newChat": "Nuevo mensaje",
+    "noMatches": "Ninguna conversación coincide con tu búsqueda.",
+    "noMessages": "Sin mensajes todavía",
+    "noUsers": "No se encontraron personas para “{{term}}”.",
+    "openMessenger": "Abrir mensajes ({{count}} sin leer)",
+    "people": "Personas",
+    "placeholder": "Escribe un mensaje…",
+    "reconnecting": "Se perdió la conexión. Reconectando…",
+    "retry": "Reintentar",
+    "rowUnread": "{{name}}, {{count}} sin leer",
+    "sayHi": "Saluda a {{name}} 👋",
+    "searchHint": "Escribe al menos {{n}} caracteres para buscar personas.",
+    "searchUsersLabel": "Buscar personas por nombre o correo",
+    "searchUsersPlaceholder": "Nombre o correo",
+    "searching": "Buscando…",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "startOfConversation": "Este es el inicio de la conversación",
+    "title": "Chats",
+    "toast": {
+      "newMessage": "Nuevo mensaje de {{name}}",
+      "open": "Abrir chat con {{name}}"
+    },
+    "today": "Hoy",
+    "typing": "{{name}} está escribiendo…",
+    "typingShort": "escribiendo…",
+    "yesterday": "Ayer",
+    "you": "Tú"
+  },
   "clientPortal": {
     "destination": "Destino",
     "doc": {
@@ -376,8 +471,10 @@
     "copyright": "© 2026 NexLog TMS. Todos los derechos reservados.",
     "footer": "NexLog TMS · Núcleo",
     "logoAlt": "Logotipo de NexLog",
+    "logout": "Cerrar sesión",
     "mainNav": "Navegación principal",
     "role": "Administrador",
+    "settings": "Configuración",
     "themeToDark": "Cambiar a tema oscuro",
     "themeToLight": "Cambiar a tema claro",
     "tms": "Sistema de Gestión de Transporte",
@@ -449,6 +546,46 @@
     "routeOptimization": "Optimización de rutas",
     "tendering": "Licitación",
     "tracking": "Rastreo"
+  },
+  "notifications": {
+    "bellLabel": "Notificaciones ({{count}} sin leer)",
+    "empty": "Estás al día.",
+    "emptyUnread": "No tienes notificaciones sin leer.",
+    "enableDesktop": "Activar alertas de escritorio",
+    "filter": {
+      "all": "Todas",
+      "unread": "Sin leer"
+    },
+    "loadError": "No se pudieron cargar las notificaciones.",
+    "markAllRead": "Marcar todo como leído",
+    "messageFrom": "Mensaje de {{name}}",
+    "mock": {
+      "delivered": {
+        "body": "La prueba de entrega ya está disponible.",
+        "title": "Envío {{id}} entregado"
+      },
+      "maintenance": {
+        "body": "El sistema se actualizará hoy a las 23:00.",
+        "title": "Mantenimiento programado"
+      },
+      "orderCreated": {
+        "body": "Se creó una orden nueva y está esperando planeación.",
+        "title": "Nueva orden {{id}}"
+      },
+      "shipmentDelayed": {
+        "body": "Retraso estimado de {{h}} h por tráfico.",
+        "title": "Envío {{id}} retrasado"
+      }
+    },
+    "open": "Abrir",
+    "types": {
+      "message": "Mensaje",
+      "order": "Orden",
+      "shipment": "Envío",
+      "system": "Sistema"
+    },
+    "unread": "Sin leer",
+    "viewAll": "Ver todas"
   },
   "orderDetail": {
     "actions": "Acciones",
@@ -718,6 +855,7 @@
     "freightAudit": "Auditoría y pago de fletes",
     "loadPlanning": "Planificación de cargas",
     "login": "Iniciar sesión",
+    "notifications": "Notificaciones",
     "orderDetail": "Detalle de orden",
     "orders": "Órdenes",
     "rateTables": "Tablas de tarifas",
@@ -774,6 +912,10 @@
     "daysAgo": "hace {{n}} d",
     "hoursAgo": "hace {{n}} h",
     "minAgo": "hace {{n}} min"
+  },
+  "toast": {
+    "dismiss": "Cerrar notificación",
+    "region": "Notificaciones"
   },
   "tracking": {
     "active": "Embarques activos",
