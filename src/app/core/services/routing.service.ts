@@ -1,6 +1,5 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, from, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 /** Free public OSRM demo server (for development). In production use a self-hosted or paid instance. */
@@ -14,10 +13,9 @@ export interface OsrmRoute {
 
 @Injectable({ providedIn: 'root' })
 export class RoutingService {
-  private http = inject(HttpClient);
-
   /**
    * Get the real driving route between one or more points.
+   * Uses fetch (not HttpClient) so Auth0/other interceptors don't interfere.
    * Falls back to a straight line if the request fails.
    */
   getRoute(points: [number, number][]): Observable<OsrmRoute> {
@@ -26,23 +24,30 @@ export class RoutingService {
     }
     const coords = points.map((p) => `${p[0]},${p[1]}`).join(';');
     const url = `${OSRM}/${coords}?overview=full&geometries=geojson&steps=false`;
-    return this.http.get<any>(url).pipe(
-      map((res) => {
+
+    return from(
+      fetch(url).then(async (r) => {
+        if (!r.ok) throw new Error(`OSRM ${r.status}`);
+        return r.json();
+      }),
+    ).pipe(
+      map((res: any) => {
         const route = res?.routes?.[0];
-        if (!route?.geometry?.coordinates) throw new Error('no geometry');
+        if (!route?.geometry?.coordinates?.length) throw new Error('no geometry');
         return {
           coordinates: route.geometry.coordinates as [number, number][],
           distanceMeters: route.distance ?? 0,
           durationSeconds: route.duration ?? 0,
         };
       }),
-      catchError(() =>
-        of({
+      catchError((err) => {
+        console.warn('[RoutingService] OSRM failed, using straight line', err);
+        return of({
           coordinates: points,
           distanceMeters: 0,
           durationSeconds: 0,
-        }),
-      ),
+        });
+      }),
     );
   }
 }

@@ -43,6 +43,8 @@ export class OrderDetailComponent implements OnInit {
   order = signal<OrderDetail | null>(null);
   routeCoords = signal<[number, number][]>([]);
 
+  private mapRef: maplibregl.Map | null = null;
+
   mapStyle = computed(() =>
     this.theme.isDark()
       ? 'https://tiles.openfreemap.org/styles/dark'
@@ -84,25 +86,48 @@ export class OrderDetailComponent implements OnInit {
     const o = this.order();
     if (!o) return;
     const pts: [number, number][] = [this.coordsFor(o.origin.city), this.coordsFor(o.destination.city)];
-    this.routing.getRoute(pts).subscribe((geo) => this.routeCoords.set(geo.coordinates));
+    // Show straight line immediately so something is visible
+    this.routeCoords.set(pts);
+    this.drawRoute(pts);
+    this.routing.getRoute(pts).subscribe((geo) => {
+      this.routeCoords.set(geo.coordinates);
+      this.drawRoute(geo.coordinates);
+    });
   }
 
-  routeGeoJson() {
-    const coords = this.routeCoords();
-    if (!coords.length) {
-      const o = this.order();
-      if (!o) return null;
-      return {
-        type: 'Feature' as const,
-        properties: {},
-        geometry: { type: 'LineString' as const, coordinates: [this.coordsFor(o.origin.city), this.coordsFor(o.destination.city)] },
-      };
-    }
-    return {
+  /** Draw the route directly on the map so it always appears (Google-style). */
+  private drawRoute(coords: [number, number][]) {
+    const map = this.mapRef;
+    if (!map || !coords.length) return;
+
+    const data = {
       type: 'Feature' as const,
       properties: {},
       geometry: { type: 'LineString' as const, coordinates: coords },
     };
+
+    const src = map.getSource('order-route-src') as maplibregl.GeoJSONSource | undefined;
+    if (src) {
+      src.setData(data);
+      return;
+    }
+
+    map.addSource('order-route-src', { type: 'geojson', data });
+    // Casing (outline) so it pops like Google
+    map.addLayer({
+      id: 'order-route-casing',
+      type: 'line',
+      source: 'order-route-src',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#1e3a8a', 'line-width': 8, 'line-opacity': 0.9 },
+    });
+    map.addLayer({
+      id: 'order-route-line',
+      type: 'line',
+      source: 'order-route-src',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#60a5fa', 'line-width': 4.5, 'line-opacity': 1 },
+    });
   }
 
   originLngLat(): [number, number] {
@@ -116,12 +141,16 @@ export class OrderDetailComponent implements OnInit {
   }
 
   onMapLoad(map: maplibregl.Map) {
+    this.mapRef = map;
     const o = this.order();
     if (!o) return;
     const origin = this.coordsFor(o.origin.city);
     const dest = this.coordsFor(o.destination.city);
     const bounds = new maplibregl.LngLatBounds(origin, origin).extend(dest);
-    map.fitBounds(bounds, { padding: 50, duration: 600 });
+    map.fitBounds(bounds, { padding: 60, duration: 600 });
+    // Draw whatever we already have (straight or real)
+    const existing = this.routeCoords();
+    this.drawRoute(existing.length ? existing : [origin, dest]);
   }
 
   goBack() {
