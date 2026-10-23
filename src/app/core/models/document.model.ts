@@ -9,9 +9,14 @@ export interface DocumentItem {
   uploadedAt: string;
   size: string;
   icon: string;
+  /** Linked load / order (API sends null when not linked). */
+  loadId?: string | null;
+  orderId?: string | null;
 }
 
 export interface EpodData {
+  id?: string;
+  loadId?: string | null;
   signature: string;
   photoUrl: string;
   gpsLat: number;

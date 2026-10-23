@@ -13,4 +13,8 @@ export interface FreightInvoice {
   invoiceDate: string;
   status: AuditStatus;
   lines: InvoiceLine[];
+  /** Totals computed by the API; sent back unchanged on PUT. */
+  expectedTotal?: number;
+  billedTotal?: number;
+  variance?: number;
 }

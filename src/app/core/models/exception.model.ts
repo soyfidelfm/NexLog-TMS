@@ -13,7 +13,7 @@ export interface ActionTaken {
   action: string;
   by: string;
   at: string;
-  notes?: string;
+  notes?: string | null;
 }
 
 export interface CommLog {
@@ -31,7 +31,7 @@ export interface ExceptionItem {
   type: string;
   title: string;
   loadId: string;
-  orderId?: string;
+  orderId?: string | null;
   carrier: string;
   severity: Severity;
   status: ExceptionStatus;

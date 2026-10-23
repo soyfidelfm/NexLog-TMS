@@ -1,5 +1,6 @@
 /** Dashboard KPI card. Text is resolved through ngx-translate keys (ES/EN). */
 export interface KPI {
+  id?: string;
   /** Key under `dashboard.` (e.g. `kpiShipments`). */
   titleKey: string;
   value: string;
