@@ -16,7 +16,7 @@
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
-          <ng-container *ngFor="let s of shipments">
+          <ng-container *ngFor="let s of shipments()">
             <path [attr.d]="s.routePath" [attr.stroke]="s.color" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
             <g [attr.transform]="'translate(' + s.position.x + ',' + s.position.y + ')'">
               <circle r="12" [attr.fill]="s.color" class="animate-pulse" opacity="0.3"/>
@@ -33,12 +33,12 @@
   <div class="w-[420px] bg-surface rounded-xl border border-line flex flex-col overflow-hidden">
     <div class="border-b border-line p-4 max-h-64 overflow-y-auto">
       <h3 class="text-sm font-semibold text-muted uppercase tracking-wider mb-3">{{ 'tracking.active' | translate }}</h3>
-      <div *ngFor="let s of shipments"
+      <div *ngFor="let s of shipments()"
            (click)="select(s)"
            class="p-3 rounded-lg mb-2 cursor-pointer transition border"
-           [class.bg-elevated]="selected?.id === s.id"
-           [class.border-line-stronger]="selected?.id === s.id"
-           [class.border-transparent]="selected?.id !== s.id">
+           [class.bg-elevated]="selected()?.id === s.id"
+           [class.border-line-stronger]="selected()?.id === s.id"
+           [class.border-transparent]="selected()?.id !== s.id">
         <div class="flex items-center justify-between mb-1">
           <span class="font-medium">{{ s.id }}</span>
           <span class="text-xs px-2 py-0.5 rounded-full" [ngClass]="getStatusColor(s.status)">{{ 'tracking.status.' + statusKey(s.status) | translate }}</span>
@@ -48,36 +48,36 @@
       </div>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-5" *ngIf="selected">
+    <div class="flex-1 overflow-y-auto p-5" *ngIf="selected() as sel">
       <div class="mb-5">
         <div class="flex items-center justify-between mb-1">
-          <h2 class="text-xl font-semibold">{{ selected.id }}</h2>
-          <span class="text-xs px-2.5 py-1 rounded-full" [ngClass]="getStatusColor(selected.status)">{{ 'tracking.status.' + statusKey(selected.status) | translate }}</span>
+          <h2 class="text-xl font-semibold">{{ sel.id }}</h2>
+          <span class="text-xs px-2.5 py-1 rounded-full" [ngClass]="getStatusColor(sel.status)">{{ 'tracking.status.' + statusKey(sel.status) | translate }}</span>
         </div>
-        <p class="text-sm text-muted">{{ selected.orderNumber }}</p>
+        <p class="text-sm text-muted">{{ sel.orderNumber }}</p>
       </div>
 
       <div class="grid grid-cols-2 gap-3 mb-5">
         <div class="bg-elevated/50 rounded-lg p-3">
           <div class="text-xs text-muted">{{ 'tracking.eta' | translate }}</div>
-          <div class="font-semibold text-green-ink">{{ etaText(selected.eta) }}</div>
+          <div class="font-semibold text-green-ink">{{ etaText(sel.eta) }}</div>
         </div>
         <div class="bg-elevated/50 rounded-lg p-3">
           <div class="text-xs text-muted">{{ 'tracking.progress' | translate }}</div>
-          <div class="font-semibold">{{ selected.progress }}%</div>
+          <div class="font-semibold">{{ sel.progress }}%</div>
         </div>
       </div>
 
       <div class="mb-5">
         <div class="text-xs text-muted mb-1">{{ 'tracking.driver' | translate }}</div>
-        <div class="font-medium">{{ selected.driver }}</div>
-        <div class="text-sm text-muted">{{ selected.driverPhone }}</div>
+        <div class="font-medium">{{ sel.driver }}</div>
+        <div class="text-sm text-muted">{{ sel.driverPhone }}</div>
       </div>
 
       <div class="mb-5">
         <h3 class="text-sm font-semibold text-body mb-3">{{ 'tracking.timeline' | translate }}</h3>
         <div class="space-y-3">
-          <div *ngFor="let step of selected.timeline; let last = last" class="flex gap-3">
+          <div *ngFor="let step of sel.timeline; let last = last" class="flex gap-3">
             <div class="flex flex-col items-center">
               <div class="w-3 h-3 rounded-full"
                    [class.bg-blue-500]="step.current"

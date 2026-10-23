@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { DocumentService } from '../../core/services/document.service';
@@ -18,23 +18,24 @@ export class DocumentsComponent implements OnInit {
   shipmentId = 'SHP-0048912';
   shipmentStatus = 'Delivered';
 
-  documents: DocumentItem[] = [];
-  selectedDocument: DocumentItem | null = null;
-  showEpodPreview = true;
-  epod: EpodData = {} as EpodData;
+  /** Signal: components are OnPush by default (Angular 22); a plain field assigned in subscribe() never repaints. */
+  documents = signal<DocumentItem[]>([]);
+  selectedDocument = signal<DocumentItem | null>(null);
+  showEpodPreview = signal(true);
+  epod = signal<EpodData>({} as EpodData);
 
   ngOnInit(): void {
     this.documentService.getDocuments(this.shipmentId).subscribe(data => {
-      this.documents = data;
+      this.documents.set(data);
     });
     this.documentService.getEpod(this.shipmentId).subscribe(data => {
-      this.epod = data;
+      this.epod.set(data ?? ({} as EpodData));
     });
   }
 
   selectDocument(doc: DocumentItem): void {
-    this.selectedDocument = doc;
-    this.showEpodPreview = doc.type === 'POD';
+    this.selectedDocument.set(doc);
+    this.showEpodPreview.set(doc.type === 'POD');
   }
 
   viewDocument(doc: DocumentItem): void {

@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
@@ -23,20 +23,21 @@ export class TrackingComponent implements OnInit {
     const [day, time] = eta.split(' ');
     return this.translate.instant(day === 'Tomorrow' ? 'tracking.tomorrow' : 'tracking.today', { time });
   }
-  selected: Shipment | null = null;
-  shipments: Shipment[] = [];
+  /** Signal: components are OnPush by default (Angular 22); a plain field assigned in subscribe() never repaints. */
+  selected = signal<Shipment | null>(null);
+  shipments = signal<Shipment[]>([]);
 
   ngOnInit(): void {
     this.shipmentService.getShipments().subscribe(data => {
-      this.shipments = data;
+      this.shipments.set(data);
       if (data.length > 0) {
-        this.selected = data[0];
+        this.selected.set(data[0]);
       }
     });
   }
 
   select(shipment: Shipment) {
-    this.selected = shipment;
+    this.selected.set(shipment);
   }
 
   getStatusColor(status: string): string {
