@@ -33,3 +33,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--od-scroll-thumb-hover);
 }
+
+.od-marker {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.4);
+}
+.od-marker.origin { background: #2563eb; }
+.od-marker.dest { background: #a855f7; }
+
+mgl-map { display: block; height: 100%; width: 100%; }
