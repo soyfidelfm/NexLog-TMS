@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../core/language.service';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -18,6 +18,7 @@ export class AnalyticsComponent implements OnInit {
   private analyticsService = inject(AnalyticsService);
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
+  private readonly cdr = inject(ChangeDetectorRef);
   dateFrom: string = '';
   dateTo: string = '';
   selectedMode: string = 'all';
@@ -44,6 +45,8 @@ export class AnalyticsComponent implements OnInit {
       this.onTimeTrends = data.onTimeTrends;
       this.modeVolumes = data.modeVolumes;
       this.applyFilters();
+      // OnPush by default (Angular 22): plain fields assigned from an async response need an explicit mark.
+      this.cdr.markForCheck();
     });
   }
 
@@ -73,25 +76,31 @@ export class AnalyticsComponent implements OnInit {
     let data: any[] = [];
     let filename = '';
     let headers: string[] = [];
+    // Explicit column order: the API rows also carry an `id`, which must not leak into the CSV.
+    let columns: string[] = [];
 
     switch (type) {
       case 'lanes':
         data = this.filteredLaneCosts;
+        columns = ['lane', 'origin', 'destination', 'avgCost', 'totalCost', 'volume', 'mode'];
         filename = 'cost_per_lane.csv';
         headers = ['analytics.csv.lane', 'analytics.csv.origin', 'analytics.csv.destination', 'analytics.csv.avgCost', 'analytics.csv.totalCost', 'analytics.csv.volume', 'analytics.csv.mode'].map(k => this.translate.instant(k));
         break;
       case 'carriers':
         data = this.filteredCarriers;
+        columns = ['carrier', 'onTimePercent', 'avgCost', 'totalVolume', 'claims', 'score'];
         filename = 'carrier_performance.csv';
         headers = ['analytics.csv.carrier', 'analytics.csv.onTime', 'analytics.csv.avgCost', 'analytics.csv.totalVolume', 'analytics.csv.claims', 'analytics.csv.score'].map(k => this.translate.instant(k));
         break;
       case 'trends':
         data = this.filteredTrends;
+        columns = ['period', 'onTimePercent', 'totalDeliveries'];
         filename = 'on_time_trend.csv';
         headers = ['analytics.csv.period', 'analytics.csv.onTime', 'analytics.csv.totalDeliveries'].map(k => this.translate.instant(k));
         break;
       case 'modes':
         data = this.filteredModes;
+        columns = ['mode', 'volume', 'percentage', 'cost'];
         filename = 'volume_by_mode.csv';
         headers = ['analytics.csv.mode', 'analytics.csv.volume', 'analytics.csv.percentage', 'analytics.csv.cost'].map(k => this.translate.instant(k));
         break;
@@ -99,7 +108,7 @@ export class AnalyticsComponent implements OnInit {
 
     const csvContent = [
       headers.join(','),
-      ...data.map(row => Object.values(row).join(','))
+      ...data.map(row => columns.map(c => this.csvCell(row[c])).join(','))
     ].join('\n');
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -111,6 +120,12 @@ export class AnalyticsComponent implements OnInit {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  /** Quotes values containing commas, quotes or newlines (e.g. "Los Angeles, CA"). */
+  private csvCell(value: unknown): string {
+    const text = String(value ?? '');
+    return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
   }
 
   getScoreClass(score: number): string {
