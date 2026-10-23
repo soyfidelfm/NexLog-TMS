@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { EMPTY, Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { EMPTY, Observable, forkJoin, of, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 /** Paged list envelope returned by every NexLog list endpoint. */
@@ -36,10 +36,19 @@ export class ApiClient {
     return this.http.get<PagedResult<T>>(this.url(path), { params: p });
   }
 
-  /** Items of a paged list (default up to 200 rows). Errors are logged and yield an empty list. */
+  /**
+   * All items of a paged list. The API caps pageSize at 200, so further pages are fetched when totalPages > 1
+   * (previously anything beyond row 200 was silently dropped). Errors are logged and yield an empty list.
+   */
   list<T>(path: string, params: ListParams = {}): Observable<T[]> {
-    return this.page<T>(path, { pageSize: 200, ...params }).pipe(
-      map(r => r.items ?? []),
+    const size = { pageSize: 200, ...params };
+    return this.page<T>(path, { ...size, page: 1 }).pipe(
+      switchMap(first => {
+        const rest = Array.from({ length: Math.max(0, (first.totalPages ?? 1) - 1) }, (_, i) =>
+          this.page<T>(path, { ...size, page: i + 2 }));
+        if (!rest.length) return of(first.items ?? []);
+        return forkJoin(rest).pipe(map(pages => [first, ...pages].flatMap(r => r.items ?? [])));
+      }),
       catchError(err => this.logAnd(err, of([] as T[])))
     );
   }
