@@ -30,8 +30,7 @@ export class RouteOptimizationComponent implements OnInit {
   optimizing = signal(false);
   objective = signal<'distance' | 'time' | 'cost'>('cost');
 
-  /** Real road geometry per route id (falls back to stop-to-stop line) */
-  geometries = signal<Record<string, [number, number][]>>({});
+  private mapRef: maplibregl.Map | null = null;
 
   mapStyle = computed(() =>
     this.theme.isDark()
@@ -42,18 +41,50 @@ export class RouteOptimizationComponent implements OnInit {
   ngOnInit(): void {
     this.routeOptService.getRoutes().subscribe((data) => {
       this.routes.set(data);
-      this.loadGeometries(data);
+      this.drawAll(data);
     });
     this.routeOptService.getSummary().subscribe((data) => this.summary.set(data));
   }
 
-  private loadGeometries(routes: OptRoute[]) {
+  private drawAll(routes: OptRoute[]) {
     for (const r of routes) {
       const pts = r.stops.map((s) => [s.lng, s.lat] as [number, number]);
+      this.upsertLine(r.id, pts, r.color);
       this.routing.getRoute(pts).subscribe((geo) => {
-        this.geometries.update((m) => ({ ...m, [r.id]: geo.coordinates }));
+        this.upsertLine(r.id, geo.coordinates, r.color);
       });
     }
+  }
+
+  private upsertLine(id: string, coords: [number, number][], color: string) {
+    const map = this.mapRef;
+    if (!map || !coords.length) return;
+    const srcId = `ro-src-${id}`;
+    const data = {
+      type: 'Feature' as const,
+      properties: {},
+      geometry: { type: 'LineString' as const, coordinates: coords },
+    };
+    const src = map.getSource(srcId) as maplibregl.GeoJSONSource | undefined;
+    if (src) {
+      src.setData(data);
+      return;
+    }
+    map.addSource(srcId, { type: 'geojson', data });
+    map.addLayer({
+      id: `ro-casing-${id}`,
+      type: 'line',
+      source: srcId,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#0f172a', 'line-width': 7, 'line-opacity': 0.55 },
+    });
+    map.addLayer({
+      id: `ro-line-${id}`,
+      type: 'line',
+      source: srcId,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': color, 'line-width': 4.5, 'line-opacity': 0.95 },
+    });
   }
 
   active = computed<OptRoute | null>(() => this.routes().find((r) => r.id === this.selected()) ?? null);
@@ -103,6 +134,7 @@ export class RouteOptimizationComponent implements OnInit {
   }
 
   onMapLoad(map: maplibregl.Map) {
+    this.mapRef = map;
     const routes = this.routes();
     if (!routes.length) return;
     const coords = routes.flatMap((r) => r.stops.map((s) => [s.lng, s.lat] as [number, number]));
@@ -113,14 +145,6 @@ export class RouteOptimizationComponent implements OnInit {
       );
       map.fitBounds(bounds, { padding: 80, duration: 1000 });
     }
-  }
-
-  routeGeoJson(r: OptRoute) {
-    const coords = this.geometries()[r.id] ?? r.stops.map((s) => [s.lng, s.lat] as [number, number]);
-    return {
-      type: 'Feature' as const,
-      properties: { id: r.id, color: r.color },
-      geometry: { type: 'LineString' as const, coordinates: coords },
-    };
+    this.drawAll(routes);
   }
 }
