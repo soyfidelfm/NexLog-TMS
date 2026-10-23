@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/auth.service';
 import { LanguageSwitcherComponent } from '../../../shared/language-switcher.component';
 import { ThemeService } from '../../../core/theme.service';
+import { LoadingOverlayComponent } from '../../../shared/loading-overlay/loading-overlay.component';
 import { effect } from '@angular/core';
 
 type Provider = 'google' | 'microsoft' | 'discord' | 'email';
@@ -17,7 +18,7 @@ interface Feature {
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [TranslatePipe, LanguageSwitcherComponent],
+  imports: [TranslatePipe, LanguageSwitcherComponent, LoadingOverlayComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
