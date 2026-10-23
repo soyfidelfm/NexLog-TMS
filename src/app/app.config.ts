@@ -7,6 +7,7 @@ import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
+import { provideMaplibreWorker } from '@maplibre/ngx-maplibre-gl/config';
 import { routes } from './app.routes';
 import { LanguageService } from './core/language.service';
 import { TranslatedTitleStrategy } from './core/translated-title.strategy';
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(LanguageService).init()),
     { provide: TitleStrategy, useClass: TranslatedTitleStrategy },
     provideCharts(withDefaultRegisterables()),
+    provideMaplibreWorker('maplibre-gl-worker.mjs'),
     provideAuth0({
       domain: environment.auth0.domain,
       clientId: environment.auth0.clientId,
