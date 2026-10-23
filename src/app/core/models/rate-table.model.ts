@@ -15,6 +15,8 @@ export interface RateTable {
 }
 
 export interface RolePermission {
+  /** Slug id assigned by the API (e.g. `admin`). */
+  id?: string;
   role: string;
   description: string;
   view: boolean;

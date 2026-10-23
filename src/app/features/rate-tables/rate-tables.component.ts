@@ -74,8 +74,9 @@ export class RateTablesComponent implements OnInit {
       status: value.status,
     };
 
-    this.rateTableService.saveRateTable(newRate).subscribe(saved => {
-      if (this.selectedRateId()) {
+    const isNew = !this.selectedRateId();
+    this.rateTableService.saveRateTable(newRate, isNew).subscribe({ next: saved => {
+      if (!isNew) {
         this.rateTables.update(list =>
           list.map(r => (r.id === this.selectedRateId() ? saved : r))
         );
@@ -84,7 +85,7 @@ export class RateTablesComponent implements OnInit {
       }
       this.isSaving.set(false);
       this.resetForm();
-    });
+    }, error: () => this.isSaving.set(false) });
   }
 
   editRate(rate: RateTable): void {
@@ -118,7 +119,7 @@ export class RateTablesComponent implements OnInit {
     });
   }
 
-  togglePermission(roleIndex: number, permission: keyof Omit<RolePermission, 'role' | 'description'>): void {
+  togglePermission(roleIndex: number, permission: keyof Omit<RolePermission, 'id' | 'role' | 'description'>): void {
     this.roles.update(list => {
       const updated = [...list];
       const role = { ...updated[roleIndex] };
