@@ -4,6 +4,8 @@ import { App } from './app';
 
 describe('App', () => {
   beforeEach(async () => {
+    // jsdom has no matchMedia (ThemeService reads it on construction).
+    (window as unknown as { matchMedia?: unknown }).matchMedia ??= () => ({ matches: false, addEventListener() {}, removeEventListener() {} });
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [provideRouter([])],
