@@ -96,10 +96,10 @@
         }
 
         <mgl-control mglNavigation position="top-right"></mgl-control>
-        <mgl-control mglScale position="bottom-left"></mgl-control>
+        <mgl-control mglScale position="bottom-right"></mgl-control>
       </mgl-map>
 
-      <div class="absolute bottom-4 left-4 flex gap-4 rounded-lg border border-line bg-app/90 px-3 py-2 text-xs text-muted backdrop-blur">
+      <div class="absolute bottom-4 left-4 z-10 flex gap-4 rounded-lg border border-line bg-app/90 px-3 py-2 text-xs text-muted backdrop-blur">
         <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-blue-600"></span>{{ 'routeOpt.depot' | translate }}</span>
         <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full border-2 border-slate-300"></span>{{ 'routeOpt.stop' | translate }}</span>
         <span>{{ 'routeOpt.stopsKm' | translate: { stops: totals().stops, km: (totals().km | number : '1.0-0' : lang.locale()) } }}</span>
