@@ -20,6 +20,7 @@ export interface OptRoute {
 }
 
 export interface RouteSummary {
+  id?: string;
   before: { km: number; cost: number; hours: number; vehicles: number };
   after: { km: number; cost: number; hours: number; vehicles: number };
   co2SavedKg: number;
