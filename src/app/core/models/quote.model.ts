@@ -1,7 +1,7 @@
 export interface CarrierQuote {
   id: string;
   carrier: string;
-  logo?: string;
+  logo?: string | null;
   price: number;
   currency: string;
   transitDays: number;
@@ -10,7 +10,7 @@ export interface CarrierQuote {
   rating: number;
   fuelSurcharge: number;
   total: number;
-  notes?: string;
+  notes?: string | null;
 }
 
 export interface QuoteRequest {

@@ -61,7 +61,8 @@ export interface OrderDetail {
     date: string;
     completed: boolean;
     current: boolean;
-    estimated?: boolean;
+    /** API sends null when not an estimate. */
+    estimated?: boolean | null;
   }[];
 }
 

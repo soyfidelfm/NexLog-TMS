@@ -9,7 +9,7 @@ export interface ShipmentTimelineItem {
   label: string;
   time: string;
   completed: boolean;
-  current?: boolean;
+  current?: boolean | null;
 }
 
 export interface Shipment {

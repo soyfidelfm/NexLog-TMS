@@ -11,7 +11,8 @@ export interface Load {
   pickupDate: string;
   status: TenderStatus;
   selectedCarrier: string | null;
-  tenderedAt?: string;
+  /** API sends null until the load is tendered. */
+  tenderedAt?: string | null;
   cascadeCount: number;
 }
 
