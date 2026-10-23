@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { camelKey } from '../../shared/i18n-keys';
@@ -22,18 +22,19 @@ export class ClientPortalComponent implements OnInit {
   readonly statusKey = camelKey;
   searchTerm = '';
 
-  shipments: PortalShipment[] = [];
+  /** Signal: OnPush by default (Angular 22), so a plain field assigned in subscribe() would never repaint. */
+  shipments = signal<PortalShipment[]>([]);
 
   ngOnInit(): void {
     this.clientPortalService.getShipments().subscribe(data => {
-      this.shipments = data;
+      this.shipments.set(data);
     });
   }
 
   get filteredShipments(): PortalShipment[] {
-    if (!this.searchTerm.trim()) return this.shipments;
+    if (!this.searchTerm.trim()) return this.shipments();
     const term = this.searchTerm.toLowerCase();
-    return this.shipments.filter(s =>
+    return this.shipments().filter(s =>
       s.trackingNumber.toLowerCase().includes(term) ||
       s.origin.toLowerCase().includes(term) ||
       s.destination.toLowerCase().includes(term) ||

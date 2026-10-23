@@ -28,7 +28,8 @@ export class CarrierManagementComponent implements OnInit {
   selectedId = signal<string | null>(null);
   showAddForm = signal(false);
 
-  carriers: Carrier[] = [];
+  /** Signal (not a plain field): this component is OnPush by default (Angular 22) and filteredCarriers/selected are computed from it. */
+  carriers = signal<Carrier[]>([]);
 
   addForm = this.fb.group({
     name: ['', Validators.required],
@@ -47,7 +48,7 @@ export class CarrierManagementComponent implements OnInit {
 
   private loadCarriers() {
     this.carrierService.getCarriers().subscribe(data => {
-      this.carriers = data;
+      this.carriers.set(data);
     });
   }
 
@@ -56,7 +57,7 @@ export class CarrierManagementComponent implements OnInit {
     const status = this.statusFilter();
     const minR = this.minRating();
 
-    return this.carriers.filter(c => {
+    return this.carriers().filter(c => {
       const matchesSearch =
         !q ||
         c.name.toLowerCase().includes(q) ||
@@ -68,7 +69,7 @@ export class CarrierManagementComponent implements OnInit {
     });
   });
 
-  selected = computed(() => this.carriers.find(c => c.id === this.selectedId()) ?? null);
+  selected = computed(() => this.carriers().find(c => c.id === this.selectedId()) ?? null);
 
   select(id: string) {
     this.selectedId.set(this.selectedId() === id ? null : id);
