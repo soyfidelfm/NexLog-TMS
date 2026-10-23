@@ -8,7 +8,7 @@
 
   <div class="px-6 py-4 flex items-center justify-between gap-4 border-b border-line">
     <div class="relative flex-1 max-w-md">
-      <input type="text" [(ngModel)]="searchQuery" [placeholder]="'orders.searchOrders' | translate"
+      <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange()" [placeholder]="'orders.searchOrders' | translate"
         class="w-full pl-4 pr-4 py-2 bg-panel border border-line-strong rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
     </div>
     <div class="flex items-center gap-2">
@@ -59,17 +59,17 @@
   </div>
 
   <div class="px-6 py-4 border-t border-line flex items-center justify-between text-sm">
-    <div class="text-muted">{{ 'pagination.showing' | translate: { from: paginatedOrders.length ? 1 : 0, to: paginatedOrders.length, total: totalOrders } }}</div>
+    <div class="text-muted">{{ 'pagination.showing' | translate: { from: rangeFrom, to: rangeTo, total: totalOrders } }}</div>
     <div class="flex items-center gap-2">
       <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="px-3 py-1 rounded hover:bg-elevated disabled:opacity-50">{{ 'pagination.prev' | translate }}</button>
       <button class="px-3 py-1 bg-blue-600 rounded text-white">1</button>
       <button (click)="changePage(currentPage + 1)" class="px-3 py-1 rounded hover:bg-elevated">{{ 'pagination.next' | translate }}</button>
       <div class="ml-4 flex items-center gap-2">
         <span class="text-muted">{{ 'pagination.rowsPerPage' | translate }}</span>
-        <select [(ngModel)]="rowsPerPage" class="bg-elevated border border-line-strong rounded px-2 py-1 text-sm">
-          <option [value]="10">10</option>
-          <option [value]="25">25</option>
-          <option [value]="50">50</option>
+        <select [(ngModel)]="rowsPerPage" (ngModelChange)="onRowsPerPageChange()" class="bg-elevated border border-line-strong rounded px-2 py-1 text-sm">
+          <option [ngValue]="10">10</option>
+          <option [ngValue]="25">25</option>
+          <option [ngValue]="50">50</option>
         </select>
       </div>
     </div>

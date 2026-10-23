@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
@@ -25,20 +25,19 @@ export class OrdersComponent implements OnInit {
   searchQuery = '';
   currentPage = 1;
   rowsPerPage = 10;
-  totalOrders = 248;
-
-  orders: Order[] = [];
+  /** Signal: this component is OnPush by default (Angular 22); a plain field assigned in subscribe() never repainted the table. */
+  orders = signal<Order[]>([]);
 
   ngOnInit(): void {
     this.orderService.getOrders().subscribe(data => {
-      this.orders = data;
+      this.orders.set(data);
     });
   }
 
   get filteredOrders() {
-    if (!this.searchQuery) return this.orders;
+    if (!this.searchQuery) return this.orders();
     const q = this.searchQuery.toLowerCase();
-    return this.orders.filter(o =>
+    return this.orders().filter(o =>
       o.id.toLowerCase().includes(q) ||
       o.origin.city.toLowerCase().includes(q) ||
       o.destination.city.toLowerCase().includes(q) ||
@@ -46,9 +45,31 @@ export class OrdersComponent implements OnInit {
     );
   }
 
+  /** Rows matching the search (was a hard-coded 248). */
+  get totalOrders(): number {
+    return this.filteredOrders.length;
+  }
+
   get paginatedOrders() {
-    const start = (this.currentPage - 1) * this.rowsPerPage;
-    return this.filteredOrders.slice(start, start + this.rowsPerPage);
+    const size = Number(this.rowsPerPage);
+    const start = (this.currentPage - 1) * size;
+    return this.filteredOrders.slice(start, start + size);
+  }
+
+  get rangeFrom(): number {
+    return this.paginatedOrders.length ? (this.currentPage - 1) * Number(this.rowsPerPage) + 1 : 0;
+  }
+
+  get rangeTo(): number {
+    return this.paginatedOrders.length ? this.rangeFrom + this.paginatedOrders.length - 1 : 0;
+  }
+
+  onSearchChange(): void {
+    this.currentPage = 1;
+  }
+
+  onRowsPerPageChange(): void {
+    this.currentPage = 1;
   }
 
   getStatusClass(status: string): string {
@@ -72,7 +93,7 @@ export class OrdersComponent implements OnInit {
   }
 
   changePage(page: number) {
-    if (page >= 1 && page <= Math.ceil(this.totalOrders / this.rowsPerPage)) {
+    if (page >= 1 && page <= Math.max(1, Math.ceil(this.totalOrders / Number(this.rowsPerPage)))) {
       this.currentPage = page;
     }
   }
