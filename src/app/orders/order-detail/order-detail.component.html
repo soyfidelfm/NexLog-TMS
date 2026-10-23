@@ -183,7 +183,33 @@
         </div>
 
         <div class="flex-1 relative rounded-lg overflow-hidden bg-panel min-h-[280px]">
-          <img src="/assets/route-map.jpg" [alt]="'orderDetail.routeMapAlt' | translate" class="w-full h-full object-cover">
+          @if (routeGeoJson(); as geo) {
+            <mgl-map
+              class="absolute inset-0"
+              [mapStyle]="mapStyle()"
+              [zoom]="5"
+              [center]="originLngLat()"
+              (mapLoad)="onMapLoad($event)"
+            >
+              <mgl-geojson-source id="order-route" [data]="geo">
+                <mgl-layer
+                  id="order-route-line"
+                  type="line"
+                  [paint]="{ 'line-color': '#3b82f6', 'line-width': 4, 'line-opacity': 0.9 }"
+                  [layout]="{ 'line-join': 'round', 'line-cap': 'round' }"
+                ></mgl-layer>
+              </mgl-geojson-source>
+
+              <mgl-marker [lngLat]="originLngLat()">
+                <div class="od-marker origin">O</div>
+              </mgl-marker>
+              <mgl-marker [lngLat]="destLngLat()">
+                <div class="od-marker dest">D</div>
+              </mgl-marker>
+
+              <mgl-control mglNavigation position="top-right"></mgl-control>
+            </mgl-map>
+          }
         </div>
 
         <div class="mt-4 grid grid-cols-1 gap-3">
