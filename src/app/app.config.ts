@@ -12,6 +12,7 @@ import { LanguageService } from './core/language.service';
 import { TranslatedTitleStrategy } from './core/translated-title.strategy';
 import { environment } from '../environments/environment';
 import { apiErrorInterceptor } from './core/interceptors/auth.interceptor';
+import { loadingInterceptor } from './core/interceptors/loading.interceptor';
 
 registerLocaleData(localeEsMx, 'es-MX');
 
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([apiErrorInterceptor, authHttpInterceptorFn])),
+    provideHttpClient(withInterceptors([loadingInterceptor, apiErrorInterceptor, authHttpInterceptorFn])),
     provideTranslateService({
       fallbackLang: 'es',
       loader: provideTranslateHttpLoader({ prefix: '/i18n/', suffix: '.json', useHttpBackend: true }),
