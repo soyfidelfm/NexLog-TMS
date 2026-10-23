@@ -1,12 +1,13 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, computed, inject, signal, OnInit, viewChild } from '@angular/core';
+import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { ThemeService } from '../../core/theme.service';
 import { RouteOptimizationService } from '../../core/services/route-optimization.service';
 import { OptRoute, RouteSummary, Stop } from '../../core/models';
-import { NgxMapLibreGLModule, MapComponent } from '@maplibre/ngx-maplibre-gl';
+import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
+import maplibregl from 'maplibre-gl';
 
 @Component({
   selector: 'app-route-optimization',
@@ -36,7 +37,6 @@ export class RouteOptimizationComponent implements OnInit {
   ngOnInit(): void {
     this.routeOptService.getRoutes().subscribe((data) => {
       this.routes.set(data);
-      // Fit map after data arrives (next tick handled by mapLoad)
     });
     this.routeOptService.getSummary().subscribe((data) => this.summary.set(data));
   }
@@ -87,27 +87,25 @@ export class RouteOptimizationComponent implements OnInit {
     setTimeout(() => this.optimizing.set(false), 1500);
   }
 
-  onMapLoad(map: any) {
-    // Fit to all stops once routes are loaded
+  onMapLoad(map: maplibregl.Map) {
     const routes = this.routes();
     if (!routes.length) return;
-    const coords = routes.flatMap((r) => r.stops.map((s) => [s.lng, s.lat]));
+    const coords = routes.flatMap((r) => r.stops.map((s) => [s.lng, s.lat] as [number, number]));
     if (coords.length) {
       const bounds = coords.reduce(
-        (b, c) => b.extend(c as [number, number]),
-        new (maplibregl as any).LngLatBounds(coords[0], coords[0]),
+        (b, c) => b.extend(c),
+        new maplibregl.LngLatBounds(coords[0], coords[0]),
       );
       map.fitBounds(bounds, { padding: 80, duration: 1000 });
     }
   }
 
-  // Helper for template GeoJSON
   routeGeoJson(r: OptRoute) {
     return {
-      type: 'Feature',
+      type: 'Feature' as const,
       properties: { id: r.id, color: r.color },
       geometry: {
-        type: 'LineString',
+        type: 'LineString' as const,
         coordinates: r.stops.map((s) => [s.lng, s.lat]),
       },
     };
