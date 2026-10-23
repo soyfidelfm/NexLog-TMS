@@ -24,8 +24,11 @@ export interface Shipment {
   status: ShipmentStatus;
   progress: number;
   color: string;
-  routePath: string;
-  position: { x: number; y: number };
+  /** Real coordinates for the live position marker */
+  lng: number;
+  lat: number;
+  /** Polyline of the route (lng, lat pairs) */
+  route: [number, number][];
   alerts: ShipmentAlert[];
   timeline: ShipmentTimelineItem[];
 }

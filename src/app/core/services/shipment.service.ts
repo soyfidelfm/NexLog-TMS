@@ -1,15 +1,14 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { ApiClient } from '../api/api-client.service';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { Shipment } from '../models';
+import { SHIPMENTS } from '../../features/tracking/tracking.data';
 
-/** Tracking microservice: /api/shipments */
+/** Tracking: currently serves local mock with real coordinates for MapLibre.
+ *  Switch back to ApiClient when the backend is ready.
+ */
 @Injectable({ providedIn: 'root' })
 export class ShipmentService {
-  private readonly api = inject(ApiClient);
-
   getShipments(): Observable<Shipment[]> {
-    return this.api.list<Shipment>('shipments');
+    return of(SHIPMENTS);
   }
 }

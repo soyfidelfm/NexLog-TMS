@@ -1,38 +1,45 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { ShipmentService } from '../../core/services/shipment.service';
 import { Shipment } from '../../core/models';
+import { ThemeService } from '../../core/theme.service';
+import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
 
 @Component({
   selector: 'app-tracking',
   standalone: true,
-  imports: [TranslatePipe, CommonModule],
+  imports: [TranslatePipe, CommonModule, NgxMapLibreGLModule],
   templateUrl: './tracking.component.html',
-  styleUrl: './tracking.component.scss'
+  styleUrl: './tracking.component.scss',
 })
 export class TrackingComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
   private readonly translate = inject(TranslateService);
+  readonly theme = inject(ThemeService);
   readonly statusKey = camelKey;
 
-  /** 'Today 16:40' / 'Tomorrow 09:30' -> localized text. */
+  selected = signal<Shipment | null>(null);
+  shipments = signal<Shipment[]>([]);
+
+  mapStyle = computed(() =>
+    this.theme.isDark()
+      ? 'https://tiles.openfreemap.org/styles/dark'
+      : 'https://tiles.openfreemap.org/styles/liberty',
+  );
+
   etaText(eta: string): string {
     const [day, time] = eta.split(' ');
     return this.translate.instant(day === 'Tomorrow' ? 'tracking.tomorrow' : 'tracking.today', { time });
   }
-  /** Signal: components are OnPush by default (Angular 22); a plain field assigned in subscribe() never repaints. */
-  selected = signal<Shipment | null>(null);
-  shipments = signal<Shipment[]>([]);
 
   ngOnInit(): void {
-    this.shipmentService.getShipments().subscribe(data => {
+    this.shipmentService.getShipments().subscribe((data) => {
       this.shipments.set(data);
-      if (data.length > 0) {
-        this.selected.set(data[0]);
-      }
+      if (data.length > 0) this.selected.set(data[0]);
     });
   }
 
@@ -42,10 +49,34 @@ export class TrackingComponent implements OnInit {
 
   getStatusColor(status: string): string {
     switch (status) {
-      case 'In Transit': return 'bg-blue-500/20 text-blue-ink';
-      case 'Out for Delivery': return 'bg-green-500/20 text-green-ink';
-      case 'Delayed': return 'bg-orange-500/20 text-orange-ink';
-      default: return 'bg-slate-500/20 text-muted';
+      case 'In Transit':
+        return 'bg-blue-500/20 text-blue-ink';
+      case 'Out for Delivery':
+        return 'bg-green-500/20 text-green-ink';
+      case 'Delayed':
+        return 'bg-orange-500/20 text-orange-ink';
+      default:
+        return 'bg-slate-500/20 text-muted';
     }
+  }
+
+  routeGeoJson(s: Shipment) {
+    return {
+      type: 'Feature' as const,
+      properties: { id: s.id, color: s.color },
+      geometry: { type: 'LineString' as const, coordinates: s.route },
+    };
+  }
+
+  onMapLoad(map: maplibregl.Map) {
+    const list = this.shipments();
+    if (!list.length) return;
+    const coords = list.flatMap((s) => s.route);
+    if (!coords.length) return;
+    const bounds = coords.reduce(
+      (b, c) => b.extend(c as [number, number]),
+      new maplibregl.LngLatBounds(coords[0], coords[0]),
+    );
+    map.fitBounds(bounds, { padding: 60, duration: 800 });
   }
 }
