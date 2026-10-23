@@ -18,7 +18,7 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    @for (kpi of kpiData; track kpi.titleKey) {
+    @for (kpi of kpiData(); track kpi.titleKey) {
       <div class="bg-raised rounded-xl p-4 border border-line">
         <div class="flex items-start justify-between">
           <div class="flex items-center gap-3">
@@ -132,7 +132,7 @@
         <a class="text-sm text-blue-ink hover:underline">{{ 'dashboard.viewAll' | translate }}</a>
       </div>
       <div class="space-y-3">
-        @for (alert of alertData; track alert.id) {
+        @for (alert of alertData(); track alert.id) {
           <div class="flex gap-3 p-3 bg-elevated/50 rounded-lg hover:bg-elevated transition">
             <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                  [class.bg-red-500/20]="alert.color === 'red'"

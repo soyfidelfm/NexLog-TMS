@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, effect } from '@angular/core';
+import { Component, OnInit, inject, effect, signal } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { BaseChartDirective } from 'ng2-charts';
@@ -21,8 +21,9 @@ export class DashboardComponent implements OnInit {
   private readonly theme = inject(ThemeService);
   private readonly translate = inject(TranslateService);
 
-  kpiData: KPI[] = [];
-  alertData: Alert[] = [];
+  /** Signal: components are OnPush by default (Angular 22); a plain field assigned in subscribe() never repaints. */
+  kpiData = signal<KPI[]>([]);
+  alertData = signal<Alert[]>([]);
 
   private readonly weekDays = ['2024-05-20', '2024-05-21', '2024-05-22', '2024-05-23', '2024-05-24', '2024-05-25', '2024-05-26'];
   weeklyVolumeData: ChartData<'line'> = {
@@ -94,10 +95,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.dashboardService.getKpis().subscribe(data => {
-      this.kpiData = data;
+      this.kpiData.set(data);
     });
     this.dashboardService.getAlerts().subscribe(data => {
-      this.alertData = data;
+      this.alertData.set(data);
     });
   }
 }

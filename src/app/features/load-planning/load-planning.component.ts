@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -32,21 +32,22 @@ export class LoadPlanningComponent implements OnInit {
   trailerLength(type: string): string {
     return type.split(' ').pop() ?? '';
   }
-  unassigned: PlanningOrder[] = [];
-  trailers: Trailer[] = [];
+  /** Signal: components are OnPush by default (Angular 22); a plain field assigned in subscribe() never repaints. */
+  unassigned = signal<PlanningOrder[]>([]);
+  trailers = signal<Trailer[]>([]);
 
   ngOnInit(): void {
     this.orderService.getUnassignedOrders().subscribe(data => {
-      this.unassigned = data;
+      this.unassigned.set(data);
     });
     this.loadService.getTrailers().subscribe(data => {
-      this.trailers = data;
+      this.trailers.set(data);
     });
   }
 
   // IDs de las listas conectadas para CDK
   get dropListIds(): string[] {
-    return ['unassigned', ...this.trailers.map(t => t.id)];
+    return ['unassigned', ...this.trailers().map(t => t.id)];
   }
 
   getUsedWeight(trailer: Trailer): number {
@@ -87,6 +88,6 @@ export class LoadPlanningComponent implements OnInit {
   // Opcional: quitar de un tráiler (botón)
   removeFromTrailer(trailer: Trailer, index: number) {
     const [order] = trailer.assigned.splice(index, 1);
-    this.unassigned.push(order);
+    this.unassigned().push(order);
   }
 }
