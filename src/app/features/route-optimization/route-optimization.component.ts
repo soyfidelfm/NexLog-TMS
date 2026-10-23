@@ -7,7 +7,7 @@ import { ThemeService } from '../../core/theme.service';
 import { RouteOptimizationService } from '../../core/services/route-optimization.service';
 import { OptRoute, RouteSummary, Stop } from '../../core/models';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
-import maplibregl from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
 
 @Component({
   selector: 'app-route-optimization',
