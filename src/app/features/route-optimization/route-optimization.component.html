@@ -71,20 +71,6 @@
         (mapLoad)="onMapLoad($event)"
       >
         @for (r of routes(); track r.id) {
-          <mgl-geojson-source [id]="'route-' + r.id" [data]="routeGeoJson(r)">
-            <mgl-layer
-              [id]="'route-line-' + r.id"
-              type="line"
-              [paint]="{
-                'line-color': r.color,
-                'line-width': selected() === r.id ? 6 : 4,
-                'line-opacity': dim(r) ? 0.2 : 0.9,
-                'line-blur': 0.5
-              }"
-              [layout]="{ 'line-join': 'round', 'line-cap': 'round' }"
-            ></mgl-layer>
-          </mgl-geojson-source>
-
           @for (s of r.stops; track s.name; let i = $index) {
             <mgl-marker [lngLat]="[s.lng, s.lat]">
               <div class="map-marker" [style.--c]="r.color" [class.depot]="s.type === 'depot'" [class.dimmed]="dim(r)">
