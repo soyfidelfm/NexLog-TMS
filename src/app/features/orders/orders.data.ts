@@ -18,7 +18,7 @@ export const ORDERS: Order[] = [
     destination: { city: 'Austin', country: 'US', flag: '🇺🇸' },
     weight: 2100,
     volume: 95,
-    status: 'Out for Delivery',
+    status: 'Picked Up',
     carrier: 'FedEx Freight',
     eta: '2026-10-25T09:30:00Z',
     priority: 'Medium',
