@@ -3,8 +3,9 @@ import { Component, computed, inject, signal, OnInit } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../core/services/order.service';
+import { RoutingService } from '../../core/services/routing.service';
 import { OrderDetail } from '../../core/models';
 import { ThemeService } from '../../core/theme.service';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
@@ -19,7 +20,9 @@ import * as maplibregl from 'maplibre-gl';
 })
 export class OrderDetailComponent implements OnInit {
   private orderService = inject(OrderService);
+  private routing = inject(RoutingService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   readonly lang = inject(LanguageService);
   readonly theme = inject(ThemeService);
 
@@ -38,6 +41,7 @@ export class OrderDetailComponent implements OnInit {
   isEditing = signal(false);
   editForm: Partial<OrderDetail> = {};
   order = signal<OrderDetail | null>(null);
+  routeCoords = signal<[number, number][]>([]);
 
   mapStyle = computed(() =>
     this.theme.isDark()
@@ -45,26 +49,30 @@ export class OrderDetailComponent implements OnInit {
       : 'https://tiles.openfreemap.org/styles/liberty',
   );
 
-  // Simple city → coords lookup for demo (extend as needed)
   private readonly cityCoords: Record<string, [number, number]> = {
     'Dallas, TX': [-96.797, 32.777],
-    'Dallas': [-96.797, 32.777],
+    Dallas: [-96.797, 32.777],
     'Austin, TX': [-97.743, 30.267],
-    'Austin': [-97.743, 30.267],
-    'Houston, TX': [-95.369, 29.760],
-    'Houston': [-95.369, 29.760],
+    Austin: [-97.743, 30.267],
+    'Houston, TX': [-95.369, 29.76],
+    Houston: [-95.369, 29.76],
     'Oklahoma City, OK': [-97.516, 35.468],
     'Oklahoma City': [-97.516, 35.468],
     'San Antonio, TX': [-98.494, 29.424],
     'San Antonio': [-98.494, 29.424],
     'Fort Worth, TX': [-97.331, 32.756],
     'Fort Worth': [-97.331, 32.756],
+    Midland: [-102.078, 31.997],
+    'Midland, TX': [-102.078, 31.997],
+    Waco: [-97.147, 31.549],
+    'Waco, TX': [-97.147, 31.549],
   };
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') || 'ORD-240515-0897';
     this.orderService.getOrderDetail(id).subscribe((data) => {
       this.order.set(data);
+      this.loadRoad();
     });
   }
 
@@ -72,15 +80,28 @@ export class OrderDetailComponent implements OnInit {
     return this.cityCoords[city] ?? this.cityCoords[city.split(',')[0].trim()] ?? [-96.797, 32.777];
   }
 
-  routeGeoJson() {
+  private loadRoad() {
     const o = this.order();
-    if (!o) return null;
-    const origin = this.coordsFor(o.origin.city);
-    const dest = this.coordsFor(o.destination.city);
+    if (!o) return;
+    const pts: [number, number][] = [this.coordsFor(o.origin.city), this.coordsFor(o.destination.city)];
+    this.routing.getRoute(pts).subscribe((geo) => this.routeCoords.set(geo.coordinates));
+  }
+
+  routeGeoJson() {
+    const coords = this.routeCoords();
+    if (!coords.length) {
+      const o = this.order();
+      if (!o) return null;
+      return {
+        type: 'Feature' as const,
+        properties: {},
+        geometry: { type: 'LineString' as const, coordinates: [this.coordsFor(o.origin.city), this.coordsFor(o.destination.city)] },
+      };
+    }
     return {
       type: 'Feature' as const,
       properties: {},
-      geometry: { type: 'LineString' as const, coordinates: [origin, dest] },
+      geometry: { type: 'LineString' as const, coordinates: coords },
     };
   }
 
@@ -101,6 +122,10 @@ export class OrderDetailComponent implements OnInit {
     const dest = this.coordsFor(o.destination.city);
     const bounds = new maplibregl.LngLatBounds(origin, origin).extend(dest);
     map.fitBounds(bounds, { padding: 50, duration: 600 });
+  }
+
+  goBack() {
+    this.router.navigate(['/orders']);
   }
 
   toggleEdit() {

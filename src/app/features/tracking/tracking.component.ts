@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
 import { ShipmentService } from '../../core/services/shipment.service';
+import { RoutingService } from '../../core/services/routing.service';
 import { Shipment } from '../../core/models';
 import { ThemeService } from '../../core/theme.service';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
@@ -18,12 +19,14 @@ import * as maplibregl from 'maplibre-gl';
 })
 export class TrackingComponent implements OnInit {
   private shipmentService = inject(ShipmentService);
+  private routing = inject(RoutingService);
   private readonly translate = inject(TranslateService);
   readonly theme = inject(ThemeService);
   readonly statusKey = camelKey;
 
   selected = signal<Shipment | null>(null);
   shipments = signal<Shipment[]>([]);
+  geometries = signal<Record<string, [number, number][]>>({});
 
   mapStyle = computed(() =>
     this.theme.isDark()
@@ -40,7 +43,16 @@ export class TrackingComponent implements OnInit {
     this.shipmentService.getShipments().subscribe((data) => {
       this.shipments.set(data);
       if (data.length > 0) this.selected.set(data[0]);
+      this.loadGeometries(data);
     });
+  }
+
+  private loadGeometries(list: Shipment[]) {
+    for (const s of list) {
+      this.routing.getRoute(s.route).subscribe((geo) => {
+        this.geometries.update((m) => ({ ...m, [s.id]: geo.coordinates }));
+      });
+    }
   }
 
   select(shipment: Shipment) {
@@ -61,10 +73,11 @@ export class TrackingComponent implements OnInit {
   }
 
   routeGeoJson(s: Shipment) {
+    const coords = this.geometries()[s.id] ?? s.route;
     return {
       type: 'Feature' as const,
       properties: { id: s.id, color: s.color },
-      geometry: { type: 'LineString' as const, coordinates: s.route },
+      geometry: { type: 'LineString' as const, coordinates: coords },
     };
   }
 

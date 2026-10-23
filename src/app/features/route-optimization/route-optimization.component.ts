@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
 import { ThemeService } from '../../core/theme.service';
 import { RouteOptimizationService } from '../../core/services/route-optimization.service';
+import { RoutingService } from '../../core/services/routing.service';
 import { OptRoute, RouteSummary, Stop } from '../../core/models';
 import { NgxMapLibreGLModule } from '@maplibre/ngx-maplibre-gl';
 import * as maplibregl from 'maplibre-gl';
@@ -18,6 +19,7 @@ import * as maplibregl from 'maplibre-gl';
 })
 export class RouteOptimizationComponent implements OnInit {
   private routeOptService = inject(RouteOptimizationService);
+  private routing = inject(RoutingService);
   readonly lang = inject(LanguageService);
   private readonly translate = inject(TranslateService);
   readonly theme = inject(ThemeService);
@@ -28,6 +30,9 @@ export class RouteOptimizationComponent implements OnInit {
   optimizing = signal(false);
   objective = signal<'distance' | 'time' | 'cost'>('cost');
 
+  /** Real road geometry per route id (falls back to stop-to-stop line) */
+  geometries = signal<Record<string, [number, number][]>>({});
+
   mapStyle = computed(() =>
     this.theme.isDark()
       ? 'https://tiles.openfreemap.org/styles/dark'
@@ -37,8 +42,18 @@ export class RouteOptimizationComponent implements OnInit {
   ngOnInit(): void {
     this.routeOptService.getRoutes().subscribe((data) => {
       this.routes.set(data);
+      this.loadGeometries(data);
     });
     this.routeOptService.getSummary().subscribe((data) => this.summary.set(data));
+  }
+
+  private loadGeometries(routes: OptRoute[]) {
+    for (const r of routes) {
+      const pts = r.stops.map((s) => [s.lng, s.lat] as [number, number]);
+      this.routing.getRoute(pts).subscribe((geo) => {
+        this.geometries.update((m) => ({ ...m, [r.id]: geo.coordinates }));
+      });
+    }
   }
 
   active = computed<OptRoute | null>(() => this.routes().find((r) => r.id === this.selected()) ?? null);
@@ -101,13 +116,11 @@ export class RouteOptimizationComponent implements OnInit {
   }
 
   routeGeoJson(r: OptRoute) {
+    const coords = this.geometries()[r.id] ?? r.stops.map((s) => [s.lng, s.lat] as [number, number]);
     return {
       type: 'Feature' as const,
       properties: { id: r.id, color: r.color },
-      geometry: {
-        type: 'LineString' as const,
-        coordinates: r.stops.map((s) => [s.lng, s.lat]),
-      },
+      geometry: { type: 'LineString' as const, coordinates: coords },
     };
   }
 }

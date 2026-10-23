@@ -43,8 +43,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let order of paginatedOrders" class="border-b border-line/50 hover:bg-elevated/30 transition">
-          <td class="px-6 py-4"><a href="#" class="text-blue-ink hover:text-blue-ink-soft font-medium">{{ order.id }}</a></td>
+        <tr *ngFor="let order of paginatedOrders" class="border-b border-line/50 hover:bg-elevated/30 transition cursor-pointer" (click)="openOrder(order.id)">
+          <td class="px-6 py-4">
+            <a [routerLink]="['/orders', order.id]" class="text-blue-ink hover:text-blue-ink-soft font-medium" (click)="$event.stopPropagation()">{{ order.id }}</a>
+          </td>
           <td class="px-6 py-4">{{ order.origin.city }}, {{ order.origin.country }}</td>
           <td class="px-6 py-4">{{ order.destination.city }}, {{ order.destination.country }}</td>
           <td class="px-6 py-4">{{ order.weight | number : '1.0-0' : lang.locale() }}</td>
@@ -54,6 +56,9 @@
           <td class="px-6 py-4 text-body">{{ order.eta | date: 'mediumDate' : undefined : lang.locale() }}</td>
           <td class="px-6 py-4"><span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium border" [ngClass]="getPriorityClass(order.priority)">{{ priorityKey[order.priority] | translate }}</span></td>
         </tr>
+        <tr *ngIf="paginatedOrders.length === 0">
+          <td colspan="9" class="px-6 py-10 text-center text-muted">No orders found</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -62,8 +67,8 @@
     <div class="text-muted">{{ 'pagination.showing' | translate: { from: rangeFrom, to: rangeTo, total: totalOrders } }}</div>
     <div class="flex items-center gap-2">
       <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="px-3 py-1 rounded hover:bg-elevated disabled:opacity-50">{{ 'pagination.prev' | translate }}</button>
-      <button class="px-3 py-1 bg-blue-600 rounded text-white">1</button>
-      <button (click)="changePage(currentPage + 1)" class="px-3 py-1 rounded hover:bg-elevated">{{ 'pagination.next' | translate }}</button>
+      <button class="px-3 py-1 bg-blue-600 rounded text-white">{{ currentPage }}</button>
+      <button (click)="changePage(currentPage + 1)" [disabled]="currentPage * rowsPerPage >= totalOrders" class="px-3 py-1 rounded hover:bg-elevated disabled:opacity-50">{{ 'pagination.next' | translate }}</button>
       <div class="ml-4 flex items-center gap-2">
         <span class="text-muted">{{ 'pagination.rowsPerPage' | translate }}</span>
         <select [(ngModel)]="rowsPerPage" (ngModelChange)="onRowsPerPageChange()" class="bg-elevated border border-line-strong rounded px-2 py-1 text-sm">
