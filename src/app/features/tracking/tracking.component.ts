@@ -26,7 +26,8 @@ export class TrackingComponent implements OnInit {
 
   selected = signal<Shipment | null>(null);
   shipments = signal<Shipment[]>([]);
-  geometries = signal<Record<string, [number, number][]>>({});
+  private mapRef: maplibregl.Map | null = null;
+  private drawn = new Set<string>();
 
   mapStyle = computed(() =>
     this.theme.isDark()
@@ -43,16 +44,43 @@ export class TrackingComponent implements OnInit {
     this.shipmentService.getShipments().subscribe((data) => {
       this.shipments.set(data);
       if (data.length > 0) this.selected.set(data[0]);
-      this.loadGeometries(data);
+      this.drawAll(data);
     });
   }
 
-  private loadGeometries(list: Shipment[]) {
+  private drawAll(list: Shipment[]) {
     for (const s of list) {
+      // Immediate straight line so something shows
+      this.upsertLine(s.id, s.route, s.color);
       this.routing.getRoute(s.route).subscribe((geo) => {
-        this.geometries.update((m) => ({ ...m, [s.id]: geo.coordinates }));
+        this.upsertLine(s.id, geo.coordinates, s.color);
       });
     }
+  }
+
+  private upsertLine(id: string, coords: [number, number][], color: string) {
+    const map = this.mapRef;
+    if (!map || !coords.length) return;
+    const srcId = `trk-src-${id}`;
+    const data = {
+      type: 'Feature' as const,
+      properties: {},
+      geometry: { type: 'LineString' as const, coordinates: coords },
+    };
+    const src = map.getSource(srcId) as maplibregl.GeoJSONSource | undefined;
+    if (src) {
+      src.setData(data);
+      return;
+    }
+    map.addSource(srcId, { type: 'geojson', data });
+    map.addLayer({
+      id: `trk-line-${id}`,
+      type: 'line',
+      source: srcId,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': color, 'line-width': 4, 'line-opacity': 0.9 },
+    });
+    this.drawn.add(id);
   }
 
   select(shipment: Shipment) {
@@ -72,24 +100,19 @@ export class TrackingComponent implements OnInit {
     }
   }
 
-  routeGeoJson(s: Shipment) {
-    const coords = this.geometries()[s.id] ?? s.route;
-    return {
-      type: 'Feature' as const,
-      properties: { id: s.id, color: s.color },
-      geometry: { type: 'LineString' as const, coordinates: coords },
-    };
-  }
-
   onMapLoad(map: maplibregl.Map) {
+    this.mapRef = map;
     const list = this.shipments();
-    if (!list.length) return;
-    const coords = list.flatMap((s) => s.route);
-    if (!coords.length) return;
-    const bounds = coords.reduce(
-      (b, c) => b.extend(c as [number, number]),
-      new maplibregl.LngLatBounds(coords[0], coords[0]),
-    );
-    map.fitBounds(bounds, { padding: 60, duration: 800 });
+    if (list.length) {
+      const coords = list.flatMap((s) => s.route);
+      if (coords.length) {
+        const bounds = coords.reduce(
+          (b, c) => b.extend(c as [number, number]),
+          new maplibregl.LngLatBounds(coords[0], coords[0]),
+        );
+        map.fitBounds(bounds, { padding: 60, duration: 800 });
+      }
+      this.drawAll(list);
+    }
   }
 }

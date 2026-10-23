@@ -17,19 +17,6 @@
           (mapLoad)="onMapLoad($event)"
         >
           @for (s of shipments(); track s.id) {
-            <mgl-geojson-source [id]="'trk-' + s.id" [data]="routeGeoJson(s)">
-              <mgl-layer
-                [id]="'trk-line-' + s.id"
-                type="line"
-                [paint]="{
-                  'line-color': s.color,
-                  'line-width': selected()?.id === s.id ? 5 : 3,
-                  'line-opacity': selected() && selected()?.id !== s.id ? 0.25 : 0.85
-                }"
-                [layout]="{ 'line-join': 'round', 'line-cap': 'round' }"
-              ></mgl-layer>
-            </mgl-geojson-source>
-
             <mgl-marker [lngLat]="[s.lng, s.lat]" (click)="select(s)">
               <div class="trk-marker" [style.--c]="s.color" [class.active]="selected()?.id === s.id">
                 <span class="trk-dot"></span>
