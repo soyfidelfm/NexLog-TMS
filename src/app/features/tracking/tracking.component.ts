@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { camelKey } from '../../shared/i18n-keys';
 import { CommonModule } from '@angular/common';
@@ -27,13 +27,21 @@ export class TrackingComponent implements OnInit {
   selected = signal<Shipment | null>(null);
   shipments = signal<Shipment[]>([]);
   private mapRef: maplibregl.Map | null = null;
-  private drawn = new Set<string>();
+  /** Cached real geometries so we can redraw without re-fetching */
+  private geoCache = new Map<string, [number, number][]>();
 
   mapStyle = computed(() =>
     this.theme.isDark()
       ? 'https://tiles.openfreemap.org/styles/dark'
       : 'https://tiles.openfreemap.org/styles/liberty',
   );
+
+  constructor() {
+    effect(() => {
+      this.theme.isDark();
+      setTimeout(() => this.redrawFromCache(), 120);
+    });
+  }
 
   etaText(eta: string): string {
     const [day, time] = eta.split(' ');
@@ -50,11 +58,19 @@ export class TrackingComponent implements OnInit {
 
   private drawAll(list: Shipment[]) {
     for (const s of list) {
-      // Immediate straight line so something shows
       this.upsertLine(s.id, s.route, s.color);
       this.routing.getRoute(s.route).subscribe((geo) => {
+        this.geoCache.set(s.id, geo.coordinates);
         this.upsertLine(s.id, geo.coordinates, s.color);
       });
+    }
+  }
+
+  private redrawFromCache() {
+    const list = this.shipments();
+    for (const s of list) {
+      const coords = this.geoCache.get(s.id) ?? s.route;
+      this.upsertLine(s.id, coords, s.color);
     }
   }
 
@@ -80,7 +96,6 @@ export class TrackingComponent implements OnInit {
       layout: { 'line-join': 'round', 'line-cap': 'round' },
       paint: { 'line-color': color, 'line-width': 4, 'line-opacity': 0.9 },
     });
-    this.drawn.add(id);
   }
 
   select(shipment: Shipment) {
@@ -102,6 +117,8 @@ export class TrackingComponent implements OnInit {
 
   onMapLoad(map: maplibregl.Map) {
     this.mapRef = map;
+    map.on('style.load', () => this.redrawFromCache());
+
     const list = this.shipments();
     if (list.length) {
       const coords = list.flatMap((s) => s.route);

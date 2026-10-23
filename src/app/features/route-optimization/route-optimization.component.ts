@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, effect } from '@angular/core';
 import { DatePipe, DecimalPipe, CurrencyPipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from '../../core/language.service';
@@ -31,12 +31,20 @@ export class RouteOptimizationComponent implements OnInit {
   objective = signal<'distance' | 'time' | 'cost'>('cost');
 
   private mapRef: maplibregl.Map | null = null;
+  private geoCache = new Map<string, [number, number][]>();
 
   mapStyle = computed(() =>
     this.theme.isDark()
       ? 'https://tiles.openfreemap.org/styles/dark'
       : 'https://tiles.openfreemap.org/styles/liberty',
   );
+
+  constructor() {
+    effect(() => {
+      this.theme.isDark();
+      setTimeout(() => this.redrawFromCache(), 120);
+    });
+  }
 
   ngOnInit(): void {
     this.routeOptService.getRoutes().subscribe((data) => {
@@ -51,8 +59,18 @@ export class RouteOptimizationComponent implements OnInit {
       const pts = r.stops.map((s) => [s.lng, s.lat] as [number, number]);
       this.upsertLine(r.id, pts, r.color);
       this.routing.getRoute(pts).subscribe((geo) => {
+        this.geoCache.set(r.id, geo.coordinates);
         this.upsertLine(r.id, geo.coordinates, r.color);
       });
+    }
+  }
+
+  private redrawFromCache() {
+    const routes = this.routes();
+    for (const r of routes) {
+      const pts = r.stops.map((s) => [s.lng, s.lat] as [number, number]);
+      const coords = this.geoCache.get(r.id) ?? pts;
+      this.upsertLine(r.id, coords, r.color);
     }
   }
 
@@ -135,6 +153,8 @@ export class RouteOptimizationComponent implements OnInit {
 
   onMapLoad(map: maplibregl.Map) {
     this.mapRef = map;
+    map.on('style.load', () => this.redrawFromCache());
+
     const routes = this.routes();
     if (!routes.length) return;
     const coords = routes.flatMap((r) => r.stops.map((s) => [s.lng, s.lat] as [number, number]));

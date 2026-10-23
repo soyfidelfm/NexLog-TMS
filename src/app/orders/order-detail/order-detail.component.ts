@@ -1,5 +1,5 @@
 import { TranslatePipe } from '@ngx-translate/core';
-import { Component, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, computed, inject, signal, OnInit, effect } from '@angular/core';
 import { LanguageService } from '../../core/language.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -70,6 +70,15 @@ export class OrderDetailComponent implements OnInit {
     'Waco, TX': [-97.147, 31.549],
   };
 
+  constructor() {
+    // Redraw route when theme changes (style reload wipes layers)
+    effect(() => {
+      this.theme.isDark();
+      // Defer so the new style has loaded
+      setTimeout(() => this.redraw(), 120);
+    });
+  }
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') || 'ORD-240515-0897';
     this.orderService.getOrderDetail(id).subscribe((data) => {
@@ -86,7 +95,6 @@ export class OrderDetailComponent implements OnInit {
     const o = this.order();
     if (!o) return;
     const pts: [number, number][] = [this.coordsFor(o.origin.city), this.coordsFor(o.destination.city)];
-    // Show straight line immediately so something is visible
     this.routeCoords.set(pts);
     this.drawRoute(pts);
     this.routing.getRoute(pts).subscribe((geo) => {
@@ -95,7 +103,11 @@ export class OrderDetailComponent implements OnInit {
     });
   }
 
-  /** Draw the route directly on the map so it always appears (Google-style). */
+  private redraw() {
+    const coords = this.routeCoords();
+    if (coords.length) this.drawRoute(coords);
+  }
+
   private drawRoute(coords: [number, number][]) {
     const map = this.mapRef;
     if (!map || !coords.length) return;
@@ -106,6 +118,7 @@ export class OrderDetailComponent implements OnInit {
       geometry: { type: 'LineString' as const, coordinates: coords },
     };
 
+    // After a style reload the source is gone; re-add if missing
     const src = map.getSource('order-route-src') as maplibregl.GeoJSONSource | undefined;
     if (src) {
       src.setData(data);
@@ -113,7 +126,6 @@ export class OrderDetailComponent implements OnInit {
     }
 
     map.addSource('order-route-src', { type: 'geojson', data });
-    // Casing (outline) so it pops like Google
     map.addLayer({
       id: 'order-route-casing',
       type: 'line',
@@ -148,7 +160,10 @@ export class OrderDetailComponent implements OnInit {
     const dest = this.coordsFor(o.destination.city);
     const bounds = new maplibregl.LngLatBounds(origin, origin).extend(dest);
     map.fitBounds(bounds, { padding: 60, duration: 600 });
-    // Draw whatever we already have (straight or real)
+
+    // Redraw whenever the style finishes loading (theme switch)
+    map.on('style.load', () => this.redraw());
+
     const existing = this.routeCoords();
     this.drawRoute(existing.length ? existing : [origin, dest]);
   }
