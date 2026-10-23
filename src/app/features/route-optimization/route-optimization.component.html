@@ -50,7 +50,7 @@
   }
 
   <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_380px]">
-    <!-- Map -->
+    <!-- MapLibre Map -->
     <section class="relative overflow-hidden rounded-xl border border-line bg-surface">
       <div class="absolute left-4 top-4 z-10 flex flex-wrap gap-2">
         @for (r of routes(); track r.id) {
@@ -60,45 +60,53 @@
           </button>
         }
       </div>
-      <svg viewBox="0 0 900 700" class="h-[460px] w-full lg:h-[620px]">
-        <defs>
-          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path class="stroke-map-grid" d="M40 0H0V40" fill="none" stroke-width="1"/>
-          </pattern>
-          <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
-        <rect width="900" height="700" fill="url(#grid)"/>
-        <path class="stroke-map-grid fill-map-land" d="M60 120 Q300 40 620 50 T880 160 L870 520 Q700 690 380 680 T40 560 Z"/>
-        <path class="stroke-map-road" d="M80 340 H860 M470 40 V690 M150 600 L800 120" stroke-width="3" stroke-dasharray="2 8" fill="none"/>
 
+      <mgl-map
+        class="h-[460px] w-full lg:h-[620px]"
+        [mapStyle]="mapStyle()"
+        [zoom]="5.5"
+        [center]="[-97.5, 33.2]"
+        [pitch]="0"
+        [bearing]="0"
+        (mapLoad)="onMapLoad($event)"
+      >
         @for (r of routes(); track r.id) {
-          <g [style.opacity]="dim(r) ? 0.15 : 1" class="cursor-pointer transition-opacity" (click)="toggle(r.id)">
-            <path [attr.d]="path(r)" fill="none" [attr.stroke]="r.color" stroke-width="10" stroke-opacity=".18" stroke-linecap="round" stroke-linejoin="round"/>
-            <path [attr.d]="path(r)" fill="none" [attr.stroke]="r.color" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="route-dash" filter="url(#glow)"/>
-            @for (s of r.stops; track s.name; let i = $index) {
-              @if (i > 0) {
-                <circle class="fill-map-node" [attr.cx]="s.x" [attr.cy]="s.y" r="11" [attr.stroke]="r.color" stroke-width="2.5"/>
-                <text class="fill-map-node-text" [attr.x]="s.x" [attr.y]="s.y + 4" text-anchor="middle" font-size="11" font-weight="700">{{ i }}</text>
-                <text class="fill-map-label" [attr.x]="s.x + 16" [attr.y]="s.y + 4" font-size="11">{{ stopName(s) | translate }}</text>
-              }
-            }
-          </g>
+          <mgl-geojson-source [id]="'route-' + r.id" [data]="routeGeoJson(r)">
+            <mgl-layer
+              [id]="'route-line-' + r.id"
+              type="line"
+              [paint]="{
+                'line-color': r.color,
+                'line-width': selected() === r.id ? 6 : 4,
+                'line-opacity': dim(r) ? 0.2 : 0.9,
+                'line-blur': 0.5
+              }"
+              [layout]="{ 'line-join': 'round', 'line-cap': 'round' }"
+            ></mgl-layer>
+          </mgl-geojson-source>
+
+          @for (s of r.stops; track s.name; let i = $index) {
+            <mgl-marker [lngLat]="[s.lng, s.lat]">
+              <div class="map-marker" [style.--c]="r.color" [class.depot]="s.type === 'depot'" [class.dimmed]="dim(r)">
+                <span class="marker-dot">{{ i === 0 ? 'D' : i }}</span>
+                <span class="marker-label">{{ stopName(s) | translate }}</span>
+              </div>
+            </mgl-marker>
+          }
         }
-        <g>
-          <circle cx="470" cy="330" r="20" fill="#2563eb" fill-opacity=".2"/>
-          <rect x="458" y="318" width="24" height="24" rx="6" fill="#2563eb"/>
-          <text x="470" y="334" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">D</text>
-          <text class="fill-map-label-depot" x="496" y="350" font-size="11">{{ 'routeOpt.mainDepot' | translate }}</text>
-        </g>
-      </svg>
-      <div class="absolute bottom-4 left-4 flex gap-4 rounded-lg border border-line bg-app/90 px-3 py-2 text-xs text-muted">
+
+        <mgl-control mglNavigation position="top-right"></mgl-control>
+        <mgl-control mglScale position="bottom-left"></mgl-control>
+      </mgl-map>
+
+      <div class="absolute bottom-4 left-4 flex gap-4 rounded-lg border border-line bg-app/90 px-3 py-2 text-xs text-muted backdrop-blur">
         <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded bg-blue-600"></span>{{ 'routeOpt.depot' | translate }}</span>
         <span class="flex items-center gap-1.5"><span class="h-3 w-3 rounded-full border-2 border-slate-300"></span>{{ 'routeOpt.stop' | translate }}</span>
         <span>{{ 'routeOpt.stopsKm' | translate: { stops: totals().stops, km: (totals().km | number : '1.0-0' : lang.locale()) } }}</span>
       </div>
     </section>
 
-    <!-- Side panel -->
+    <!-- Side panel (unchanged structure) -->
     <aside class="flex max-h-[720px] flex-col gap-4 overflow-y-auto pr-1">
       @for (r of routes(); track r.id) {
         <article (click)="toggle(r.id)" class="cursor-pointer rounded-xl border bg-surface p-4 transition-colors"

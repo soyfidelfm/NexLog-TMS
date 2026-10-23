@@ -1,7 +1,7 @@
 export interface Stop {
   name: string;
-  x: number;
-  y: number;
+  lng: number;
+  lat: number;
   eta: string;
   type: 'depot' | 'pickup' | 'delivery';
 }

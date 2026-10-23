@@ -8,7 +8,6 @@
   --ro-scroll-thumb: #cbd5e1;
 }
 
-
 :host { display: block; }
 
 .btn-outline {
@@ -22,11 +21,62 @@
 .stat-v { @apply text-sm font-semibold text-strong; }
 .stat-l { @apply text-[11px] text-subtle; }
 
-.route-dash {
-  stroke-dasharray: 10 8;
-  animation: dash 1.2s linear infinite;
-}
-@keyframes dash { to { stroke-dashoffset: -18; } }
-
 aside::-webkit-scrollbar { width: 6px; }
 aside::-webkit-scrollbar-thumb { background: var(--ro-scroll-thumb); border-radius: 999px; }
+
+/* Custom MapLibre markers */
+.map-marker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.map-marker.dimmed {
+  opacity: 0.25;
+}
+.marker-dot {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--c, #3b82f6);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+}
+.map-marker.depot .marker-dot {
+  background: #2563eb;
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+.marker-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: rgb(15 23 42 / 0.85);
+  padding: 2px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+}
+:host-context([data-theme="light"]) .marker-label {
+  color: #0f172a;
+  background: rgb(255 255 255 / 0.92);
+}
+
+/* MapLibre attribution styling to match theme */
+mgl-map .maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: rgb(0 0 0 / 0.55) !important;
+  color: #e2e8f0 !important;
+}
+:host-context([data-theme="light"]) mgl-map .maplibregl-ctrl-attrib {
+  background: rgb(255 255 255 / 0.85) !important;
+  color: #334155 !important;
+}

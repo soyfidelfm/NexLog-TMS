@@ -1,19 +1,18 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { ApiClient } from '../api/api-client.service';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { OptRoute, RouteSummary } from '../models';
+import { ROUTES, SUMMARY } from '../../features/route-optimization/route-optimization.data';
 
-/** RouteOptimization microservice: /api/routes, /api/routes/summary */
+/** RouteOptimization: currently serves local mock with real coordinates for MapLibre demo.
+ *  Switch back to ApiClient when the backend is ready.
+ */
 @Injectable({ providedIn: 'root' })
 export class RouteOptimizationService {
-  private readonly api = inject(ApiClient);
-
   getRoutes(): Observable<OptRoute[]> {
-    return this.api.list<OptRoute>('routes');
+    return of(ROUTES);
   }
 
   getSummary(): Observable<RouteSummary> {
-    return this.api.get<RouteSummary>('routes/summary');
+    return of(SUMMARY);
   }
 }
