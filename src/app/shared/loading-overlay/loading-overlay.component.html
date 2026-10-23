@@ -1,0 +1,18 @@
+<!-- Persistent live region: screen readers announce "Loading" when the popup appears. -->
+<div class="sr-only" role="status" aria-live="polite" [attr.aria-busy]="loading.visible()">
+  {{ loading.visible() ? ('common.loading' | translate) : '' }}
+</div>
+
+@if (loading.visible()) {
+  <div class="loading-overlay" aria-hidden="true">
+    <div class="loading-card">
+      <div class="loading-logo">
+        <img [src]="theme.isDark() ? '/iconInsideLight.png' : '/iconInside.png'" alt="" draggable="false" />
+      </div>
+      <p class="loading-text">
+        <span>{{ 'common.loading' | translate }}</span>
+        <span class="loading-dots"><i></i><i></i><i></i></span>
+      </p>
+    </div>
+  </div>
+}
