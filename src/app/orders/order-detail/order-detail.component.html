@@ -5,7 +5,7 @@
     <!-- Header -->
     <header class="h-16 border-b border-line flex items-center justify-between px-6 bg-app-deep">
       <div class="flex items-center gap-4">
-        <button class="text-muted hover:text-strong" [attr.aria-label]="'orderDetail.back' | translate" [attr.title]="'orderDetail.back' | translate">←</button>
+        <button (click)="goBack()" class="text-muted hover:text-strong" [attr.aria-label]="'orderDetail.back' | translate" [attr.title]="'orderDetail.back' | translate">←</button>
         <div>
           <h1 class="text-xl font-semibold">{{ 'orderDetail.title' | translate }}</h1>
           <span class="text-blue-ink font-mono text-sm">{{ o.id }}</span>
