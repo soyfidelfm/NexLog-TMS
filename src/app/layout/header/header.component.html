@@ -9,11 +9,20 @@
   </div>
 
   <div class="flex items-center gap-4">
-    <!-- Notifications -->
-    <button type="button" class="relative text-muted hover:text-strong">
-      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-      <span class="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-blue-500"></span>
+    <!-- Messenger -->
+    <button id="chat-toggle" type="button" (click)="chat.togglePanel()"
+            [attr.aria-expanded]="chat.panelOpen()" aria-controls="chat-panel"
+            [attr.aria-label]="'chat.openMessenger' | translate: { count: chat.totalUnread() }"
+            class="relative rounded-lg p-1.5 text-muted hover:bg-elevated hover:text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            [class.text-strong]="chat.panelOpen()">
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.3 7.5L3 21l2-5.7A8.4 8.4 0 1 1 21 11.5Z"/></svg>
+      @if (chat.totalUnread() > 0) {
+        <span class="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold leading-none text-white ring-2 ring-panel">{{ chat.totalUnread() > 99 ? '99+' : chat.totalUnread() }}</span>
+      }
     </button>
+
+    <!-- Notifications -->
+    <app-notification-bell />
 
     <!-- User menu -->
     <div class="relative">
@@ -42,7 +51,7 @@
           </div>
 
           <div class="py-1">
-            <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted">Settings</div>
+            <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted">{{ 'layout.settings' | translate }}</div>
 
             <!-- Language + Theme on one line -->
             <div class="flex items-center justify-between gap-2 px-3 py-2">
@@ -50,7 +59,7 @@
 
               <button type="button" (click)="theme.toggle()"
                       class="flex h-8 w-8 items-center justify-center rounded-lg border border-line text-muted hover:bg-elevated hover:text-strong"
-                      [attr.aria-label]="theme.isDark() ? 'Light mode' : 'Dark mode'">
+                      [attr.aria-label]="(theme.isDark() ? 'layout.themeToLight' : 'layout.themeToDark') | translate">
                 @if (theme.isDark()) {
                   <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="4"/>
@@ -67,7 +76,7 @@
 
           <div class="border-t border-line py-1">
             <button type="button" (click)="logout()" class="flex w-full items-center gap-2 px-3 py-2.5 text-sm text-red-500 hover:bg-elevated">
-              Log out
+              {{ 'layout.logout' | translate }}
             </button>
           </div>
         </div>

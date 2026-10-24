@@ -11,3 +11,4 @@ export * from './exception.model';
 export * from './analytics.model';
 export * from './rate-table.model';
 export * from './client-portal.model';
+export * from './chat.model';

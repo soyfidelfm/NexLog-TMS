@@ -72,16 +72,16 @@ export class ApiClient {
     );
   }
 
-  post<T>(path: string, body: unknown): Observable<T> {
-    return this.http.post<T>(this.url(path), body);
+  post<T>(path: string, body: unknown, opts?: ApiOptions): Observable<T> {
+    return this.http.post<T>(this.url(path), body, { context: this.context(opts) });
   }
 
-  put<T>(path: string, body: unknown): Observable<T> {
-    return this.http.put<T>(this.url(path), body);
+  put<T>(path: string, body: unknown, opts?: ApiOptions): Observable<T> {
+    return this.http.put<T>(this.url(path), body, { context: this.context(opts) });
   }
 
-  delete(path: string): Observable<void> {
-    return this.http.delete<void>(this.url(path));
+  delete(path: string, opts?: ApiOptions): Observable<void> {
+    return this.http.delete<void>(this.url(path), { context: this.context(opts) });
   }
 
   /** Swallows non-auth errors for read calls so screens render empty instead of crashing. */

@@ -1,0 +1,102 @@
+<header class="flex items-center gap-2 border-b border-line px-2 py-2.5">
+  <button type="button" (click)="chat.closeThread()" [attr.aria-label]="'chat.back' | translate"
+          class="rounded-lg p-1.5 text-muted hover:bg-elevated hover:text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <app-user-avatar [name]="peer()?.name" [url]="peer()?.avatarUrl" [online]="peer()?.online" size="md" />
+  <div class="min-w-0 flex-1">
+    <h2 class="truncate text-sm font-semibold text-strong">{{ peer()?.name }}</h2>
+    <p class="truncate text-[11px]" [class]="typing() ? 'text-blue-ink' : 'text-muted'">
+      @if (typing()) { {{ 'chat.typingShort' | translate }} }
+      @else if (peer()?.online) { {{ 'chat.activeNow' | translate }} }
+      @else { {{ peer()?.title || peer()?.email }} }
+    </p>
+  </div>
+  <button type="button" (click)="closed.emit()" [attr.aria-label]="'chat.close' | translate"
+          class="rounded-lg p-1.5 text-muted hover:bg-elevated hover:text-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
+    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</header>
+
+<div #scroller (scroll)="onScroll()" role="log" [attr.aria-label]="'chat.history' | translate: { name: peer()?.name }"
+     class="flex-1 overflow-y-auto px-3 py-3">
+  @if (loading() && !chat.activeMessages().length) {
+    <div class="flex h-full items-center justify-center" role="status">
+      <span class="spinner h-6 w-6 rounded-full border-2 border-line-strong border-t-blue-500"></span>
+      <span class="sr-only">{{ 'chat.loadingMessages' | translate }}</span>
+    </div>
+  } @else if (failedLoad() && !chat.activeMessages().length) {
+    <div class="flex h-full flex-col items-center justify-center gap-3 text-center text-sm text-muted" role="alert">
+      <span>{{ 'chat.errors.loadMessages' | translate }}</span>
+      <button type="button" (click)="reload()" class="rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-500">{{ 'chat.retry' | translate }}</button>
+    </div>
+  } @else {
+    @if (chat.activeHasMore()) {
+      <div class="mb-2 flex justify-center">
+        @if (loadingOlder()) {
+          <span class="spinner h-4 w-4 rounded-full border-2 border-line-strong border-t-blue-500" role="status" [attr.aria-label]="'chat.loadingOlder' | translate"></span>
+        } @else {
+          <button type="button" (click)="loadOlder()" class="rounded-full px-3 py-1 text-xs font-medium text-blue-ink hover:bg-elevated">{{ 'chat.loadOlder' | translate }}</button>
+        }
+      </div>
+    } @else if (chat.activeMessages().length) {
+      <p class="mb-3 text-center text-[11px] text-subtle">{{ 'chat.startOfConversation' | translate }}</p>
+    }
+
+    @if (!chat.activeMessages().length) {
+      <div class="flex h-full flex-col items-center justify-center gap-2 text-center">
+        <app-user-avatar [name]="peer()?.name" [url]="peer()?.avatarUrl" size="lg" />
+        <p class="text-sm font-medium text-strong">{{ peer()?.name }}</p>
+        <p class="text-xs text-muted">{{ 'chat.sayHi' | translate: { name: peer()?.name } }}</p>
+      </div>
+    }
+
+    @for (item of items(); track item.key) {
+      @if (item.kind === 'day') {
+        <div class="my-3 flex items-center gap-3 text-[11px] font-medium text-subtle">
+          <span class="h-px flex-1 bg-line"></span><span>{{ item.label }}</span><span class="h-px flex-1 bg-line"></span>
+        </div>
+      } @else {
+        <div class="mb-2 flex items-end gap-2" [class.justify-end]="item.mine">
+          @if (!item.mine) {
+            <app-user-avatar [name]="item.sender?.name" [url]="item.sender?.avatarUrl" size="sm" />
+          }
+          <div class="flex max-w-[78%] flex-col gap-0.5" [class.items-end]="item.mine" [class.items-start]="!item.mine">
+            @for (m of item.messages; track m.clientId ?? m.id; let first = $first; let last = $last) {
+              <div class="whitespace-pre-wrap break-words rounded-2xl px-3 py-2 text-sm leading-snug" [class]="bubble(item, m, first, last)" [title]="clock(m.createdAt)">{{ m.body }}</div>
+              @if (m.status === 'failed') {
+                <div class="flex items-center gap-2 px-1 text-[11px] text-red-ink" role="alert">
+                  <span>{{ 'chat.failed' | translate }}</span>
+                  <button type="button" (click)="chat.retry(m.conversationId, m.clientId!)" class="font-semibold underline hover:no-underline">{{ 'chat.retry' | translate }}</button>
+                  <button type="button" (click)="chat.discard(m.conversationId, m.clientId!)" class="text-muted underline hover:no-underline">{{ 'chat.discard' | translate }}</button>
+                </div>
+              }
+            }
+            <span class="px-1 text-[10px] text-subtle">
+              {{ item.time }}@if (item.sending) { · {{ 'chat.sending' | translate }} }
+            </span>
+          </div>
+        </div>
+      }
+    }
+
+    @if (typing(); as t) {
+      <div class="mb-1 flex items-center gap-2 text-xs text-muted" role="status">
+        <span class="typing-dots flex items-center gap-1 rounded-2xl bg-elevated px-3 py-2.5" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>{{ 'chat.typing' | translate: { name: t.name } }}</span>
+      </div>
+    }
+  }
+</div>
+
+<form class="flex items-end gap-2 border-t border-line p-2.5" (submit)="$event.preventDefault(); send()">
+  <label class="sr-only" for="chat-composer">{{ 'chat.inputLabel' | translate }}</label>
+  <textarea #box id="chat-composer" rows="1" [value]="draft()" [attr.maxlength]="maxLength"
+            (input)="onInput($event)" (keydown.enter)="onEnter($event)"
+            [placeholder]="'chat.placeholder' | translate"
+            class="max-h-28 min-h-10 flex-1 resize-none rounded-2xl border border-line-strong bg-elevated px-3.5 py-2 text-sm text-primary placeholder:text-subtle focus:border-blue-500 focus:outline-none"></textarea>
+  <button type="submit" [attr.aria-label]="'chat.send' | translate" [title]="'chat.send' | translate"
+          class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4Z"/></svg>
+  </button>
+</form>

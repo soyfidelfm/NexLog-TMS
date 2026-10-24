@@ -41,6 +41,11 @@ export const routes: Routes = [
       { path: 'analytics', component: AnalyticsComponent, title: 'routes.analytics' },
       { path: 'client-portal', component: ClientPortalComponent, title: 'routes.clientPortal' },
       { path: 'rate-tables', component: RateTablesComponent, title: 'routes.rateTables' },
+      {
+        path: 'notifications',
+        loadComponent: () => import('./features/chat/ui/notifications-page.component').then(m => m.NotificationsPageComponent),
+        title: 'routes.notifications',
+      },
     ]
   },
   { path: '**', redirectTo: 'dashboard' }

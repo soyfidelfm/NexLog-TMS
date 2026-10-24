@@ -113,6 +113,101 @@
     "title": "Carrier Management",
     "totalHandled": "Total loads handled:"
   },
+  "chat": {
+    "activeNow": "Active now",
+    "back": "Back",
+    "close": "Close chat",
+    "conversations": "Conversations",
+    "demo": "Demo data",
+    "demoHint": "Example data: the chat backend is not connected yet",
+    "discard": "Delete",
+    "empty": {
+      "body": "Start a chat with anyone on your team.",
+      "title": "No conversations yet"
+    },
+    "errors": {
+      "loadConversations": "Couldn't load your conversations.",
+      "loadMessages": "Couldn't load the messages.",
+      "openFailed": "Couldn't open the conversation.",
+      "search": "The search failed. Try again."
+    },
+    "failed": "Not sent",
+    "filterLabel": "Search conversations",
+    "filterPlaceholder": "Search conversations",
+    "history": "Conversation with {{name}}",
+    "inputLabel": "Message",
+    "loadOlder": "Load earlier messages",
+    "loadingConversations": "Loading conversations",
+    "loadingMessages": "Loading messages",
+    "loadingOlder": "Loading earlier messages",
+    "mock": {
+      "filler": {
+        "1": "Morning! Any updates on today's pickups?",
+        "2": "All trucks left the yard on time.",
+        "3": "Can you double-check the weight on the next load?",
+        "4": "Done, it's within limits.",
+        "5": "Customer confirmed the delivery window.",
+        "6": "Perfect, thanks!"
+      },
+      "incoming": {
+        "lena": "Hi! ACME is asking for the ETA of shipment SHP-1201."
+      },
+      "reply": {
+        "1": "Got it, thanks!",
+        "2": "On it, I'll update you in a few minutes.",
+        "3": "Sounds good 👍",
+        "4": "Let me check with the carrier and get back to you.",
+        "5": "Confirmed.",
+        "6": "Can we talk about this after lunch?"
+      },
+      "seed": {
+        "dana1": "Load LD-2041 is ready for pickup at dock 4.",
+        "dana2": "Driver ETA is 14:30. Can you confirm the BOL?",
+        "dana3": "Also, the reefer must be pre-cooled to 2 °C.",
+        "marcos1": "Rate confirmation for lane MTY → LAX is ready.",
+        "me1": "Great, I'll assign a carrier now.",
+        "me2": "Thanks, approved.",
+        "priya1": "Invoice INV-7788 has a $120 variance. Can you take a look?"
+      },
+      "titles": {
+        "accountManager": "Account manager",
+        "auditAnalyst": "Freight audit analyst",
+        "carrierRep": "Carrier representative",
+        "customerService": "Customer service",
+        "dispatcher": "Dispatcher",
+        "driver": "Driver",
+        "warehouse": "Warehouse supervisor"
+      }
+    },
+    "newChat": "New message",
+    "noMatches": "No conversations match your search.",
+    "noMessages": "No messages yet",
+    "noUsers": "No people found for “{{term}}”.",
+    "openMessenger": "Open messages ({{count}} unread)",
+    "people": "People",
+    "placeholder": "Write a message…",
+    "reconnecting": "Connection lost. Reconnecting…",
+    "retry": "Retry",
+    "rowUnread": "{{name}}, {{count}} unread",
+    "sayHi": "Say hi to {{name}} 👋",
+    "searchHint": "Type at least {{n}} characters to search people.",
+    "searchUsersLabel": "Search people by name or email",
+    "searchUsersPlaceholder": "Name or email",
+    "searching": "Searching…",
+    "send": "Send",
+    "sending": "Sending…",
+    "startOfConversation": "This is the beginning of the conversation",
+    "title": "Chats",
+    "toast": {
+      "newMessage": "New message from {{name}}",
+      "open": "Open chat with {{name}}"
+    },
+    "today": "Today",
+    "typing": "{{name}} is typing…",
+    "typingShort": "typing…",
+    "yesterday": "Yesterday",
+    "you": "You"
+  },
   "clientPortal": {
     "destination": "Destination",
     "doc": {
@@ -376,8 +471,10 @@
     "copyright": "© 2026 NexLog TMS. All rights reserved.",
     "footer": "NexLog TMS · Core",
     "logoAlt": "NexLog logo",
+    "logout": "Log out",
     "mainNav": "Main navigation",
     "role": "Administrator",
+    "settings": "Settings",
     "themeToDark": "Switch to dark theme",
     "themeToLight": "Switch to light theme",
     "tms": "Transportation Management System",
@@ -449,6 +546,46 @@
     "routeOptimization": "Route Optimization",
     "tendering": "Tendering",
     "tracking": "Tracking"
+  },
+  "notifications": {
+    "bellLabel": "Notifications ({{count}} unread)",
+    "empty": "You're all caught up.",
+    "emptyUnread": "No unread notifications.",
+    "enableDesktop": "Enable desktop alerts",
+    "filter": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "loadError": "Couldn't load notifications.",
+    "markAllRead": "Mark all as read",
+    "messageFrom": "Message from {{name}}",
+    "mock": {
+      "delivered": {
+        "body": "Proof of delivery is now available.",
+        "title": "Shipment {{id}} delivered"
+      },
+      "maintenance": {
+        "body": "The system will be updated tonight at 23:00.",
+        "title": "Scheduled maintenance"
+      },
+      "orderCreated": {
+        "body": "A new order was created and is waiting for planning.",
+        "title": "New order {{id}}"
+      },
+      "shipmentDelayed": {
+        "body": "Estimated delay of {{h}} h due to traffic.",
+        "title": "Shipment {{id}} delayed"
+      }
+    },
+    "open": "Open",
+    "types": {
+      "message": "Message",
+      "order": "Order",
+      "shipment": "Shipment",
+      "system": "System"
+    },
+    "unread": "Unread",
+    "viewAll": "View all"
   },
   "orderDetail": {
     "actions": "Actions",
@@ -718,6 +855,7 @@
     "freightAudit": "Freight Audit & Payment",
     "loadPlanning": "Load Planning",
     "login": "Sign in",
+    "notifications": "Notifications",
     "orderDetail": "Order Detail",
     "orders": "Orders",
     "rateTables": "Rate Tables",
@@ -774,6 +912,10 @@
     "daysAgo": "{{n}}d ago",
     "hoursAgo": "{{n}}h ago",
     "minAgo": "{{n}} min ago"
+  },
+  "toast": {
+    "dismiss": "Dismiss notification",
+    "region": "Notifications"
   },
   "tracking": {
     "active": "Active Shipments",
